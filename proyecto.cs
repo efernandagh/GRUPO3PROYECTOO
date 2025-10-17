@@ -95,8 +95,8 @@ namespace INICIO
                         command.Parameters.AddWithValue("@ID_PROYECTO", Txtidproyecto.Text);
                         command.Parameters.AddWithValue("@NOMBRE_PROYECTO", Txtnombrepro.Text);
                         command.Parameters.AddWithValue("@DESCRIPCION", Txtdescripcion.Text);
-                        command.Parameters.AddWithValue("@FECHA_INICIO", DateTime.Parse(txtfi.Text));
-                        command.Parameters.AddWithValue("@FECHA_FIN", DateTime.Parse(txtff.Text));
+                        command.Parameters.AddWithValue("@FECHA_INICIO", dtpinicio.Value);
+                        command.Parameters.AddWithValue("@FECHA_FIN", dtpfin.Value);
                         command.Parameters.AddWithValue("@ESTADO", Txtestado.Text);
                         command.Parameters.AddWithValue("@ID_USUARIO", Convert.ToInt32(cbUsuario.SelectedItem)); ;
 

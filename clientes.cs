@@ -8,16 +8,15 @@ namespace INICIO
     public partial class clientes : Form
     {
         private string conexiontionString;
-        string conexion = "Server=DESKTOP-FT2QP2U\\SQLEXPRESS;Database=MECANICA_INDUSTRIAL;Integrated Security=True;TrustServerCertificate=True;";
-
+          private ConexionBD conexionDB = new ConexionBD();
         public clientes()
         {
             InitializeComponent();
         }
 
-        private SqlConnection CrearConexion()
+        private SqlConnection Conectar()
         {
-            return new SqlConnection(conexion);
+            return ConexionBD.ObtenerConexion();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -36,7 +35,7 @@ namespace INICIO
 
                 try
                 {
-                    conn.Open();
+                    
                     cmd.ExecuteNonQuery();
                     MessageBox.Show("Cliente guardado correctamente.");
                 }
@@ -48,10 +47,7 @@ namespace INICIO
             }
         }
 
-        private SqlConnection Conectar()
-        {
-            return new SqlConnection(conexion);
-        }
+     
 
         private void label2_Click(object sender, EventArgs e)
         {

@@ -31,13 +31,13 @@ namespace INICIO
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(proyecto));
             groupBox1 = new GroupBox();
+            dtpfin = new DateTimePicker();
+            dtpinicio = new DateTimePicker();
             cbUsuario = new ComboBox();
             button1 = new Button();
             btnCancelar = new Button();
             btnNuevo = new Button();
             btnLimpiar = new Button();
-            txtff = new TextBox();
-            txtfi = new TextBox();
             Txtdescripcion = new TextBox();
             Txtestado = new TextBox();
             Txtnombrepro = new TextBox();
@@ -49,6 +49,8 @@ namespace INICIO
             Label3 = new Label();
             Label2 = new Label();
             Label1 = new Label();
+            txtff = new TextBox();
+            txtfi = new TextBox();
             panel1 = new Panel();
             pictureBox2 = new PictureBox();
             groupBox1.SuspendLayout();
@@ -59,13 +61,13 @@ namespace INICIO
             // groupBox1
             // 
             groupBox1.BackColor = Color.CornflowerBlue;
+            groupBox1.Controls.Add(dtpfin);
+            groupBox1.Controls.Add(dtpinicio);
             groupBox1.Controls.Add(cbUsuario);
             groupBox1.Controls.Add(button1);
             groupBox1.Controls.Add(btnCancelar);
             groupBox1.Controls.Add(btnNuevo);
             groupBox1.Controls.Add(btnLimpiar);
-            groupBox1.Controls.Add(txtff);
-            groupBox1.Controls.Add(txtfi);
             groupBox1.Controls.Add(Txtdescripcion);
             groupBox1.Controls.Add(Txtestado);
             groupBox1.Controls.Add(Txtnombrepro);
@@ -85,6 +87,22 @@ namespace INICIO
             groupBox1.TabStop = false;
             groupBox1.Text = "Proyecto";
             groupBox1.Enter += groupBox1_Enter;
+            // 
+            // dtpfin
+            // 
+            dtpfin.Format = DateTimePickerFormat.Short;
+            dtpfin.Location = new Point(267, 193);
+            dtpfin.Name = "dtpfin";
+            dtpfin.Size = new Size(107, 23);
+            dtpfin.TabIndex = 35;
+            // 
+            // dtpinicio
+            // 
+            dtpinicio.Format = DateTimePickerFormat.Short;
+            dtpinicio.Location = new Point(267, 161);
+            dtpinicio.Name = "dtpinicio";
+            dtpinicio.Size = new Size(107, 23);
+            dtpinicio.TabIndex = 4;
             // 
             // cbUsuario
             // 
@@ -138,22 +156,6 @@ namespace INICIO
             btnLimpiar.Text = "LIMPIAR";
             btnLimpiar.UseVisualStyleBackColor = true;
             btnLimpiar.Click += btnLimpiar_Click;
-            // 
-            // txtff
-            // 
-            txtff.BackColor = SystemColors.ActiveBorder;
-            txtff.Location = new Point(267, 194);
-            txtff.Name = "txtff";
-            txtff.Size = new Size(100, 23);
-            txtff.TabIndex = 29;
-            // 
-            // txtfi
-            // 
-            txtfi.BackColor = SystemColors.ActiveBorder;
-            txtfi.Location = new Point(267, 158);
-            txtfi.Name = "txtfi";
-            txtfi.Size = new Size(100, 23);
-            txtfi.TabIndex = 28;
             // 
             // Txtdescripcion
             // 
@@ -264,6 +266,22 @@ namespace INICIO
             Label1.TabIndex = 15;
             Label1.Text = "ID PROYECTO";
             // 
+            // txtff
+            // 
+            txtff.BackColor = SystemColors.ActiveBorder;
+            txtff.Location = new Point(276, 107);
+            txtff.Name = "txtff";
+            txtff.Size = new Size(100, 23);
+            txtff.TabIndex = 29;
+            // 
+            // txtfi
+            // 
+            txtfi.BackColor = SystemColors.ActiveBorder;
+            txtfi.Location = new Point(276, 145);
+            txtfi.Name = "txtfi";
+            txtfi.Size = new Size(100, 23);
+            txtfi.TabIndex = 28;
+            // 
             // panel1
             // 
             panel1.BackColor = Color.SteelBlue;
@@ -291,6 +309,8 @@ namespace INICIO
             ClientSize = new Size(965, 579);
             Controls.Add(panel1);
             Controls.Add(groupBox1);
+            Controls.Add(txtfi);
+            Controls.Add(txtff);
             FormBorderStyle = FormBorderStyle.None;
             Name = "proyecto";
             StartPosition = FormStartPosition.CenterScreen;
@@ -301,6 +321,7 @@ namespace INICIO
             panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
 
@@ -330,5 +351,7 @@ namespace INICIO
         private Button btnLimpiar;
         private Button button1;
         private ComboBox cbUsuario;
+        private DateTimePicker dtpinicio;
+        private DateTimePicker dtpfin;
     }
 }
