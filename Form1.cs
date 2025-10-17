@@ -7,15 +7,142 @@ namespace INICIO
     public partial class Form1 : Form
 
     {
+        private string servidor = "Server=DESKTOP-8QJ2O4S\\ENIAGOMEZ;Integrated Security=True;TrustServerCertificate=True;";
+
         private ConexionBD conexionDB = new ConexionBD();
 
         public Form1()
         {
             InitializeComponent();
 
+            PreguntarSQL();
 
-          
         }
+
+        private void PreguntarSQL()
+        {
+            DialogResult tieneSQL = MessageBox.Show(
+                "¿Tiene instalado SQL Server en su equipo?",
+                "Verificación SQL Server",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (tieneSQL == DialogResult.No)
+            {
+                MessageBox.Show(
+                    "Debe instalar SQL Server antes de continuar.\nEl programa se cerrará.",
+                    "Requisito necesario",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+                Application.Exit();
+                return;
+            }
+
+            // Si tiene SQL, pasamos a verificar la base de datos
+            VerificarBaseDeDatos();
+        }
+
+        private void VerificarBaseDeDatos()
+        {
+            DialogResult tieneBD = MessageBox.Show(
+                "¿Ya tiene creada la base de datos MECANICA_INDUSTRIAL?",
+                "Verificación Base de Datos",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (tieneBD == DialogResult.No)
+            {
+                DialogResult crearBD = MessageBox.Show(
+                    "¿Desea crear la base de datos automáticamente?",
+                    "Crear Base de Datos",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+
+                if (crearBD == DialogResult.Yes)
+                {
+                    CrearBaseDeDatos();
+                }
+                else
+                {
+                    MessageBox.Show(
+                        "No se puede continuar sin la base de datos.\nEl programa se cerrará.",
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                    Application.Exit();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Perfecto ? Puede iniciar sesión.", "Confirmación",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void CrearBaseDeDatos()
+        {
+            try
+            {
+                string cadenaMaster = servidor + "Database=master;";
+                using (SqlConnection con = new SqlConnection(cadenaMaster))
+                {
+                    con.Open();
+
+                    string script = @"
+                    CREATE DATABASE MECANICA_INDUSTRIAL;
+                    USE MECANICA_INDUSTRIAL;
+
+                    CREATE TABLE ROL (
+                        ID_ROL BIGINT PRIMARY KEY,
+                        NOMBRE_ROL VARCHAR(100),
+                        DESCRIPCION VARCHAR(255)
+                    );
+
+                    CREATE TABLE USUARIOS (
+                        ID_USUARIO BIGINT PRIMARY KEY,
+                        NOMBRE VARCHAR(100),
+                        APELLIDO VARCHAR(100),
+                        CORREO VARCHAR(150) UNIQUE,
+                        CLAVE VARCHAR(150),
+                        ID_ROL BIGINT,
+                        FECHA_REGISTRO DATETIME,
+                        FOREIGN KEY (ID_ROL) REFERENCES ROL(ID_ROL)
+                    );
+
+                    INSERT INTO ROL (ID_ROL, NOMBRE_ROL, DESCRIPCION) VALUES
+                    (1, 'Administrador', 'Acceso total al sistema'),
+                    (2, 'Técnico', 'Encargado de procesos'),
+                    (3, 'Cliente', 'Accede a sus contratos y facturas');
+
+                    CREATE TABLE CLIENTES (
+                        ID_CLIENTES BIGINT PRIMARY KEY,
+                        NOMBRE_CLIENTE VARCHAR(100),
+                        CORREO VARCHAR(100),
+                        TELEFONO VARCHAR(20),
+                        DIRECCION VARCHAR(255),
+                        FECHA_REGISTRO DATETIME
+                    );
+                    ";
+
+                    SqlCommand cmd = new SqlCommand(script, con);
+                    cmd.ExecuteNonQuery();
+
+                    MessageBox.Show("? Base de datos MECANICA_INDUSTRIAL creada correctamente.", "Éxito",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("? Error al crear la base de datos: " + ex.Message);
+            }
+        }
+
+
 
         private void Form1_Load(object sender, EventArgs e)
         {
