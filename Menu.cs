@@ -252,6 +252,16 @@ namespace INICIO
         {
             this.WindowState = FormWindowState.Minimized;
         }
+
+        private void btnrespaldo_Click(object sender, EventArgs e)
+        {
+            ssubmenuadmin.Visible = false;
+            AbrirFormulario(new RespaldoYrestaurar());
+
+            RespaldoYrestaurar ventanaBackup = new RespaldoYrestaurar();
+            ventanaBackup.ShowDialog(); // Abre la ve
+
+        }
     }
 
 }

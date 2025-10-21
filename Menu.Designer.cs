@@ -69,6 +69,7 @@
             Panelcontenedor = new Panel();
             panel9 = new Panel();
             ssubmenuadmin = new Panel();
+            btnrespaldo = new Button();
             btnusuarios = new Button();
             btnroles = new Button();
             btnadmin = new Button();
@@ -661,13 +662,29 @@
             // ssubmenuadmin
             // 
             ssubmenuadmin.BackColor = Color.CornflowerBlue;
+            ssubmenuadmin.Controls.Add(btnrespaldo);
             ssubmenuadmin.Controls.Add(btnusuarios);
             ssubmenuadmin.Controls.Add(btnroles);
             ssubmenuadmin.Location = new Point(6, 177);
             ssubmenuadmin.Name = "ssubmenuadmin";
-            ssubmenuadmin.Size = new Size(123, 75);
+            ssubmenuadmin.Size = new Size(123, 147);
             ssubmenuadmin.TabIndex = 29;
             ssubmenuadmin.Visible = false;
+            // 
+            // btnrespaldo
+            // 
+            btnrespaldo.FlatAppearance.BorderSize = 0;
+            btnrespaldo.FlatAppearance.MouseOverBackColor = Color.SteelBlue;
+            btnrespaldo.FlatStyle = FlatStyle.Flat;
+            btnrespaldo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            btnrespaldo.ForeColor = Color.White;
+            btnrespaldo.Location = new Point(19, 65);
+            btnrespaldo.Name = "btnrespaldo";
+            btnrespaldo.Size = new Size(85, 23);
+            btnrespaldo.TabIndex = 21;
+            btnrespaldo.Text = "Respaldo";
+            btnrespaldo.UseVisualStyleBackColor = true;
+            btnrespaldo.Click += btnrespaldo_Click;
             // 
             // btnusuarios
             // 
@@ -851,5 +868,6 @@
         private Button btnminimizar;
         private Button btnmax;
         private Button button2;
+        private Button btnrespaldo;
     }
 }

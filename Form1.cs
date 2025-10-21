@@ -79,7 +79,7 @@ namespace INICIO
             }
             else
             {
-                MessageBox.Show("Perfecto ? Puede iniciar sesión.", "Confirmación",
+                MessageBox.Show("Perfecto, Puede iniciar sesión.", "Confirmación",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }

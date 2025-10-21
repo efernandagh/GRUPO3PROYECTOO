@@ -114,54 +114,59 @@ namespace INICIO
 
         private void btnGuardar_Click_1(object sender, EventArgs e)
         {
-            if (cboidcontrato.SelectedIndex == -1 || string.IsNullOrWhiteSpace(txtMontoTotal.Text) || cmbMetodoPago.SelectedIndex == -1)
-            {
-                MessageBox.Show("⚠️ Por favor, completa todos los campos.", "Advertencia");
-                return;
-            }
+            // VALIDACIÓN: Campos requeridos
+    if (cboidcontrato.SelectedIndex == -1 || string.IsNullOrWhiteSpace(txtMontoTotal.Text) || cmbMetodoPago.SelectedIndex == -1)
+    {
+        MessageBox.Show("⚠️ Por favor, completa todos los campos.", "Advertencia");
+        return;
+    }
 
-            if (!decimal.TryParse(txtMontoTotal.Text, out decimal montoDecimal))
-            {
-                MessageBox.Show("⚠️ El monto debe ser un número válido.", "Advertencia");
-                return;
-            }
+    if (!decimal.TryParse(txtMontoTotal.Text, out decimal montoDecimal))
+    {
+        MessageBox.Show("⚠️ El monto debe ser un número válido.", "Advertencia");
+        return;
+    }
 
-            int idGenerado = 0;
+    int idGenerado = 0;
 
-            using (SqlConnection conn = ConexionBD.ObtenerConexion())
-            {
-                try
-                {
-                    
+    using (SqlConnection conn = ConexionBD.ObtenerConexion())
+    {
+        try
+        {
+            // 🔹 NO incluimos ID_FACTURA, ya que SQL lo genera automáticamente
+            string query = @"INSERT INTO FACTURAS (ID_CONTRATO, FECHA_FACTURA, MONTO_TOTAL, METODO_PAGO)
+                             OUTPUT INSERTED.ID_FACTURA
+                             VALUES (@idcontrato, @fecha, @monto, @metodo)";
 
-                    string query = @"INSERT INTO FACTURAS (ID_CONTRATO, FECHA_FACTURA, MONTO_TOTAL, METODO_PAGO)
-                                     OUTPUT INSERTED.ID_FACTURA
-                                     VALUES (@idcontrato, @fecha, @monto, @metodo)";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@idcontrato", Convert.ToInt32(cboidcontrato.SelectedItem));
+            cmd.Parameters.AddWithValue("@fecha", dtpFecha.Value);
+            cmd.Parameters.AddWithValue("@monto", montoDecimal);
+            cmd.Parameters.AddWithValue("@metodo", cmbMetodoPago.SelectedItem.ToString());
 
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@idcontrato", Convert.ToInt32(cboidcontrato.SelectedItem));
-                    cmd.Parameters.AddWithValue("@fecha", dtpFecha.Value);
-                    cmd.Parameters.AddWithValue("@monto", montoDecimal);
-                    cmd.Parameters.AddWithValue("@metodo", cmbMetodoPago.SelectedItem.ToString());
-
-                    // 🔹 Obtener el ID autogenerado
                     idGenerado = (int)cmd.ExecuteScalar();
 
                     MessageBox.Show($"✅ Factura guardada correctamente.\n🧾 ID generado: {idGenerado}",
-                                    "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // 🔹 Preguntar si desea registrar pago
-                    DialogResult result = MessageBox.Show("¿Desea registrar un pago para esta factura?",
-                        "Factura Guardada", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            // Preguntar si desea registrar pago
+            DialogResult result = MessageBox.Show("¿Desea registrar un pago para esta factura?",
+                "Factura Guardada", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-                  
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("❌ Error al guardar: " + ex.Message);
-                }
+            if (result == DialogResult.Yes)
+            {
+                // Aquí podrías abrir el formulario de pagos
+                // new pagos(idGenerado).ShowDialog();
             }
+
+            // Actualizar el campo ID en pantalla
+            txtidfactura.Text = idGenerado.ToString();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("❌ Error al guardar: " + ex.Message);
+        }
+    }
 
 
 

@@ -95,7 +95,7 @@ namespace INICIO
                 cmd.Parameters.AddWithValue("@nombre", txtnombreser.Text);
                 cmd.Parameters.AddWithValue("@descripcion", txtdesc.Text);
 
-                cmd.ExecuteNonQuery();
+                
                 MessageBox.Show("Servicio guardado correctamente.");
                 con.Close();
             }

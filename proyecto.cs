@@ -70,8 +70,7 @@ namespace INICIO
             Txtestado.Enabled = true;
             cbUsuario.Enabled = true;
             Txtdescripcion.Enabled = true;
-            txtfi.Enabled = true;
-            txtff.Enabled = true;
+          
             btnLimpiar.Enabled = true;
             button1.Enabled = true;
 
@@ -189,8 +188,7 @@ namespace INICIO
 
             
             Txtdescripcion.Clear();
-            txtfi.Clear();
-            txtff.Clear();
+           
 
 
 

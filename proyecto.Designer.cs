@@ -49,8 +49,6 @@ namespace INICIO
             Label3 = new Label();
             Label2 = new Label();
             Label1 = new Label();
-            txtff = new TextBox();
-            txtfi = new TextBox();
             panel1 = new Panel();
             pictureBox2 = new PictureBox();
             groupBox1.SuspendLayout();
@@ -266,22 +264,6 @@ namespace INICIO
             Label1.TabIndex = 15;
             Label1.Text = "ID PROYECTO";
             // 
-            // txtff
-            // 
-            txtff.BackColor = SystemColors.ActiveBorder;
-            txtff.Location = new Point(276, 107);
-            txtff.Name = "txtff";
-            txtff.Size = new Size(100, 23);
-            txtff.TabIndex = 29;
-            // 
-            // txtfi
-            // 
-            txtfi.BackColor = SystemColors.ActiveBorder;
-            txtfi.Location = new Point(276, 145);
-            txtfi.Name = "txtfi";
-            txtfi.Size = new Size(100, 23);
-            txtfi.TabIndex = 28;
-            // 
             // panel1
             // 
             panel1.BackColor = Color.SteelBlue;
@@ -309,8 +291,6 @@ namespace INICIO
             ClientSize = new Size(965, 579);
             Controls.Add(panel1);
             Controls.Add(groupBox1);
-            Controls.Add(txtfi);
-            Controls.Add(txtff);
             FormBorderStyle = FormBorderStyle.None;
             Name = "proyecto";
             StartPosition = FormStartPosition.CenterScreen;
@@ -321,7 +301,6 @@ namespace INICIO
             panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
 
@@ -344,8 +323,6 @@ namespace INICIO
         internal Label Label1;
         private Panel panel1;
         private PictureBox pictureBox2;
-        internal TextBox txtff;
-        internal TextBox txtfi;
         private Button btnCancelar;
         private Button btnNuevo;
         private Button btnLimpiar;
