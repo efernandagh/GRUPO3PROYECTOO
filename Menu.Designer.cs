@@ -68,6 +68,11 @@
             btnproyectos = new Button();
             Panelcontenedor = new Panel();
             panel9 = new Panel();
+            menusalidas = new Panel();
+            button3 = new Button();
+            button4 = new Button();
+            btnsalidapagos = new Button();
+            btnsalida = new Button();
             ssubmenuadmin = new Panel();
             btnrespaldo = new Button();
             btnusuarios = new Button();
@@ -88,6 +93,7 @@
             Submenuservicios.SuspendLayout();
             Submenuproyectos.SuspendLayout();
             panel9.SuspendLayout();
+            menusalidas.SuspendLayout();
             ssubmenuadmin.SuspendLayout();
             submenufacturacion.SuspendLayout();
             SuspendLayout();
@@ -649,6 +655,8 @@
             // panel9
             // 
             panel9.BackColor = Color.CornflowerBlue;
+            panel9.Controls.Add(menusalidas);
+            panel9.Controls.Add(btnsalida);
             panel9.Controls.Add(ssubmenuadmin);
             panel9.Controls.Add(btnadmin);
             panel9.Controls.Add(submenufacturacion);
@@ -658,6 +666,78 @@
             panel9.Name = "panel9";
             panel9.Size = new Size(151, 591);
             panel9.TabIndex = 29;
+            // 
+            // menusalidas
+            // 
+            menusalidas.BackColor = Color.CornflowerBlue;
+            menusalidas.Controls.Add(button3);
+            menusalidas.Controls.Add(button4);
+            menusalidas.Controls.Add(btnsalidapagos);
+            menusalidas.Location = new Point(11, 375);
+            menusalidas.Name = "menusalidas";
+            menusalidas.Size = new Size(123, 147);
+            menusalidas.TabIndex = 30;
+            menusalidas.Visible = false;
+            menusalidas.Paint += panel2_Paint;
+            // 
+            // button3
+            // 
+            button3.FlatAppearance.BorderSize = 0;
+            button3.FlatAppearance.MouseOverBackColor = Color.SteelBlue;
+            button3.FlatStyle = FlatStyle.Flat;
+            button3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            button3.ForeColor = Color.White;
+            button3.Location = new Point(19, 65);
+            button3.Name = "button3";
+            button3.Size = new Size(85, 23);
+            button3.TabIndex = 21;
+            button3.Text = "Respaldo";
+            button3.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            button4.FlatAppearance.BorderSize = 0;
+            button4.FlatAppearance.MouseOverBackColor = Color.SteelBlue;
+            button4.FlatStyle = FlatStyle.Flat;
+            button4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            button4.ForeColor = Color.White;
+            button4.Location = new Point(19, 36);
+            button4.Name = "button4";
+            button4.Size = new Size(85, 23);
+            button4.TabIndex = 20;
+            button4.Text = "Usuarios";
+            button4.UseVisualStyleBackColor = true;
+            // 
+            // btnsalidapagos
+            // 
+            btnsalidapagos.FlatAppearance.BorderSize = 0;
+            btnsalidapagos.FlatAppearance.MouseOverBackColor = Color.SteelBlue;
+            btnsalidapagos.FlatStyle = FlatStyle.Flat;
+            btnsalidapagos.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            btnsalidapagos.ForeColor = Color.White;
+            btnsalidapagos.Location = new Point(3, 7);
+            btnsalidapagos.Name = "btnsalidapagos";
+            btnsalidapagos.Size = new Size(117, 23);
+            btnsalidapagos.TabIndex = 19;
+            btnsalidapagos.Text = "Salidas de pago";
+            btnsalidapagos.UseVisualStyleBackColor = true;
+            btnsalidapagos.Click += btnsalidapagos_Click;
+            // 
+            // btnsalida
+            // 
+            btnsalida.BackColor = Color.CornflowerBlue;
+            btnsalida.FlatAppearance.BorderSize = 0;
+            btnsalida.FlatAppearance.MouseOverBackColor = Color.SteelBlue;
+            btnsalida.FlatStyle = FlatStyle.Flat;
+            btnsalida.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnsalida.ForeColor = Color.White;
+            btnsalida.Location = new Point(4, 346);
+            btnsalida.Name = "btnsalida";
+            btnsalida.Size = new Size(125, 23);
+            btnsalida.TabIndex = 30;
+            btnsalida.Text = "Salidas";
+            btnsalida.UseVisualStyleBackColor = false;
+            btnsalida.Click += button1_Click;
             // 
             // ssubmenuadmin
             // 
@@ -670,6 +750,7 @@
             ssubmenuadmin.Size = new Size(123, 147);
             ssubmenuadmin.TabIndex = 29;
             ssubmenuadmin.Visible = false;
+            ssubmenuadmin.Paint += ssubmenuadmin_Paint;
             // 
             // btnrespaldo
             // 
@@ -815,6 +896,7 @@
             Submenuservicios.ResumeLayout(false);
             Submenuproyectos.ResumeLayout(false);
             panel9.ResumeLayout(false);
+            menusalidas.ResumeLayout(false);
             ssubmenuadmin.ResumeLayout(false);
             submenufacturacion.ResumeLayout(false);
             ResumeLayout(false);
@@ -869,5 +951,10 @@
         private Button btnmax;
         private Button button2;
         private Button btnrespaldo;
+        private Panel menusalidas;
+        private Button button3;
+        private Button button4;
+        private Button btnsalidapagos;
+        private Button btnsalida;
     }
 }

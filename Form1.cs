@@ -10,6 +10,7 @@ namespace INICIO
         private string servidor = "Server=DESKTOP-8QJ2O4S\\ENIAGOMEZ;Integrated Security=True;TrustServerCertificate=True;";
 
         private ConexionBD conexionDB = new ConexionBD();
+        private string rutaConfig = "configuracion.txt"; // archivo donde guardamos las respuestas
 
         public Form1()
         {
@@ -19,29 +20,98 @@ namespace INICIO
 
         }
 
+
+        private void VerificarConfiguracion()
+        {
+            try
+            {
+                // Si ya existe el archivo, leemos el contenido
+                if (File.Exists(rutaConfig))
+                {
+                    string[] lineas = File.ReadAllLines(rutaConfig);
+
+                    bool tieneSQL = Array.Exists(lineas, l => l.Contains("SQL=SI"));
+                    bool tieneBD = Array.Exists(lineas, l => l.Contains("BD=SI"));
+
+                    if (!tieneSQL)
+                    {
+                        MessageBox.Show("Debe instalar SQL Server antes de continuar.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Application.Exit();
+                        Environment.Exit(0);
+                        return;
+                    }
+
+                    if (!tieneBD)
+                    {
+                        DialogResult crearBD = MessageBox.Show("¿Desea crear la base de datos automáticamente?", "Crear Base de Datos", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (crearBD == DialogResult.Yes)
+                            CrearBaseDeDatos();
+                        else
+                        {
+                            MessageBox.Show("No se puede continuar sin la base de datos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Application.Exit();
+                            Environment.Exit(0);
+                        }
+                    }
+                    else
+                    {
+                        // Todo correcto, continúa con el programa
+                        return;
+                    }
+                }
+                else
+                {
+                    // Si el archivo no existe, preguntamos por primera vez
+                    PreguntarSQL();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error en la verificación: " + ex.Message);
+            }
+        }
         private void PreguntarSQL()
         {
-            DialogResult tieneSQL = MessageBox.Show(
-                "¿Tiene instalado SQL Server en su equipo?",
-                "Verificación SQL Server",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
+            DialogResult tieneSQL = MessageBox.Show("¿Tiene instalado SQL Server en su equipo?", "Verificación SQL Server",
+                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (tieneSQL == DialogResult.No)
             {
-                MessageBox.Show(
-                    "Debe instalar SQL Server antes de continuar.\nEl programa se cerrará.",
-                    "Requisito necesario",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
+                MessageBox.Show("Debe instalar SQL Server antes de continuar.\nEl programa se cerrará.", "Requisito necesario",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                GuardarConfiguracion("SQL=NO", "BD=NO");
                 Application.Exit();
+                Environment.Exit(0);
                 return;
             }
 
-            // Si tiene SQL, pasamos a verificar la base de datos
-            VerificarBaseDeDatos();
+            DialogResult tieneBD = MessageBox.Show("¿Ya tiene creada la base de datos MECANICA_INDUSTRIAL?", "Verificación Base de Datos",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (tieneBD == DialogResult.No)
+            {
+                DialogResult crearBD = MessageBox.Show("¿Desea crear la base de datos automáticamente?", "Crear Base de Datos",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (crearBD == DialogResult.Yes)
+                {
+                    CrearBaseDeDatos();
+                    GuardarConfiguracion("SQL=SI", "BD=SI");
+                }
+                else
+                {
+                    MessageBox.Show("No se puede continuar sin la base de datos.\nEl programa se cerrará.", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    GuardarConfiguracion("SQL=SI", "BD=NO");
+                    Application.Exit();
+                    Environment.Exit(0);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Perfecto, puede iniciar sesión.", "Confirmación", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                GuardarConfiguracion("SQL=SI", "BD=SI");
+            }
         }
 
         private void VerificarBaseDeDatos()
@@ -81,6 +151,18 @@ namespace INICIO
             {
                 MessageBox.Show("Perfecto, Puede iniciar sesión.", "Confirmación",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void GuardarConfiguracion(string sql, string bd)
+        {
+            try
+            {
+                File.WriteAllLines(rutaConfig, new string[] { sql, bd });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al guardar configuración: " + ex.Message);
             }
         }
 

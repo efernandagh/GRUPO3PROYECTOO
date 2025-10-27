@@ -262,6 +262,28 @@ namespace INICIO
             ventanaBackup.ShowDialog(); // Abre la ve
 
         }
+
+        private void btnsalidapagos_Click(object sender, EventArgs e)
+        {
+            ssubmenuadmin.Visible = false;
+            AbrirFormulario(new Salidapagos());
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            menusalidas.Visible = true;
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void ssubmenuadmin_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 
 }

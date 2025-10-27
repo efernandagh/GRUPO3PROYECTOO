@@ -31,7 +31,7 @@ namespace INICIO
                 using (SqlConnection conn = ConexionBD.ObtenerConexion())
                 {
                     
-                    string query = "SELECT ID_FACTURA FROM FACTURAS";
+                    string query = "SELECT ID_CONTRATO FROM CONTRATOS";
                     SqlCommand cmd = new SqlCommand(query, conn);
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -39,7 +39,7 @@ namespace INICIO
 
                     while (reader.Read())
                     {
-                        cboidcontrato.Items.Add(reader["ID_FACTURA"].ToString());
+                        cboidcontrato.Items.Add(reader["ID_CONTRATO"].ToString());
                     }
                     reader.Close();
                 }
@@ -133,13 +133,31 @@ namespace INICIO
     {
         try
         {
-            // 🔹 NO incluimos ID_FACTURA, ya que SQL lo genera automáticamente
-            string query = @"INSERT INTO FACTURAS (ID_CONTRATO, FECHA_FACTURA, MONTO_TOTAL, METODO_PAGO)
-                             OUTPUT INSERTED.ID_FACTURA
-                             VALUES (@idcontrato, @fecha, @monto, @metodo)";
+                    if (cboidcontrato.SelectedItem == null)
+                    {
+                        MessageBox.Show("Seleccione un contrato antes de guardar.");
+                        return;
+                    }
+
+                    if (cmbMetodoPago.SelectedItem == null)
+                    {
+                        MessageBox.Show("Seleccione un método de pago antes de guardar.");
+                        return;
+                    } 
+                    // ✅ Generar ID manualmente (ya que FACTURAS no tiene IDENTITY)
+                    string getNextIdQuery = "SELECT ISNULL(MAX(ID_FACTURA), 0) + 1 FROM FACTURAS";
+                    SqlCommand getIdCmd = new SqlCommand(getNextIdQuery, conn);
+                    idGenerado = Convert.ToInt32(getIdCmd.ExecuteScalar());
+
+
+                    // 🔹 NO incluimos ID_FACTURA, ya que SQL lo genera automáticamente
+                    string query = @"INSERT INTO FACTURAS (ID_FACTURA,  ID_CONTRATO, FECHA_FACTURA, MONTO_TOTAL, METODO_PAGO)
+                             
+                             VALUES ( @idfactura, @idcontrato, @fecha, @monto, @metodo)";
 
             SqlCommand cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@idcontrato", Convert.ToInt32(cboidcontrato.SelectedItem));
+                   cmd.Parameters.AddWithValue("@idfactura", idGenerado);
+                    cmd.Parameters.AddWithValue("@idcontrato", Convert.ToInt32(cboidcontrato.SelectedItem));
             cmd.Parameters.AddWithValue("@fecha", dtpFecha.Value);
             cmd.Parameters.AddWithValue("@monto", montoDecimal);
             cmd.Parameters.AddWithValue("@metodo", cmbMetodoPago.SelectedItem.ToString());
@@ -276,18 +294,16 @@ namespace INICIO
 
             return siguienteId;
         }
-
         private void GenerarNuevoId()
         {
             try
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
-
                     string consulta = "SELECT ISNULL(MAX(ID_FACTURA), 0) + 1 FROM FACTURAS";
                     SqlCommand cmd = new SqlCommand(consulta, con);
                     object resultado = cmd.ExecuteScalar();
-                    txtidfactura.Text = (resultado != null) ? resultado.ToString() : "1";
+                    txtidfactura.Text = resultado?.ToString() ?? "1";
                 }
             }
             catch (Exception ex)
@@ -296,8 +312,10 @@ namespace INICIO
                 txtidfactura.Text = "1";
             }
         }
+    
 
-        private void cmbContrato_SelectedIndexChanged(object sender, EventArgs e)
+
+private void cmbContrato_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
