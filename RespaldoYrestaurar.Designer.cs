@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             groupBox1 = new GroupBox();
+            btnSalir = new Button();
             btnrestau = new Button();
             btnrestaurar = new Button();
-            btnSalir = new Button();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -41,12 +41,27 @@
             groupBox1.Controls.Add(btnSalir);
             groupBox1.Controls.Add(btnrestau);
             groupBox1.Controls.Add(btnrestaurar);
-            groupBox1.Location = new Point(371, 150);
+            groupBox1.Location = new Point(365, 84);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(405, 307);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Respaldo y restauracion";
+            // 
+            // btnSalir
+            // 
+            btnSalir.FlatAppearance.BorderSize = 0;
+            btnSalir.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
+            btnSalir.FlatStyle = FlatStyle.Flat;
+            btnSalir.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            btnSalir.ForeColor = Color.White;
+            btnSalir.Location = new Point(176, 224);
+            btnSalir.Name = "btnSalir";
+            btnSalir.Size = new Size(75, 23);
+            btnSalir.TabIndex = 14;
+            btnSalir.Text = "SALIR";
+            btnSalir.UseVisualStyleBackColor = true;
+            btnSalir.Click += btnSalir_Click;
             // 
             // btnrestau
             // 
@@ -81,21 +96,6 @@
             btnrestaurar.Text = "Respaldo";
             btnrestaurar.UseVisualStyleBackColor = false;
             btnrestaurar.Click += btnrestaurar_Click;
-            // 
-            // btnSalir
-            // 
-            btnSalir.FlatAppearance.BorderSize = 0;
-            btnSalir.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
-            btnSalir.FlatStyle = FlatStyle.Flat;
-            btnSalir.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-            btnSalir.ForeColor = Color.White;
-            btnSalir.Location = new Point(176, 224);
-            btnSalir.Name = "btnSalir";
-            btnSalir.Size = new Size(75, 23);
-            btnSalir.TabIndex = 14;
-            btnSalir.Text = "SALIR";
-            btnSalir.UseVisualStyleBackColor = true;
-            btnSalir.Click += btnSalir_Click;
             // 
             // RespaldoYrestaurar
             // 

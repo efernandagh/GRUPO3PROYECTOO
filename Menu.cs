@@ -271,8 +271,18 @@ namespace INICIO
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // Crear una instancia del formulario que quieres abrir
+            Menuconsultas frmConsultas = new Menuconsultas();
 
-            menusalidas.Visible = true;
+            // Mostrarlo en pantalla completa
+            frmConsultas.WindowState = FormWindowState.Maximized;
+
+            // Mostrar el formulario
+            frmConsultas.Show();
+
+            // Ocultar el formulario actual (el menú)
+            this.Hide();
+
         }
 
         private void panel2_Paint(object sender, PaintEventArgs e)

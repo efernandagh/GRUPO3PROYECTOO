@@ -735,7 +735,7 @@
             btnsalida.Name = "btnsalida";
             btnsalida.Size = new Size(125, 23);
             btnsalida.TabIndex = 30;
-            btnsalida.Text = "Salidas";
+            btnsalida.Text = "Consultas";
             btnsalida.UseVisualStyleBackColor = false;
             btnsalida.Click += button1_Click;
             // 
