@@ -37,6 +37,8 @@
             btnsalir = new Button();
             btnlimpiar = new Button();
             label2 = new Label();
+            cbotabla = new ComboBox();
+            label3 = new Label();
             ((System.ComponentModel.ISupportInitialize)dtvproyectos).BeginInit();
             SuspendLayout();
             // 
@@ -127,12 +129,33 @@
             label2.TabIndex = 21;
             label2.Text = "CONSULTA DE PROYECTOS";
             // 
+            // cbotabla
+            // 
+            cbotabla.FormattingEnabled = true;
+            cbotabla.Location = new Point(215, 74);
+            cbotabla.Margin = new Padding(3, 4, 3, 4);
+            cbotabla.Name = "cbotabla";
+            cbotabla.Size = new Size(189, 28);
+            cbotabla.TabIndex = 31;
+            cbotabla.SelectedIndexChanged += cbotabla_SelectedIndexChanged;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(125, 74);
+            label3.Name = "label3";
+            label3.Size = new Size(44, 20);
+            label3.TabIndex = 30;
+            label3.Text = "Tabla";
+            // 
             // ConsultaProyectos
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(192, 192, 255);
             ClientSize = new Size(1023, 600);
+            Controls.Add(cbotabla);
+            Controls.Add(label3);
             Controls.Add(label1);
             Controls.Add(btnbuscar);
             Controls.Add(txtbuscar);
@@ -162,5 +185,7 @@
         private Button btnsalir;
         private Button btnlimpiar;
         private Label label2;
+        private ComboBox cbotabla;
+        private Label label3;
     }
 }

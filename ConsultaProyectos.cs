@@ -11,7 +11,6 @@ using Microsoft.Data.SqlClient;
 
 namespace INICIO
 {
-
     public partial class ConsultaProyectos : Form
     {
         public ConsultaProyectos()
@@ -19,68 +18,67 @@ namespace INICIO
             InitializeComponent();
         }
 
-
-
-
-
-
-        private void btnlimpiar_Click(object sender, EventArgs e)
-        {
-            txtbuscar.Clear();
-            cbobuscar.SelectedIndex = 0;
-            dtvproyectos.DataSource = null;
-        }
-
         private void ConsultaProyectos_Load(object sender, EventArgs e)
         {
-            cbobuscar.Items.Add("ID_PROYECTO");
-            cbobuscar.Items.Add("NOMBRE_PROYECTO");
-            cbobuscar.Items.Add("DESCRIPCION");
-            cbobuscar.Items.Add("FECHA_INICIO");
-            cbobuscar.Items.Add("FECHA_FIN");
-            cbobuscar.Items.Add("ESTADO");
-            cbobuscar.Items.Add("ID_USUARIO");
-            cbobuscar.SelectedIndex = 0;
+            // 🔹 Llenar ComboBox de tablas
+            cbotabla.Items.Add("PROYECTOS");
+            cbotabla.Items.Add("SEGUIMIENTO");
+            cbotabla.Items.Add("CONTRATOS");
+            cbotabla.Items.Add("PROCESOS");
+            cbotabla.SelectedIndex = 0;
+
+            // 🔹 Cargar columnas iniciales
+            CargarColumnas("PROYECTOS");
         }
 
-        private void btnsalir_Click(object sender, EventArgs e)
+        private void cbotabla_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Preguntar si realmente quiere salir
-            DialogResult resultado = MessageBox.Show(
-                "¿Está seguro que desea salir del sistema de facturas?",
-                "Confirmar Salida",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            // Si el usuario presiona "Sí", cerrar el formulario
-            if (resultado == DialogResult.Yes)
-            {
-                this.Close();
-            }
+            string tablaSeleccionada = cbotabla.Text;
+            CargarColumnas(tablaSeleccionada);
         }
 
-        // 🔹 Cargar todos los registros
-        private void CargarProyectos()
+        // 🔹 Cargar columnas según tabla seleccionada
+        private void CargarColumnas(string tabla)
         {
-            try
+            cbobuscar.Items.Clear();
+
+            switch (tabla)
             {
-                using (SqlConnection con = ConexionBD.ObtenerConexion())
-                {
-                    string query = "SELECT * FROM PROYECTOS";
-                    SqlDataAdapter da = new SqlDataAdapter(query, con);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    dtvproyectos.DataSource = dt;
-                }
+                case "PROYECTOS":
+                    cbobuscar.Items.AddRange(new string[] {
+                        "ID_PROYECTO", "NOMBRE_PROYECTO", "DESCRIPCION",
+                        "FECHA_INICIO", "FECHA_FIN", "ESTADO", "ID_USUARIO"
+                    });
+                    break;
+
+                case "SEGUIMIENTO":
+                    cbobuscar.Items.AddRange(new string[] {
+                        "ID_SEGUIMIENTO", "ID_CONTRATO", "FECHA_SEGUIMIENTO",
+                        "DESCRIPCION", "NIVEL_SATISFACTORIO"
+                    });
+                    break;
+
+                case "CONTRATOS":
+                    cbobuscar.Items.AddRange(new string[] {
+                        "ID_CONTRATO", "ID_CLIENTE", "ID_SERVICIO",
+                        "FECHA_INICIO", "FECHA_FIN", "ESTADO"
+                    });
+                    break;
+
+                case "PROCESOS":
+                    cbobuscar.Items.AddRange(new string[] {
+                        "ID_PROCESOS", "NOMBRE_PROCESO", "DESCRIPCION", "ID_USUARIO"
+                    });
+                    break;
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al cargar los pagos: " + ex.Message);
-            }
+
+            if (cbobuscar.Items.Count > 0)
+                cbobuscar.SelectedIndex = 0;
         }
 
-        private void btnbuscar_Click(object sender, EventArgs e)
+        private void btnbuscar_Click_1(object sender, EventArgs e)
         {
+            string tabla = cbotabla.Text;
             string columna = cbobuscar.Text;
             string valor = txtbuscar.Text.Trim();
 
@@ -94,17 +92,7 @@ namespace INICIO
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
-                    string query;
-
-                    if (columna == "Fecha")
-                    {
-                        query = "SELECT * FROM PROYECTOS WHERE CONVERT(date, Fecha) = @valor";
-                    }
-                    else
-                    {
-                        query = $"SELECT * FROM PROYECTOS WHERE {columna} LIKE '%' + @valor + '%'";
-                    }
-
+                    string query = $"SELECT * FROM {tabla} WHERE {columna} LIKE '%' + @valor + '%'";
                     SqlCommand cmd = new SqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@valor", valor);
 
@@ -127,51 +115,16 @@ namespace INICIO
             dtvproyectos.DataSource = null;
         }
 
-        private void btnbuscar_Click_1(object sender, EventArgs e)
-        {
-            string columna = cbobuscar.Text;
-            string valor = txtbuscar.Text.Trim();
-
-            if (string.IsNullOrEmpty(valor))
-            {
-                MessageBox.Show("Ingrese un valor para buscar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            try
-            {
-                using (SqlConnection con = ConexionBD.ObtenerConexion())
-                {
-                    string query;
-
-                    if (columna == "Fecha")
-                    {
-                        query = "SELECT * FROM PROYECTOS WHERE CONVERT(date, Fecha) = @valor";
-                    }
-                    else
-                    {
-                        query = $"SELECT * FROM PROYECTOS WHERE {columna} LIKE '%' + @valor + '%'";
-                    }
-
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@valor", valor);
-
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    dtvproyectos.DataSource = dt;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al buscar: " + ex.Message);
-            }
-        }
-
         private void btnsalir_Click_1(object sender, EventArgs e)
         {
-            this.Close();
+            DialogResult resultado = MessageBox.Show(
+                "¿Está seguro que desea salir del sistema?",
+                "Confirmar salida",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+                this.Close();
         }
     }
-
 }
