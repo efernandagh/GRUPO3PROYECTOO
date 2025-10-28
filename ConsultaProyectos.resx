@@ -117,28 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="button4.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DAAACwwBP0AiyAAAAMdJREFUSEvtlUsKwkAQROsSgkdwofdQPLN4B124V++hFExLW91jk8js8mDIpFNV
-        88kPWJjIEcATwGtmewA4aKiHAjVNbXcN9ZhoLqW/FBSUfhVsAJwBrF3NWAE4Adi5mvoDKmAAz68t0GCf
-        NV6jxlB/QAUMurTara0kq/X8gUzgZ8uj7/tVkcz/RU/gZ53N3Oj5P/QEQwcYukXZDc1qPX9ABcMf020L
-        0K0g9qJRY6g/UAoKSn8pKCj9wz/X/Fn8MwjD9xq68JM3HaqoNi8Bn0IAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="btnvolver.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        EAAACxABrSO9dQAAASlJREFUSEvdlM8qhVEUxX/+lDJVBkp5ClNliKFSXgBhoAy4Jh6AifIMMmLiBfAK
-        vAURZSK0tL/altu9l7tN/Gp36lvnnHXOt/c+8J0V4BGYc6GKNeAtYt7FClaTwYaLFWSDTRcrUA60+Ttw
-        C+z/MPaAZWDKN848hEFFXAMzbiDyTW7anLRbHABnwFPsob2OgCE3ylW17mKPjAK7wEuYnQADPikn/7dG
-        YjqlYMtFUdUnWisTNfWYi0I50kn67fiLMNIv/DMWw+TKhUomwuTehUpGwuTVhUqam9y5UEmTk0sXKmmq
-        a8eFKhbC4BkYd7GC3PHbLvaL3q5WertOgcFG1EvabewUh8B5eoUVx8BwrP9EH7uNvYYqaTbWfaHdyX3s
-        FKqeJWAy5v9jPgB7C4BAlYnFIAAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <metadata name="sqlCommandBuilder1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
 </root>

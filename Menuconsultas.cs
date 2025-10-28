@@ -40,5 +40,11 @@ namespace INICIO
 
             Application.Exit();
         }
+
+        private void btnpro_Click(object sender, EventArgs e)
+        {
+            ConsultaProyectos frm = new ConsultaProyectos();
+            frm.Show(); // ← esto muestra el formulario
+        }
     }
 }

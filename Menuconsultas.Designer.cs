@@ -52,8 +52,9 @@
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1284, 69);
+            panel1.Size = new Size(1467, 92);
             panel1.TabIndex = 0;
             // 
             // button4
@@ -66,9 +67,10 @@
             button4.FlatAppearance.MouseDownBackColor = Color.LightSkyBlue;
             button4.FlatAppearance.MouseOverBackColor = Color.LightSkyBlue;
             button4.FlatStyle = FlatStyle.Flat;
-            button4.Location = new Point(1177, 21);
+            button4.Location = new Point(1345, 28);
+            button4.Margin = new Padding(3, 4, 3, 4);
             button4.Name = "button4";
-            button4.Size = new Size(27, 25);
+            button4.Size = new Size(31, 33);
             button4.TabIndex = 20;
             button4.UseVisualStyleBackColor = false;
             button4.Click += button4_Click;
@@ -81,9 +83,10 @@
             btnvolver.FlatAppearance.BorderSize = 0;
             btnvolver.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
             btnvolver.FlatStyle = FlatStyle.Flat;
-            btnvolver.Location = new Point(1147, 20);
+            btnvolver.Location = new Point(1311, 27);
+            btnvolver.Margin = new Padding(3, 4, 3, 4);
             btnvolver.Name = "btnvolver";
-            btnvolver.Size = new Size(24, 27);
+            btnvolver.Size = new Size(27, 36);
             btnvolver.TabIndex = 2;
             btnvolver.UseVisualStyleBackColor = false;
             btnvolver.Click += btnvolver_Click;
@@ -93,9 +96,9 @@
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(546, 21);
+            label1.Location = new Point(624, 28);
             label1.Name = "label1";
-            label1.Size = new Size(179, 25);
+            label1.Size = new Size(230, 32);
             label1.TabIndex = 0;
             label1.Text = "Menú de consultas";
             // 
@@ -108,9 +111,10 @@
             panel2.Controls.Add(button1);
             panel2.Controls.Add(btnpro);
             panel2.Dock = DockStyle.Left;
-            panel2.Location = new Point(0, 69);
+            panel2.Location = new Point(0, 92);
+            panel2.Margin = new Padding(3, 4, 3, 4);
             panel2.Name = "panel2";
-            panel2.Size = new Size(172, 542);
+            panel2.Size = new Size(197, 723);
             panel2.TabIndex = 1;
             // 
             // btnfacturacion
@@ -121,9 +125,10 @@
             btnfacturacion.FlatStyle = FlatStyle.Flat;
             btnfacturacion.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnfacturacion.ForeColor = Color.White;
-            btnfacturacion.Location = new Point(22, 268);
+            btnfacturacion.Location = new Point(25, 357);
+            btnfacturacion.Margin = new Padding(3, 4, 3, 4);
             btnfacturacion.Name = "btnfacturacion";
-            btnfacturacion.Size = new Size(90, 23);
+            btnfacturacion.Size = new Size(103, 31);
             btnfacturacion.TabIndex = 24;
             btnfacturacion.Text = "Facturación";
             btnfacturacion.UseVisualStyleBackColor = false;
@@ -137,9 +142,10 @@
             button3.FlatStyle = FlatStyle.Flat;
             button3.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button3.ForeColor = Color.White;
-            button3.Location = new Point(22, 206);
+            button3.Location = new Point(25, 275);
+            button3.Margin = new Padding(3, 4, 3, 4);
             button3.Name = "button3";
-            button3.Size = new Size(90, 23);
+            button3.Size = new Size(103, 31);
             button3.TabIndex = 23;
             button3.Text = "Proyectos";
             button3.UseVisualStyleBackColor = false;
@@ -152,9 +158,10 @@
             button2.FlatStyle = FlatStyle.Flat;
             button2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button2.ForeColor = Color.White;
-            button2.Location = new Point(22, 149);
+            button2.Location = new Point(25, 199);
+            button2.Margin = new Padding(3, 4, 3, 4);
             button2.Name = "button2";
-            button2.Size = new Size(90, 23);
+            button2.Size = new Size(103, 31);
             button2.TabIndex = 22;
             button2.Text = "Inventarios";
             button2.UseVisualStyleBackColor = false;
@@ -167,9 +174,10 @@
             button1.FlatStyle = FlatStyle.Flat;
             button1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button1.ForeColor = Color.White;
-            button1.Location = new Point(22, 89);
+            button1.Location = new Point(25, 119);
+            button1.Margin = new Padding(3, 4, 3, 4);
             button1.Name = "button1";
-            button1.Size = new Size(90, 23);
+            button1.Size = new Size(103, 31);
             button1.TabIndex = 21;
             button1.Text = "Servicios";
             button1.UseVisualStyleBackColor = false;
@@ -182,22 +190,25 @@
             btnpro.FlatStyle = FlatStyle.Flat;
             btnpro.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnpro.ForeColor = Color.White;
-            btnpro.Location = new Point(22, 28);
+            btnpro.Location = new Point(25, 37);
+            btnpro.Margin = new Padding(3, 4, 3, 4);
             btnpro.Name = "btnpro";
-            btnpro.Size = new Size(90, 23);
+            btnpro.Size = new Size(103, 31);
             btnpro.TabIndex = 20;
             btnpro.Text = "Proyectos";
             btnpro.UseVisualStyleBackColor = false;
+            btnpro.Click += btnpro_Click;
             // 
             // Menuconsultas
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(192, 192, 255);
-            ClientSize = new Size(1284, 611);
+            ClientSize = new Size(1467, 815);
             Controls.Add(panel2);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 4, 3, 4);
             Name = "Menuconsultas";
             Text = "Menuconsultas";
             panel1.ResumeLayout(false);
