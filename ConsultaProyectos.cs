@@ -126,5 +126,15 @@ namespace INICIO
             if (resultado == DialogResult.Yes)
                 this.Close();
         }
+
+        private void dtvproyectos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void txtbuscar_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -69,6 +69,7 @@
             txtbuscar.Name = "txtbuscar";
             txtbuscar.Size = new Size(189, 27);
             txtbuscar.TabIndex = 27;
+            txtbuscar.TextChanged += txtbuscar_TextChanged;
             // 
             // cbobuscar
             // 
@@ -97,6 +98,7 @@
             dtvproyectos.RowHeadersWidth = 51;
             dtvproyectos.Size = new Size(486, 269);
             dtvproyectos.TabIndex = 24;
+            dtvproyectos.CellContentClick += dtvproyectos_CellContentClick;
             // 
             // btnsalir
             // 

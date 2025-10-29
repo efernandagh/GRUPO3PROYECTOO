@@ -8,50 +8,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace INICIO
 {
-
-    public partial class Salidapagos : Form
+    public partial class ConsultaServicio : Form
     {
-        public Salidapagos()
+        public ConsultaServicio()
         {
             InitializeComponent();
         }
 
-        private void btnguardar_Click(object sender, EventArgs e)
-        {
-
-
-
-        }
-
-
-
-
-
-        private void btnlimpiar_Click(object sender, EventArgs e)
-        {
-            txtbuscar.Clear();
-            cbobuscar.SelectedIndex = 0;
-            dtvpagos.DataSource = null;
-        }
-
         private void Salidapagos_Load(object sender, EventArgs e)
         {
-            cbobuscar.Items.Add("ID_PAGO");
-            cbobuscar.Items.Add("ID_FACTURA");
-            cbobuscar.Items.Add("FECHA_PAGO");
-            cbobuscar.Items.Add("Monto_PAGO");
-            cbobuscar.Items.Add("ESTADO_PAGO");
-            cbobuscar.SelectedIndex = 0;
+            cbmbuscar.Items.Add("ID_SERVICIOS");
+            cbmbuscar.Items.Add("NOMBRE_SERVICIO");
+            cbmbuscar.Items.Add("DESCRIPCION");
+            cbmbuscar.SelectedIndex = 0;
         }
-
         private void btnsalir_Click(object sender, EventArgs e)
         {
             // Preguntar si realmente quiere salir
             DialogResult resultado = MessageBox.Show(
-                "¿Está seguro que desea salir del sistema de facturas?",
+                "¿Está seguro que desea salir de su Consulta de Servicios?",
                 "Confirmar Salida",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
@@ -63,34 +42,39 @@ namespace INICIO
             }
         }
 
-        // 🔹 Cargar todos los registros
-        private void CargarPagos()
+        private void CargarServicio()
         {
             try
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
-                    string query = "SELECT * FROM Pagos";
+                    string query = "SELECT * FROM SERVICIOS";
                     SqlDataAdapter da = new SqlDataAdapter(query, con);
                     DataTable dt = new DataTable();
                     da.Fill(dt);
-                    dtvpagos.DataSource = dt;
+                    dgvservicio.DataSource = dt;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar los pagos: " + ex.Message);
+                MessageBox.Show("Error al cargar algunos servicios: " + ex.Message);
             }
+        }
+        private void btnlimpiar_Click(object sender, EventArgs e)
+        {
+            txtdescripcion.Clear();
+            cbmbuscar.SelectedIndex = 0;
+            dgvservicio.DataSource = null;
         }
 
         private void btnbuscar_Click(object sender, EventArgs e)
         {
-            string columna = cbobuscar.Text;
-            string valor = txtbuscar.Text.Trim();
+            string columna = cbmbuscar.Text;
+            string valor = txtdescripcion.Text.Trim();
 
             if (string.IsNullOrEmpty(valor))
             {
-                MessageBox.Show("Ingrese un valor para buscar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingrese su ID para buscar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -98,24 +82,14 @@ namespace INICIO
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
-                    string query;
-
-                    if (columna == "Fecha")
-                    {
-                        query = "SELECT * FROM PAGOS WHERE CONVERT(date, Fecha) = @valor";
-                    }
-                    else
-                    {
-                        query = $"SELECT * FROM PAGOS WHERE {columna} LIKE '%' + @valor + '%'";
-                    }
-
+                    string query = $"SELECT * FROM NOMBRE_SERVICIO WHERE {columna} LIKE '%' + @valor + '%'";
                     SqlCommand cmd = new SqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@valor", valor);
 
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
                     da.Fill(dt);
-                    dtvpagos.DataSource = dt;
+                    dgvservicio.DataSource = dt;
                 }
             }
             catch (Exception ex)
@@ -124,20 +98,9 @@ namespace INICIO
             }
         }
 
-        private void dtvpagos_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void cbobuscar_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtbuscar_TextChanged(object sender, EventArgs e)
+        private void cbmbuscar_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
     }
-
 }
