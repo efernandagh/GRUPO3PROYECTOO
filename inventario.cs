@@ -57,7 +57,7 @@ namespace INICIO
         // 🔸 Cargar ComboBox con los servicios al iniciar
         private void servicios_Load(object sender, EventArgs e)
         {
-           
+
             using (SqlConnection conn = Conectar())
             {
                 string query = "SELECT UNIDAD_MEDIDA FROM INVENTARIOS";
@@ -215,6 +215,11 @@ namespace INICIO
                 MessageBox.Show("❌ Error al generar ID: " + ex.Message);
                 txtidinventario.Text = "1";
             }
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

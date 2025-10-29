@@ -51,5 +51,17 @@ namespace INICIO
         {
 
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ConsultaServicio frm = new ConsultaServicio();
+            frm.Show();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            ConsultaInventario frm = new ConsultaInventario();
+            frm.Show();
+        }
     }
 }
