@@ -39,13 +39,62 @@ namespace INICIO
 
         private void Salidapagos_Load(object sender, EventArgs e)
         {
-            cbobuscar.Items.Add("ID_PAGO");
-            cbobuscar.Items.Add("ID_FACTURA");
-            cbobuscar.Items.Add("FECHA_PAGO");
-            cbobuscar.Items.Add("Monto_PAGO");
-            cbobuscar.Items.Add("ESTADO_PAGO");
-            cbobuscar.SelectedIndex = 0;
+
+            InicializarCombos();
         }
+        private void InicializarCombos()
+        {
+            try
+            {
+                cmbtabla.Items.Clear();
+                cmbtabla.Items.Add("PAGOS");
+                cmbtabla.Items.Add("FACTURAS");
+
+                if (cmbtabla.Items.Count > 0)
+                {
+                    cmbtabla.SelectedIndex = 0;
+                    CargarColumnas(cmbtabla.SelectedItem.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al inicializar combos: " + ex.Message);
+            }
+        }
+
+        private void CargarColumnas(string tabla)
+        {
+            cbobuscar.Items.Clear();
+
+            switch (tabla)
+            {
+                case "PAGOS":
+                    cbobuscar.Items.AddRange(new string[]
+                    {
+                "ID_PAGO",
+                "ID_FACTURA",
+                "FECHA_PAGO",
+                "MONTO_PAGO",
+                "ESTADO_PAGO"
+                    });
+                    break;
+
+                case "FACTURAS":
+                    cbobuscar.Items.AddRange(new string[]
+                    {
+                "ID_FACTURA",
+                "ID_CONTRATO",
+                "FECHA_FACTURA",
+                "MONTO_TOTAL",
+                "METODO_PAGO"
+                    });
+                    break;
+            }
+
+            if (cbobuscar.Items.Count > 0)
+                cbobuscar.SelectedIndex = 0;
+        }
+
 
         private void btnsalir_Click(object sender, EventArgs e)
         {
@@ -85,6 +134,7 @@ namespace INICIO
 
         private void btnbuscar_Click(object sender, EventArgs e)
         {
+            string tabla = cmbtabla.Text;
             string columna = cbobuscar.Text;
             string valor = txtbuscar.Text.Trim();
 
@@ -98,17 +148,7 @@ namespace INICIO
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
-                    string query;
-
-                    if (columna == "Fecha")
-                    {
-                        query = "SELECT * FROM PAGOS WHERE CONVERT(date, Fecha) = @valor";
-                    }
-                    else
-                    {
-                        query = $"SELECT * FROM PAGOS WHERE {columna} LIKE '%' + @valor + '%'";
-                    }
-
+                    string query = $"SELECT * FROM {tabla} WHERE {columna} LIKE '%' + @valor + '%'";
                     SqlCommand cmd = new SqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@valor", valor);
 
@@ -124,6 +164,28 @@ namespace INICIO
             }
         }
 
+        // 🔹 Cargar todos los registros de la tabla seleccionada
+        private void btncargar_Click(object sender, EventArgs e)
+        {
+            string tabla = cmbtabla.Text;
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"SELECT * FROM {tabla}";
+                    SqlDataAdapter da = new SqlDataAdapter(query, con);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dtvpagos.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar los datos: " + ex.Message);
+            }
+        }
+
         private void dtvpagos_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
@@ -131,12 +193,19 @@ namespace INICIO
 
         private void cbobuscar_SelectedIndexChanged(object sender, EventArgs e)
         {
-
         }
+         
 
         private void txtbuscar_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void cmbtabla_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            string tablaSeleccionada = cmbtabla.Text;
+            CargarColumnas(tablaSeleccionada);
         }
     }
 

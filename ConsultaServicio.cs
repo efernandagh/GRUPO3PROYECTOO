@@ -18,14 +18,28 @@ namespace INICIO
         {
             InitializeComponent();
         }
-
-        private void Salidapagos_Load(object sender, EventArgs e)
+        private void InicializarCombos()
         {
-            cbmbuscar.Items.Add("ID_SERVICIOS");
-            cbmbuscar.Items.Add("NOMBRE_SERVICIO");
-            cbmbuscar.Items.Add("DESCRIPCION");
-            cbmbuscar.SelectedIndex = 0;
+            try
+            {
+                cmbtabla.Items.Clear();
+                cmbtabla.Items.Add("CLIENTES");
+                cmbtabla.Items.Add("SERVICIOS");
+
+                if (cmbtabla.Items.Count > 0)
+                {
+                    cmbtabla.SelectedIndex = 0;
+                    CargarColumnas(cmbtabla.SelectedItem.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al inicializar combos: " + ex.Message);
+            }
         }
+
+
+
         private void btnsalir_Click(object sender, EventArgs e)
         {
             // Preguntar si realmente quiere salir
@@ -42,13 +56,14 @@ namespace INICIO
             }
         }
 
-        private void CargarServicio()
+        // 🔹 Cargar todos los datos de la tabla seleccionada
+        private void CargarDatos(string tabla)
         {
             try
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
-                    string query = "SELECT * FROM SERVICIOS";
+                    string query = $"SELECT * FROM {tabla}";
                     SqlDataAdapter da = new SqlDataAdapter(query, con);
                     DataTable dt = new DataTable();
                     da.Fill(dt);
@@ -57,8 +72,38 @@ namespace INICIO
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar algunos servicios: " + ex.Message);
+                MessageBox.Show("Error al cargar datos: " + ex.Message);
             }
+        }
+        // 🔹 Cargar columnas según la tabla seleccionada
+        private void CargarColumnas(string tabla)
+        {
+            cbmbuscar.Items.Clear();
+
+            if (tabla == "CLIENTES")
+            {
+                cbmbuscar.Items.AddRange(new string[]
+                {
+                    "ID_CLIENTES",
+                    "NOMBRE_CLIENTE",
+                    "CORREO",
+                    "TELEFONO",
+                    "DIRECCION",
+                    "FECHA_REGISTRO"
+                });
+            }
+            else if (tabla == "SERVICIOS")
+            {
+                cbmbuscar.Items.AddRange(new string[]
+                {
+                    "ID_SERVICIOS",
+                    "NOMBRE_SERVICIO",
+                    "DESCRIPCION"
+                });
+            }
+
+            if (cbmbuscar.Items.Count > 0)
+                cbmbuscar.SelectedIndex = 0;
         }
         private void btnlimpiar_Click(object sender, EventArgs e)
         {
@@ -69,12 +114,13 @@ namespace INICIO
 
         private void btnbuscar_Click(object sender, EventArgs e)
         {
+            string tabla = cmbtabla.Text;
             string columna = cbmbuscar.Text;
             string valor = txtdescripcion.Text.Trim();
 
             if (string.IsNullOrEmpty(valor))
             {
-                MessageBox.Show("Ingrese su ID para buscar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingrese un valor para buscar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -82,7 +128,7 @@ namespace INICIO
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
-                    string query = $"SELECT * FROM NOMBRE_SERVICIO WHERE {columna} LIKE '%' + @valor + '%'";
+                    string query = $"SELECT * FROM {tabla} WHERE {columna} LIKE '%' + @valor + '%'";
                     SqlCommand cmd = new SqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@valor", valor);
 
@@ -96,9 +142,28 @@ namespace INICIO
             {
                 MessageBox.Show("Error al buscar: " + ex.Message);
             }
+
         }
 
         private void cbmbuscar_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ConsultaServicio_Load(object sender, EventArgs e)
+        {
+
+            InicializarCombos();
+        }
+
+        private void cmbbuscar_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string tabla = cmbtabla.SelectedItem.ToString();
+            CargarColumnas(tabla);
+            CargarDatos(tabla);
+        }
+
+        private void label3_Click(object sender, EventArgs e)
         {
 
         }

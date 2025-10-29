@@ -45,18 +45,24 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(110, 194);
+            label1.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            label1.ForeColor = Color.White;
+            label1.Location = new Point(103, 199);
             label1.Name = "label1";
-            label1.Size = new Size(87, 20);
+            label1.Size = new Size(67, 15);
             label1.TabIndex = 29;
             label1.Text = "Descripcion";
             // 
             // btnbuscar
             // 
-            btnbuscar.Location = new Point(230, 295);
-            btnbuscar.Margin = new Padding(3, 4, 3, 4);
+            btnbuscar.FlatAppearance.BorderSize = 0;
+            btnbuscar.FlatAppearance.MouseOverBackColor = Color.SteelBlue;
+            btnbuscar.FlatStyle = FlatStyle.Flat;
+            btnbuscar.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            btnbuscar.ForeColor = Color.White;
+            btnbuscar.Location = new Point(208, 274);
             btnbuscar.Name = "btnbuscar";
-            btnbuscar.Size = new Size(86, 31);
+            btnbuscar.Size = new Size(75, 23);
             btnbuscar.TabIndex = 28;
             btnbuscar.Text = "Buscar";
             btnbuscar.UseVisualStyleBackColor = true;
@@ -64,48 +70,55 @@
             // 
             // txtbuscar
             // 
-            txtbuscar.Location = new Point(215, 194);
-            txtbuscar.Margin = new Padding(3, 4, 3, 4);
+            txtbuscar.Location = new Point(195, 199);
             txtbuscar.Name = "txtbuscar";
-            txtbuscar.Size = new Size(189, 27);
+            txtbuscar.Size = new Size(166, 23);
             txtbuscar.TabIndex = 27;
             txtbuscar.TextChanged += txtbuscar_TextChanged;
             // 
             // cbobuscar
             // 
             cbobuscar.FormattingEnabled = true;
-            cbobuscar.Location = new Point(215, 121);
-            cbobuscar.Margin = new Padding(3, 4, 3, 4);
+            cbobuscar.Location = new Point(195, 144);
             cbobuscar.Name = "cbobuscar";
-            cbobuscar.Size = new Size(189, 28);
+            cbobuscar.Size = new Size(166, 23);
             cbobuscar.TabIndex = 26;
+            cbobuscar.SelectedIndexChanged += cbobuscar_SelectedIndexChanged;
             // 
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(125, 121);
+            label7.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            label7.ForeColor = Color.White;
+            label7.Location = new Point(116, 144);
             label7.Name = "label7";
-            label7.Size = new Size(52, 20);
+            label7.Size = new Size(42, 15);
             label7.TabIndex = 25;
             label7.Text = "Buscar";
             // 
             // dtvproyectos
             // 
+            dtvproyectos.BackgroundColor = Color.FromArgb(192, 192, 255);
+            dtvproyectos.BorderStyle = BorderStyle.None;
+            dtvproyectos.CellBorderStyle = DataGridViewCellBorderStyle.None;
             dtvproyectos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dtvproyectos.Location = new Point(484, 129);
-            dtvproyectos.Margin = new Padding(3, 4, 3, 4);
+            dtvproyectos.Location = new Point(424, 97);
             dtvproyectos.Name = "dtvproyectos";
             dtvproyectos.RowHeadersWidth = 51;
-            dtvproyectos.Size = new Size(486, 269);
+            dtvproyectos.Size = new Size(425, 202);
             dtvproyectos.TabIndex = 24;
             dtvproyectos.CellContentClick += dtvproyectos_CellContentClick;
             // 
             // btnsalir
             // 
-            btnsalir.Location = new Point(333, 295);
-            btnsalir.Margin = new Padding(3, 4, 3, 4);
+            btnsalir.FlatAppearance.BorderSize = 0;
+            btnsalir.FlatAppearance.MouseOverBackColor = Color.SteelBlue;
+            btnsalir.FlatStyle = FlatStyle.Flat;
+            btnsalir.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            btnsalir.ForeColor = Color.White;
+            btnsalir.Location = new Point(298, 274);
             btnsalir.Name = "btnsalir";
-            btnsalir.Size = new Size(86, 31);
+            btnsalir.Size = new Size(75, 23);
             btnsalir.TabIndex = 23;
             btnsalir.Text = "Salir";
             btnsalir.UseVisualStyleBackColor = true;
@@ -113,10 +126,14 @@
             // 
             // btnlimpiar
             // 
-            btnlimpiar.Location = new Point(138, 295);
-            btnlimpiar.Margin = new Padding(3, 4, 3, 4);
+            btnlimpiar.FlatAppearance.BorderSize = 0;
+            btnlimpiar.FlatAppearance.MouseOverBackColor = Color.SteelBlue;
+            btnlimpiar.FlatStyle = FlatStyle.Flat;
+            btnlimpiar.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            btnlimpiar.ForeColor = Color.White;
+            btnlimpiar.Location = new Point(128, 274);
             btnlimpiar.Name = "btnlimpiar";
-            btnlimpiar.Size = new Size(86, 31);
+            btnlimpiar.Size = new Size(75, 23);
             btnlimpiar.TabIndex = 22;
             btnlimpiar.Text = "Limpiar";
             btnlimpiar.UseVisualStyleBackColor = true;
@@ -125,37 +142,40 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(619, 74);
+            label2.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.ForeColor = Color.White;
+            label2.Location = new Point(542, 56);
             label2.Name = "label2";
-            label2.Size = new Size(187, 20);
+            label2.Size = new Size(168, 17);
             label2.TabIndex = 21;
             label2.Text = "CONSULTA DE PROYECTOS";
             // 
             // cbotabla
             // 
             cbotabla.FormattingEnabled = true;
-            cbotabla.Location = new Point(215, 74);
-            cbotabla.Margin = new Padding(3, 4, 3, 4);
+            cbotabla.Location = new Point(195, 109);
             cbotabla.Name = "cbotabla";
-            cbotabla.Size = new Size(189, 28);
+            cbotabla.Size = new Size(166, 23);
             cbotabla.TabIndex = 31;
             cbotabla.SelectedIndexChanged += cbotabla_SelectedIndexChanged;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(125, 74);
+            label3.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            label3.ForeColor = Color.White;
+            label3.Location = new Point(116, 109);
             label3.Name = "label3";
-            label3.Size = new Size(44, 20);
+            label3.Size = new Size(37, 15);
             label3.TabIndex = 30;
             label3.Text = "Tabla";
             // 
             // ConsultaProyectos
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(192, 192, 255);
-            ClientSize = new Size(1023, 600);
+            BackColor = Color.SteelBlue;
+            ClientSize = new Size(895, 450);
             Controls.Add(cbotabla);
             Controls.Add(label3);
             Controls.Add(label1);
@@ -167,6 +187,8 @@
             Controls.Add(btnsalir);
             Controls.Add(btnlimpiar);
             Controls.Add(label2);
+            FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 2, 3, 2);
             Name = "ConsultaProyectos";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ConsultaProyectos";

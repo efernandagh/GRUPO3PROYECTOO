@@ -12,8 +12,7 @@ namespace INICIO
     {
         // 🔹 Cadena de conexión centralizada
         private static readonly string cadenaConexion =
-            "Server=ALEJANDROC\\SQLEXPRESS;Database=MECANICA_INDUSTRIAL;Integrated Security=True;TrustServerCertificate=True;";
-
+            "Server=DESKTOP-8QJ2O4S\\ENIAGOMEZ;Database=MECANICA_INDUSTRIAL;Integrated Security=True;TrustServerCertificate=True;";
         // 🔹 Método para obtener una conexión abierta
         public static SqlConnection ObtenerConexion()
         {

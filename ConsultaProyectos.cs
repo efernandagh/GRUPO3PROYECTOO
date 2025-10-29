@@ -136,5 +136,10 @@ namespace INICIO
         {
 
         }
+
+        private void cbobuscar_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
