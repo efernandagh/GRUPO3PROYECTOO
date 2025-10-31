@@ -32,16 +32,76 @@ namespace INICIO
 
         private void btnlimpiar_Click(object sender, EventArgs e)
         {
-            txtbuscar.Clear();
-            cbobuscar.SelectedIndex = 0;
-            dtvpagos.DataSource = null;
+            cmbtabla.SelectedIndex = 0;
+            cmbdescrip.SelectedIndex = 0;
+            dtvpagos.DataSource = null; ;
         }
 
         private void Salidapagos_Load(object sender, EventArgs e)
         {
-
-            InicializarCombos();
+            cmbtabla.Items.AddRange(new string[] { "FACTURAS", "PAGOS" });
+            cmbtabla.SelectedIndex = 0;
+            CargarColumnas("FACTURAS");
+            CargarValoresDescripcion("FACTURAS", cbobuscar.SelectedItem.ToString());
+            CargarDatos();
         }
+        private void CargarDescripcion()
+        {
+            cmbdescrip.Items.Clear();
+
+            using (SqlConnection conn = ConexionBD.ObtenerConexion())
+            {
+                string campo = cbobuscar.SelectedItem.ToString();
+                string query = $"SELECT DISTINCT {campo} FROM PAGOS";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    cmbdescrip.Items.Add(dr[0].ToString());
+                }
+            }
+
+            if (cmbdescrip.Items.Count > 0)
+                cmbdescrip.SelectedIndex = 0;
+        }
+        private void CargarDatos()
+        {
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string tabla = cmbtabla.Text;
+                    string columna = cbobuscar.Text;
+                    string valor = cmbdescrip.Text;
+
+                    string query = $"SELECT * FROM {tabla}";
+
+                    if (!string.IsNullOrEmpty(valor))
+                    {
+                        if (columna.Contains("FECHA"))
+                        {
+                            query += $" WHERE CONVERT(date, {columna}) = '{valor}'";
+                        }
+                        else
+                        {
+                            query += $" WHERE {columna} LIKE '%{valor}%'";
+                        }
+                    }
+
+                    SqlDataAdapter da = new SqlDataAdapter(query, con);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dtvpagos.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar datos: " + ex.Message);
+            }
+        }
+
         private void InicializarCombos()
         {
             try
@@ -59,6 +119,38 @@ namespace INICIO
             catch (Exception ex)
             {
                 MessageBox.Show("Error al inicializar combos: " + ex.Message);
+            }
+        }
+        // ✅ Cargar valores únicos de la columna seleccionada en el ComboBox descripción
+        private void CargarValoresDescripcion(string tabla, string columna)
+        {
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"SELECT DISTINCT {columna} FROM {tabla} WHERE {columna} IS NOT NULL";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    cmbdescrip.Items.Clear();
+
+                    while (reader.Read())
+                    {
+                        object val = reader[columna];
+
+                        if (val is DateTime)
+                            cmbdescrip.Items.Add(Convert.ToDateTime(val).ToString("yyyy-MM-dd"));
+                        else
+                            cmbdescrip.Items.Add(val.ToString());
+                    }
+
+                    if (cmbdescrip.Items.Count > 0)
+                        cmbdescrip.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar valores: " + ex.Message);
             }
         }
 
@@ -134,57 +226,16 @@ namespace INICIO
 
         private void btnbuscar_Click(object sender, EventArgs e)
         {
-            string tabla = cmbtabla.Text;
-            string columna = cbobuscar.Text;
-            string valor = txtbuscar.Text.Trim();
 
-            if (string.IsNullOrEmpty(valor))
-            {
-                MessageBox.Show("Ingrese un valor para buscar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            try
-            {
-                using (SqlConnection con = ConexionBD.ObtenerConexion())
-                {
-                    string query = $"SELECT * FROM {tabla} WHERE {columna} LIKE '%' + @valor + '%'";
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@valor", valor);
-
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    dtvpagos.DataSource = dt;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al buscar: " + ex.Message);
-            }
+          
         }
 
-        // 🔹 Cargar todos los registros de la tabla seleccionada
         private void btncargar_Click(object sender, EventArgs e)
         {
-            string tabla = cmbtabla.Text;
-
-            try
-            {
-                using (SqlConnection con = ConexionBD.ObtenerConexion())
-                {
-                    string query = $"SELECT * FROM {tabla}";
-                    SqlDataAdapter da = new SqlDataAdapter(query, con);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    dtvpagos.DataSource = dt;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al cargar los datos: " + ex.Message);
-            }
+            CargarDatos();
         }
+
+
 
         private void dtvpagos_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -193,8 +244,9 @@ namespace INICIO
 
         private void cbobuscar_SelectedIndexChanged(object sender, EventArgs e)
         {
+            CargarValoresDescripcion(cmbtabla.Text, cbobuscar.Text);
         }
-         
+
 
         private void txtbuscar_TextChanged(object sender, EventArgs e)
         {
@@ -203,9 +255,19 @@ namespace INICIO
 
         private void cmbtabla_SelectedIndexChanged(object sender, EventArgs e)
         {
+            CargarColumnas(cmbtabla.Text);
+            CargarValoresDescripcion(cmbtabla.Text, cbobuscar.Text);
+            CargarDatos();
+        }
 
-            string tablaSeleccionada = cmbtabla.Text;
-            CargarColumnas(tablaSeleccionada);
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cmbdescrip_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarDatos();
         }
     }
 
