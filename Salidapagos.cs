@@ -128,7 +128,7 @@ namespace INICIO
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
-                    string query = $"SELECT DISTINCT {columna} FROM {tabla} WHERE {columna} IS NOT NULL";
+                    string query = $"SELECT DISTINCT {columna} FROM {tabla}";
                     SqlCommand cmd = new SqlCommand(query, con);
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -136,21 +136,23 @@ namespace INICIO
 
                     while (reader.Read())
                     {
-                        object val = reader[columna];
-
-                        if (val is DateTime)
-                            cmbdescrip.Items.Add(Convert.ToDateTime(val).ToString("yyyy-MM-dd"));
-                        else
-                            cmbdescrip.Items.Add(val.ToString());
+                        if (reader[columna] != DBNull.Value)
+                        {
+                            if (reader[columna] is DateTime dt)
+                                cmbdescrip.Items.Add(dt.ToString("yyyy-MM-dd"));
+                            else if (reader[columna] is decimal or double or float)
+                                cmbdescrip.Items.Add(Convert.ToDecimal(reader[columna]).ToString());
+                            else
+                                cmbdescrip.Items.Add(reader[columna].ToString());
+                        }
                     }
 
-                    if (cmbdescrip.Items.Count > 0)
-                        cmbdescrip.SelectedIndex = 0;
+                    if (cmbdescrip.Items.Count > 0) cmbdescrip.SelectedIndex = 0;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar valores: " + ex.Message);
+                MessageBox.Show("Error al cargar valores únicos: " + ex.Message);
             }
         }
 
@@ -268,6 +270,58 @@ namespace INICIO
         private void cmbdescrip_SelectedIndexChanged(object sender, EventArgs e)
         {
             CargarDatos();
+            if (cmbdescrip.SelectedIndex < 0) return;
+
+            string tabla = cmbtabla.Text;
+            string columna = cbobuscar.Text;
+            string valor = cmbdescrip.Text;
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+
+                    string query = $"SELECT * FROM {tabla} WHERE ";
+
+                    // ✅ Detectar fecha correctamente
+                    if (columna.ToUpper().Contains("FECHA"))
+                    {
+                        query += $"CONVERT(date,{columna}) = @valor";
+                        cmd.Parameters.AddWithValue("@valor", DateTime.Parse(valor));
+                    }
+                    // ✅ Detectar montos decimal
+                    else if (columna.ToUpper().Contains("MONTO"))
+                    {
+                        query += $"{columna} = @valor";
+                        cmd.Parameters.AddWithValue("@valor", decimal.Parse(valor));
+                    }
+                    // ✅ Detectar ID (entero)
+                    else if (columna.ToUpper().Contains("ID"))
+                    {
+                        query += $"{columna} = @valor";
+                        cmd.Parameters.AddWithValue("@valor", int.Parse(valor));
+                    }
+                    // ✅ Texto
+                    else
+                    {
+                        query += $"{columna} LIKE '%' + @valor + '%'";
+                        cmd.Parameters.AddWithValue("@valor", valor);
+                    }
+
+                    cmd.CommandText = query;
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dtvpagos.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al buscar: " + ex.Message);
+            }
         }
     }
 

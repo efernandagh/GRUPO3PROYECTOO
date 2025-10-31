@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             label2 = new Label();
-            btnlimpiar = new Button();
             btnsalir = new Button();
             dtvpagos = new DataGridView();
             label7 = new Label();
@@ -53,21 +52,6 @@
             label2.Text = "Salida de pagos";
             label2.Click += label2_Click;
             // 
-            // btnlimpiar
-            // 
-            btnlimpiar.FlatAppearance.BorderSize = 0;
-            btnlimpiar.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
-            btnlimpiar.FlatStyle = FlatStyle.Flat;
-            btnlimpiar.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
-            btnlimpiar.ForeColor = Color.White;
-            btnlimpiar.Location = new Point(399, 458);
-            btnlimpiar.Name = "btnlimpiar";
-            btnlimpiar.Size = new Size(75, 23);
-            btnlimpiar.TabIndex = 11;
-            btnlimpiar.Text = "Limpiar";
-            btnlimpiar.UseVisualStyleBackColor = true;
-            btnlimpiar.Click += btnlimpiar_Click;
-            // 
             // btnsalir
             // 
             btnsalir.FlatAppearance.BorderSize = 0;
@@ -75,7 +59,7 @@
             btnsalir.FlatStyle = FlatStyle.Flat;
             btnsalir.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
             btnsalir.ForeColor = Color.White;
-            btnsalir.Location = new Point(480, 458);
+            btnsalir.Location = new Point(435, 455);
             btnsalir.Name = "btnsalir";
             btnsalir.Size = new Size(75, 23);
             btnsalir.TabIndex = 12;
@@ -170,7 +154,6 @@
             Controls.Add(label7);
             Controls.Add(dtvpagos);
             Controls.Add(btnsalir);
-            Controls.Add(btnlimpiar);
             Controls.Add(label2);
             FormBorderStyle = FormBorderStyle.None;
             Name = "Salidapagos";
@@ -184,7 +167,6 @@
 
         #endregion
         private Label label2;
-        private Button btnlimpiar;
         private Button btnsalir;
         private DataGridView dtvpagos;
         private Label label7;
