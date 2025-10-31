@@ -31,10 +31,15 @@ namespace INICIO
             CargarColumnas("PROYECTOS");
         }
 
+        // 🔹 Cuando cambia la tabla
         private void cbotabla_SelectedIndexChanged(object sender, EventArgs e)
         {
             string tablaSeleccionada = cbotabla.Text;
             CargarColumnas(tablaSeleccionada);
+
+            // Limpiar combos dependientes
+            cbDescripcion.Items.Clear();
+            cbDescripcion.Text = "";
         }
 
         // 🔹 Cargar columnas según tabla seleccionada
@@ -76,6 +81,79 @@ namespace INICIO
                 cbobuscar.SelectedIndex = 0;
         }
 
+        // 🔹 Cuando cambia el campo "Buscar"
+        private void cbobuscar_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string tabla = cbotabla.Text;
+            string columna = cbobuscar.Text;
+
+            if (!string.IsNullOrEmpty(tabla) && !string.IsNullOrEmpty(columna))
+            {
+                CargarDescripcion(tabla, columna);
+            }
+        }
+
+        // 🔹 Cargar los valores distintos del campo seleccionado
+        private void CargarDescripcion(string tabla, string columna)
+        {
+            cbDescripcion.Items.Clear();
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"SELECT DISTINCT {columna} FROM {tabla}";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+                        cbDescripcion.Items.Add(dr[columna].ToString());
+                    }
+
+                    dr.Close();
+
+                    if (cbDescripcion.Items.Count > 0)
+                        cbDescripcion.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar descripciones: " + ex.Message);
+            }
+        }
+
+        // 🔹 Buscar registros al seleccionar una descripción
+        private void cbDescripcion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string tabla = cbotabla.Text;
+            string columna = cbobuscar.Text;
+            string valor = cbDescripcion.Text;
+
+            if (string.IsNullOrEmpty(valor))
+                return;
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"SELECT * FROM {tabla} WHERE {columna} = @valor";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@valor", valor);
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dtvproyectos.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al buscar registros: " + ex.Message);
+            }
+        }
+
+        // 🔹 Botón BUSCAR (por si deseas buscar manualmente con texto)
         private void btnbuscar_Click_1(object sender, EventArgs e)
         {
             string tabla = cbotabla.Text;
@@ -112,6 +190,7 @@ namespace INICIO
         {
             txtbuscar.Clear();
             cbobuscar.SelectedIndex = 0;
+            cbDescripcion.Items.Clear();
             dtvproyectos.DataSource = null;
         }
 
@@ -133,11 +212,6 @@ namespace INICIO
         }
 
         private void txtbuscar_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cbobuscar_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
