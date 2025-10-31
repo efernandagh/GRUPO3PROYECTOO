@@ -30,6 +30,8 @@ namespace INICIO
                 {
                     cmbtabla.SelectedIndex = 0;
                     CargarColumnas(cmbtabla.SelectedItem.ToString());
+                    CargarDescripcion(cmbtabla.Text, cbmbuscar.Text);
+                    CargarDatos(cmbtabla.Text);
                 }
             }
             catch (Exception ex)
@@ -170,9 +172,7 @@ namespace INICIO
                     SqlDataReader dr = cmd.ExecuteReader();
 
                     while (dr.Read())
-                    {
                         cmbdescripcion.Items.Add(dr[columna].ToString());
-                    }
 
                     dr.Close();
 
@@ -205,6 +205,38 @@ namespace INICIO
         private void label3_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void cmbdescripcion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string tabla = cmbtabla.Text;
+            string columna = cbmbuscar.Text;
+            string valor = cmbdescripcion.Text.Trim();
+
+            if (string.IsNullOrEmpty(valor))
+            {
+                MessageBox.Show("Seleccione un valor para buscar.", "Atención");
+                return;
+            }
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"SELECT * FROM {tabla} WHERE {columna} LIKE '%' + @valor + '%'";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@valor", valor);
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dgvservicio.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al buscar: " + ex.Message);
+            }
         }
     }
 }

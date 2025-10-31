@@ -43,9 +43,10 @@
             // cmbbuscar
             // 
             cmbbuscar.FormattingEnabled = true;
-            cmbbuscar.Location = new Point(421, 94);
+            cmbbuscar.Location = new Point(368, 70);
+            cmbbuscar.Margin = new Padding(3, 2, 3, 2);
             cmbbuscar.Name = "cmbbuscar";
-            cmbbuscar.Size = new Size(151, 28);
+            cmbbuscar.Size = new Size(133, 23);
             cmbbuscar.TabIndex = 0;
             cmbbuscar.SelectedIndexChanged += cmbbuscar_SelectedIndexChanged;
             // 
@@ -55,10 +56,11 @@
             dgvinventario.BorderStyle = BorderStyle.None;
             dgvinventario.CellBorderStyle = DataGridViewCellBorderStyle.None;
             dgvinventario.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvinventario.Location = new Point(173, 164);
+            dgvinventario.Location = new Point(151, 123);
+            dgvinventario.Margin = new Padding(3, 2, 3, 2);
             dgvinventario.Name = "dgvinventario";
             dgvinventario.RowHeadersWidth = 51;
-            dgvinventario.Size = new Size(654, 335);
+            dgvinventario.Size = new Size(572, 251);
             dgvinventario.TabIndex = 2;
             // 
             // label2
@@ -66,9 +68,9 @@
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
             label2.ForeColor = Color.White;
-            label2.Location = new Point(344, 99);
+            label2.Location = new Point(301, 74);
             label2.Name = "label2";
-            label2.Size = new Size(58, 23);
+            label2.Size = new Size(45, 17);
             label2.TabIndex = 4;
             label2.Text = "Buscar";
             // 
@@ -77,9 +79,9 @@
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
             label3.ForeColor = Color.White;
-            label3.Location = new Point(631, 99);
+            label3.Location = new Point(552, 74);
             label3.Name = "label3";
-            label3.Size = new Size(93, 23);
+            label3.Size = new Size(72, 17);
             label3.TabIndex = 5;
             label3.Text = "Descripcion";
             // 
@@ -88,12 +90,11 @@
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             label4.ForeColor = Color.White;
-            label4.Location = new Point(403, 19);
+            label4.Location = new Point(353, 14);
             label4.Name = "label4";
-            label4.Size = new Size(200, 23);
+            label4.Size = new Size(155, 17);
             label4.TabIndex = 6;
             label4.Text = "CONSULTA INVENTARIO";
-            label4.Click += label4_Click;
             // 
             // btnsalir
             // 
@@ -101,9 +102,10 @@
             btnsalir.FlatStyle = FlatStyle.Flat;
             btnsalir.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
             btnsalir.ForeColor = Color.White;
-            btnsalir.Location = new Point(433, 529);
+            btnsalir.Location = new Point(379, 397);
+            btnsalir.Margin = new Padding(3, 2, 3, 2);
             btnsalir.Name = "btnsalir";
-            btnsalir.Size = new Size(94, 29);
+            btnsalir.Size = new Size(82, 22);
             btnsalir.TabIndex = 10;
             btnsalir.Text = "Salir";
             btnsalir.UseVisualStyleBackColor = true;
@@ -112,9 +114,10 @@
             // cmbtabla
             // 
             cmbtabla.FormattingEnabled = true;
-            cmbtabla.Location = new Point(150, 94);
+            cmbtabla.Location = new Point(131, 70);
+            cmbtabla.Margin = new Padding(3, 2, 3, 2);
             cmbtabla.Name = "cmbtabla";
-            cmbtabla.Size = new Size(151, 28);
+            cmbtabla.Size = new Size(133, 23);
             cmbtabla.TabIndex = 11;
             cmbtabla.SelectedIndexChanged += cmbtabla_SelectedIndexChanged;
             // 
@@ -123,27 +126,28 @@
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(94, 94);
+            label1.Location = new Point(82, 70);
             label1.Name = "label1";
-            label1.Size = new Size(50, 23);
+            label1.Size = new Size(39, 17);
             label1.TabIndex = 12;
             label1.Text = "Tabla";
             // 
             // cmbdescripcion
             // 
             cmbdescripcion.FormattingEnabled = true;
-            cmbdescripcion.Location = new Point(730, 99);
+            cmbdescripcion.Location = new Point(639, 74);
+            cmbdescripcion.Margin = new Padding(3, 2, 3, 2);
             cmbdescripcion.Name = "cmbdescripcion";
-            cmbdescripcion.Size = new Size(151, 28);
+            cmbdescripcion.Size = new Size(133, 23);
             cmbdescripcion.TabIndex = 13;
             cmbdescripcion.SelectedIndexChanged += cmbdescripcion_SelectedIndexChanged;
             // 
             // ConsultaInventario
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SteelBlue;
-            ClientSize = new Size(997, 617);
+            ClientSize = new Size(872, 463);
             Controls.Add(cmbdescripcion);
             Controls.Add(label1);
             Controls.Add(cmbtabla);
@@ -154,10 +158,11 @@
             Controls.Add(dgvinventario);
             Controls.Add(cmbbuscar);
             FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 2, 3, 2);
             Name = "ConsultaInventario";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ConsultaInventario";
-            Load += ConsultaInventario_Load_1;
+            Load += ConsultaInventario_Load;
             ((System.ComponentModel.ISupportInitialize)dgvinventario).EndInit();
             ResumeLayout(false);
             PerformLayout();

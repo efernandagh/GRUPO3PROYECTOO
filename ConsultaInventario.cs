@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace INICIO
 {
@@ -30,6 +31,7 @@ namespace INICIO
                 {
                     cmbtabla.SelectedIndex = 0;
                     CargarColumnas(cmbtabla.SelectedItem.ToString());
+                    CargarDatos(cmbtabla.SelectedItem.ToString());
                 }
             }
             catch (Exception ex)
@@ -38,27 +40,6 @@ namespace INICIO
             }
         }
 
-        private void CargarDescripcion()
-        {
-            cmbdescripcion.Items.Clear();
-
-            using (SqlConnection conn = ConexionBD.ObtenerConexion())
-            {
-                string campo = cmbbuscar.SelectedItem.ToString();
-                string query = $"SELECT DISTINCT {campo} FROM PAGOS";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader dr = cmd.ExecuteReader();
-
-                while (dr.Read())
-                {
-                    cmbdescripcion.Items.Add(dr[0].ToString());
-                }
-            }
-
-            if (cmbdescripcion.Items.Count > 0)
-                cmbdescripcion.SelectedIndex = 0;
-        }
 
         private void btnsalir_Click(object sender, EventArgs e)
         {
@@ -211,14 +192,17 @@ namespace INICIO
             string tablaSeleccionada = cmbtabla.Text;
             CargarColumnas(tablaSeleccionada);
 
-            // Limpiar combos dependientes
+            // limpiar y recargar descripciones y datos
             cmbdescripcion.Items.Clear();
             cmbdescripcion.Text = "";
+            CargarDescripcion(tablaSeleccionada, cmbbuscar.Text);
+            CargarDatos(tablaSeleccionada);
         }
 
         private void cmbbuscar_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            // cuando cambia la columna, recargar posibles descripciones
+            CargarDescripcion(cmbtabla.Text, cmbbuscar.Text);
         }
 
         private void label4_Click(object sender, EventArgs e)
@@ -238,21 +222,79 @@ namespace INICIO
             try
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
+                using (SqlCommand cmd = new SqlCommand())
                 {
-                    string query = $"SELECT * FROM {tabla} WHERE {columna} = @valor";
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@valor", valor);
+                    cmd.Connection = con;
 
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    dgvinventario.DataSource = dt;
+                    // Si columna es fecha, convertir y comparar por fecha (sin hora)
+                    if (columna.ToUpper().Contains("FECHA"))
+                    {
+                        if (!DateTime.TryParse(valor, out DateTime fecha))
+                        {
+                            MessageBox.Show("Formato de fecha inválido en la descripción.");
+                            return;
+                        }
+
+                        cmd.CommandText = $"SELECT * FROM {tabla} WHERE CONVERT(date, {columna}) = @valor";
+                        cmd.Parameters.AddWithValue("@valor", fecha.Date);
+                    }
+                    else if (columna.ToUpper().Contains("CANTIDAD") ||
+                             columna.ToUpper().Contains("ID") && int.TryParse(valor, out _))
+                    {
+                        // buscar por valor numérico entero si aplica
+                        if (int.TryParse(valor, out int intVal))
+                        {
+                            cmd.CommandText = $"SELECT * FROM {tabla} WHERE {columna} = @valor";
+                            cmd.Parameters.AddWithValue("@valor", intVal);
+                        }
+                        else
+                        {
+                            // si no es entero, usar LIKE (texto)
+                            cmd.CommandText = $"SELECT * FROM {tabla} WHERE {columna} LIKE '%' + @valor + '%'";
+                            cmd.Parameters.AddWithValue("@valor", valor);
+                        }
+                    }
+                    else if (columna.ToUpper().Contains("MONTO") || columna.ToUpper().Contains("PRECIO"))
+                    {
+                        // intentar decimal
+                        if (decimal.TryParse(valor, out decimal decVal))
+                        {
+                            cmd.CommandText = $"SELECT * FROM {tabla} WHERE {columna} = @valor";
+                            cmd.Parameters.AddWithValue("@valor", decVal);
+                        }
+                        else
+                        {
+                            cmd.CommandText = $"SELECT * FROM {tabla} WHERE {columna} LIKE '%' + @valor + '%'";
+                            cmd.Parameters.AddWithValue("@valor", valor);
+                        }
+                    }
+                    else
+                    {
+                        // búsqueda de texto por defecto
+                        cmd.CommandText = $"SELECT * FROM {tabla} WHERE {columna} LIKE '%' + @valor + '%'";
+                        cmd.Parameters.AddWithValue("@valor", valor);
+                    }
+
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+                        dgvinventario.DataSource = dt;
+
+                        if (dt.Rows.Count == 0)
+                            MessageBox.Show("No se encontraron registros para la selección.");
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al buscar en Inventario: " + ex.Message);
+                MessageBox.Show("Error al buscar: " + ex.Message);
             }
+        }
+
+        private void ConsultaInventario_Load(object sender, EventArgs e)
+        {
+            InicializarCombos();
         }
     }
 }

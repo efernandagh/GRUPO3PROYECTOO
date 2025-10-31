@@ -46,10 +46,11 @@
             dgvservicio.BorderStyle = BorderStyle.None;
             dgvservicio.CellBorderStyle = DataGridViewCellBorderStyle.None;
             dgvservicio.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvservicio.Location = new Point(187, 143);
+            dgvservicio.Location = new Point(164, 107);
+            dgvservicio.Margin = new Padding(3, 2, 3, 2);
             dgvservicio.Name = "dgvservicio";
             dgvservicio.RowHeadersWidth = 51;
-            dgvservicio.Size = new Size(600, 319);
+            dgvservicio.Size = new Size(525, 239);
             dgvservicio.TabIndex = 0;
             // 
             // label1
@@ -57,9 +58,9 @@
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(353, 72);
+            label1.Location = new Point(309, 54);
             label1.Name = "label1";
-            label1.Size = new Size(58, 23);
+            label1.Size = new Size(45, 17);
             label1.TabIndex = 1;
             label1.Text = "Buscar";
             // 
@@ -68,18 +69,19 @@
             Descripcion.AutoSize = true;
             Descripcion.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
             Descripcion.ForeColor = Color.White;
-            Descripcion.Location = new Point(634, 72);
+            Descripcion.Location = new Point(555, 54);
             Descripcion.Name = "Descripcion";
-            Descripcion.Size = new Size(93, 23);
+            Descripcion.Size = new Size(72, 17);
             Descripcion.TabIndex = 2;
             Descripcion.Text = "Descripcion";
             // 
             // cbmbuscar
             // 
             cbmbuscar.FormattingEnabled = true;
-            cbmbuscar.Location = new Point(428, 74);
+            cbmbuscar.Location = new Point(374, 56);
+            cbmbuscar.Margin = new Padding(3, 2, 3, 2);
             cbmbuscar.Name = "cbmbuscar";
-            cbmbuscar.Size = new Size(185, 28);
+            cbmbuscar.Size = new Size(162, 23);
             cbmbuscar.TabIndex = 6;
             cbmbuscar.SelectedIndexChanged += cbmbuscar_SelectedIndexChanged;
             // 
@@ -90,9 +92,10 @@
             btnsalir.FlatStyle = FlatStyle.Flat;
             btnsalir.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
             btnsalir.ForeColor = Color.White;
-            btnsalir.Location = new Point(428, 480);
+            btnsalir.Location = new Point(374, 360);
+            btnsalir.Margin = new Padding(3, 2, 3, 2);
             btnsalir.Name = "btnsalir";
-            btnsalir.Size = new Size(94, 29);
+            btnsalir.Size = new Size(82, 22);
             btnsalir.TabIndex = 10;
             btnsalir.Text = "Salir";
             btnsalir.UseVisualStyleBackColor = true;
@@ -101,9 +104,10 @@
             // cmbtabla
             // 
             cmbtabla.FormattingEnabled = true;
-            cmbtabla.Location = new Point(121, 72);
+            cmbtabla.Location = new Point(106, 54);
+            cmbtabla.Margin = new Padding(3, 2, 3, 2);
             cmbtabla.Name = "cmbtabla";
-            cmbtabla.Size = new Size(185, 28);
+            cmbtabla.Size = new Size(162, 23);
             cmbtabla.TabIndex = 11;
             cmbtabla.SelectedIndexChanged += cmbbuscar_SelectedIndexChanged;
             // 
@@ -112,9 +116,9 @@
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
             label2.ForeColor = Color.White;
-            label2.Location = new Point(44, 74);
+            label2.Location = new Point(38, 56);
             label2.Name = "label2";
-            label2.Size = new Size(50, 23);
+            label2.Size = new Size(39, 17);
             label2.TabIndex = 12;
             label2.Text = "Tabla";
             // 
@@ -123,9 +127,9 @@
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label3.ForeColor = Color.White;
-            label3.Location = new Point(373, 18);
+            label3.Location = new Point(326, 14);
             label3.Name = "label3";
-            label3.Size = new Size(206, 28);
+            label3.Size = new Size(166, 21);
             label3.TabIndex = 13;
             label3.Text = "Consulta de Servicios";
             label3.Click += label3_Click;
@@ -133,17 +137,19 @@
             // cmbdescripcion
             // 
             cmbdescripcion.FormattingEnabled = true;
-            cmbdescripcion.Location = new Point(733, 70);
+            cmbdescripcion.Location = new Point(641, 52);
+            cmbdescripcion.Margin = new Padding(3, 2, 3, 2);
             cmbdescripcion.Name = "cmbdescripcion";
-            cmbdescripcion.Size = new Size(151, 28);
+            cmbdescripcion.Size = new Size(133, 23);
             cmbdescripcion.TabIndex = 14;
+            cmbdescripcion.SelectedIndexChanged += cmbdescripcion_SelectedIndexChanged;
             // 
             // ConsultaServicio
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SteelBlue;
-            ClientSize = new Size(970, 545);
+            ClientSize = new Size(849, 409);
             Controls.Add(cmbdescripcion);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -154,6 +160,7 @@
             Controls.Add(label1);
             Controls.Add(dgvservicio);
             FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 2, 3, 2);
             Name = "ConsultaServicio";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ConsultaServicio";
