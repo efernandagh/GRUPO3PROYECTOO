@@ -38,6 +38,27 @@ namespace INICIO
             }
         }
 
+        private void CargarDescripcion()
+        {
+            cmbdescripcion.Items.Clear();
+
+            using (SqlConnection conn = ConexionBD.ObtenerConexion())
+            {
+                string campo = cmbbuscar.SelectedItem.ToString();
+                string query = $"SELECT DISTINCT {campo} FROM PAGOS";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    cmbdescripcion.Items.Add(dr[0].ToString());
+                }
+            }
+
+            if (cmbdescripcion.Items.Count > 0)
+                cmbdescripcion.SelectedIndex = 0;
+        }
 
         private void btnsalir_Click(object sender, EventArgs e)
         {
@@ -51,6 +72,35 @@ namespace INICIO
             if (resultado == DialogResult.Yes)
             {
                 this.Close();
+            }
+        }
+
+        private void CargarDescripcion(string tabla, string columna)
+        {
+            cmbdescripcion.Items.Clear();
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"SELECT DISTINCT {columna} FROM {tabla}";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+                        cmbdescripcion.Items.Add(dr[columna].ToString());
+                    }
+
+                    dr.Close();
+
+                    if (cmbdescripcion.Items.Count > 0)
+                        cmbdescripcion.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar descripciones: " + ex.Message);
             }
         }
 
@@ -114,7 +164,7 @@ namespace INICIO
         private void btnlimpiar_Click(object sender, EventArgs e)
         {
             cmbbuscar.SelectedIndex = 0;
-            txtdescripcion.Clear();
+            cmbdescripcion.SelectedIndex = 0;
             dgvinventario.DataSource = null;
         }
 
@@ -122,7 +172,7 @@ namespace INICIO
         {
             string tabla = cmbtabla.Text;
             string columna = cmbbuscar.Text;
-            string valor = txtdescripcion.Text.Trim();
+            string valor = cmbdescripcion.Text.Trim();
 
             if (string.IsNullOrEmpty(valor))
             {
@@ -158,9 +208,12 @@ namespace INICIO
 
         private void cmbtabla_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string tabla = cmbtabla.Text;
-            CargarColumnas(tabla);
-            CargarDatos(tabla);
+            string tablaSeleccionada = cmbtabla.Text;
+            CargarColumnas(tablaSeleccionada);
+
+            // Limpiar combos dependientes
+            cmbdescripcion.Items.Clear();
+            cmbdescripcion.Text = "";
         }
 
         private void cmbbuscar_SelectedIndexChanged(object sender, EventArgs e)
@@ -171,6 +224,35 @@ namespace INICIO
         private void label4_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void cmbdescripcion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string tabla = cmbtabla.Text;
+            string columna = cmbbuscar.Text;
+            string valor = cmbdescripcion.Text;
+
+            if (string.IsNullOrEmpty(valor))
+                return;
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"SELECT * FROM {tabla} WHERE {columna} = @valor";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@valor", valor);
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dgvinventario.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al buscar en Inventario: " + ex.Message);
+            }
         }
     }
 }

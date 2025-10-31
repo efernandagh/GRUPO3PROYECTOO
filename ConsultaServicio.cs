@@ -107,7 +107,7 @@ namespace INICIO
         }
         private void btnlimpiar_Click(object sender, EventArgs e)
         {
-            txtdescripcion.Clear();
+            cmbdescripcion.SelectedIndex = 0;
             cbmbuscar.SelectedIndex = 0;
             dgvservicio.DataSource = null;
         }
@@ -116,7 +116,7 @@ namespace INICIO
         {
             string tabla = cmbtabla.Text;
             string columna = cbmbuscar.Text;
-            string valor = txtdescripcion.Text.Trim();
+            string valor = cmbdescripcion.Text.Trim();
 
             if (string.IsNullOrEmpty(valor))
             {
@@ -147,7 +147,43 @@ namespace INICIO
 
         private void cbmbuscar_SelectedIndexChanged(object sender, EventArgs e)
         {
+            string tabla = cmbtabla.Text;
+            string columna = cbmbuscar.Text;
 
+            if (!string.IsNullOrEmpty(tabla) && !string.IsNullOrEmpty(columna))
+            {
+                CargarDescripcion(tabla, columna);
+            }
+        }
+
+        // 🔹 Cargar los valores distintos del campo seleccionado
+        private void CargarDescripcion(string tabla, string columna)
+        {
+            cmbdescripcion.Items.Clear();
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"SELECT DISTINCT {columna} FROM {tabla}";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+                        cmbdescripcion.Items.Add(dr[columna].ToString());
+                    }
+
+                    dr.Close();
+
+                    if (cmbdescripcion.Items.Count > 0)
+                        cmbdescripcion.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar descripciones: " + ex.Message);
+            }
         }
 
         private void ConsultaServicio_Load(object sender, EventArgs e)
@@ -158,9 +194,12 @@ namespace INICIO
 
         private void cmbbuscar_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string tabla = cmbtabla.SelectedItem.ToString();
-            CargarColumnas(tabla);
-            CargarDatos(tabla);
+            string tablaSeleccionada = cmbtabla.Text;
+            CargarColumnas(tablaSeleccionada);
+
+            // Limpiar combos dependientes
+            cmbdescripcion.Items.Clear();
+            cmbdescripcion.Text = "";
         }
 
         private void label3_Click(object sender, EventArgs e)
