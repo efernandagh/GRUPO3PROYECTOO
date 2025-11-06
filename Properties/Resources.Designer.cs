@@ -73,6 +73,16 @@ namespace INICIO.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap cmisur_logo {
+            get {
+                object obj = ResourceManager.GetObject("cmisur logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap CONTRATO {
             get {
                 object obj = ResourceManager.GetObject("CONTRATO", resourceCulture);
