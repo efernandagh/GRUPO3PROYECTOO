@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
 
@@ -16,11 +16,55 @@ namespace INICIO
         {
             InitializeComponent();
 
-            PreguntarSQL();
+            
 
         }
 
+        private string ObtenerServidorSQL()
+        {
+            // Nombre del equipo actual
+            string nombrePC = Environment.MachineName;
 
+            // Intentar detectar instancia de SQL Server comÃºn
+            string[] posiblesInstancias = { "SQLEXPRESS", "MSSQLSERVER", "SQL2019", "ENIAGOMEZ" };
+
+            foreach (string instancia in posiblesInstancias)
+            {
+                string servidorPrueba = $"Server={nombrePC}\\{instancia};Integrated Security=True;TrustServerCertificate=True;";
+                try
+                {
+                    using (SqlConnection con = new SqlConnection(servidorPrueba))
+                    {
+                        con.Open();
+                        return servidorPrueba; // âœ… Devuelve la cadena que sÃ­ funciona
+                    }
+                }
+                catch
+                {
+                    // Si falla, intenta con la siguiente instancia
+                    continue;
+                }
+            }
+
+            // Si ninguna instancia comÃºn funciona, probar sin nombre de instancia
+            string servidorDefault = $"Server={nombrePC};Integrated Security=True;TrustServerCertificate=True;";
+            try
+            {
+                using (SqlConnection con = new SqlConnection(servidorDefault))
+                {
+                    con.Open();
+                    return servidorDefault;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("âŒ No se pudo conectar a SQL Server en este equipo.\nVerifique que estÃ© instalado y ejecutÃ¡ndose.",
+                    "Error de conexiÃ³n", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+                Environment.Exit(0);
+                return null;
+            }
+        }
         private void VerificarConfiguracion()
         {
             try
@@ -43,7 +87,7 @@ namespace INICIO
 
                     if (!tieneBD)
                     {
-                        DialogResult crearBD = MessageBox.Show("¿Desea crear la base de datos automáticamente?", "Crear Base de Datos", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        DialogResult crearBD = MessageBox.Show("Â¿Desea crear la base de datos automÃ¡ticamente?", "Crear Base de Datos", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (crearBD == DialogResult.Yes)
                             CrearBaseDeDatos();
                         else
@@ -55,102 +99,44 @@ namespace INICIO
                     }
                     else
                     {
-                        // Todo correcto, continúa con el programa
+                        // Todo correcto, continÃºa con el programa
                         return;
                     }
                 }
-                else
+            
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error en la verificaciÃ³n: " + ex.Message);
+            }
+        }
+      
+        private void VerificarBaseDeDatos()
+        {
+            try
+            {
+                string cadenaMaster = servidor + "Database=master;";
+                using (SqlConnection con = new SqlConnection(cadenaMaster))
                 {
-                    // Si el archivo no existe, preguntamos por primera vez
-                    PreguntarSQL();
+                    con.Open();
+                    string verificarBD = "SELECT COUNT(*) FROM sys.databases WHERE name = 'MECANICA_INDUSTRIAL'";
+                    SqlCommand cmd = new SqlCommand(verificarBD, con);
+                    int existe = (int)cmd.ExecuteScalar();
+
+                    if (existe == 0)
+                    {
+                        CrearBaseDeDatos();
+                    }
+                    else
+                    {
+                        // Base de datos ya existe
+                        GuardarConfiguracion("SQL=SI", "BD=SI");
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error en la verificación: " + ex.Message);
-            }
-        }
-        private void PreguntarSQL()
-        {
-            DialogResult tieneSQL = MessageBox.Show("¿Tiene instalado SQL Server en su equipo?", "Verificación SQL Server",
-                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (tieneSQL == DialogResult.No)
-            {
-                MessageBox.Show("Debe instalar SQL Server antes de continuar.\nEl programa se cerrará.", "Requisito necesario",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                GuardarConfiguracion("SQL=NO", "BD=NO");
-                Application.Exit();
-                Environment.Exit(0);
-                return;
-            }
-
-            DialogResult tieneBD = MessageBox.Show("¿Ya tiene creada la base de datos MECANICA_INDUSTRIAL?", "Verificación Base de Datos",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (tieneBD == DialogResult.No)
-            {
-                DialogResult crearBD = MessageBox.Show("¿Desea crear la base de datos automáticamente?", "Crear Base de Datos",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-                if (crearBD == DialogResult.Yes)
-                {
-                    CrearBaseDeDatos();
-                    GuardarConfiguracion("SQL=SI", "BD=SI");
-                }
-                else
-                {
-                    MessageBox.Show("No se puede continuar sin la base de datos.\nEl programa se cerrará.", "Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    GuardarConfiguracion("SQL=SI", "BD=NO");
-                    Application.Exit();
-                    Environment.Exit(0);
-                }
-            }
-            else
-            {
-                MessageBox.Show("Perfecto, puede iniciar sesión.", "Confirmación", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                GuardarConfiguracion("SQL=SI", "BD=SI");
-            }
-        }
-
-        private void VerificarBaseDeDatos()
-        {
-            DialogResult tieneBD = MessageBox.Show(
-                "¿Ya tiene creada la base de datos MECANICA_INDUSTRIAL?",
-                "Verificación Base de Datos",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
-
-            if (tieneBD == DialogResult.No)
-            {
-                DialogResult crearBD = MessageBox.Show(
-                    "¿Desea crear la base de datos automáticamente?",
-                    "Crear Base de Datos",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
-                );
-
-                if (crearBD == DialogResult.Yes)
-                {
-                    CrearBaseDeDatos();
-                }
-                else
-                {
-                    MessageBox.Show(
-                        "No se puede continuar sin la base de datos.\nEl programa se cerrará.",
-                        "Error",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error
-                    );
-                    Application.Exit();
-                }
-            }
-            else
-            {
-                MessageBox.Show("Perfecto, Puede iniciar sesión.", "Confirmación",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Error al verificar la base de datos: " + ex.Message);
             }
         }
 
@@ -162,7 +148,7 @@ namespace INICIO
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar configuración: " + ex.Message);
+                MessageBox.Show("Error al guardar configuraciÃ³n: " + ex.Message);
             }
         }
 
@@ -176,45 +162,223 @@ namespace INICIO
                     con.Open();
 
                     string script = @"
-                    CREATE DATABASE MECANICA_INDUSTRIAL;
-                    USE MECANICA_INDUSTRIAL;
+CREATE DATABASE MECANICA_INDUSTRIAL;
+USE MECANICA_INDUSTRIAL;
 
-                    CREATE TABLE ROL (
-                        ID_ROL BIGINT PRIMARY KEY,
-                        NOMBRE_ROL VARCHAR(100),
-                        DESCRIPCION VARCHAR(255)
-                    );
+CREATE TABLE ROL (
+    ID_ROL BIGINT PRIMARY KEY,
+    NOMBRE_ROL VARCHAR(100),
+    DESCRIPCION VARCHAR(255)
+);
 
-                    CREATE TABLE USUARIOS (
-                        ID_USUARIO BIGINT PRIMARY KEY,
-                        NOMBRE VARCHAR(100),
-                        APELLIDO VARCHAR(100),
-                        CORREO VARCHAR(150) UNIQUE,
-                        CLAVE VARCHAR(150),
-                        ID_ROL BIGINT,
-                        FECHA_REGISTRO DATETIME,
-                        FOREIGN KEY (ID_ROL) REFERENCES ROL(ID_ROL)
-                    );
+CREATE TABLE USUARIOS (
+    ID_USUARIO BIGINT PRIMARY KEY,
+    NOMBRE VARCHAR(100),
+    APELLIDO VARCHAR(100),
+    CORREO VARCHAR(150) UNIQUE,
+    CLAVE VARCHAR(150),
+    ID_ROL BIGINT,
+    FECHA_REGISTRO DATETIME,
+    FOREIGN KEY (ID_ROL) REFERENCES ROL(ID_ROL)
+);
 
-                    INSERT INTO ROL (ID_ROL, NOMBRE_ROL, DESCRIPCION) VALUES
-                    (1, 'Administrador', 'Acceso total al sistema'),
-                    (2, 'Técnico', 'Encargado de procesos'),
-                    (3, 'Cliente', 'Accede a sus contratos y facturas');
+CREATE TABLE PROCESOS (
+    ID_PROCESOS BIGINT PRIMARY KEY,
+    NOMBRE_PROCESO VARCHAR(150),
+    DESCRIPCION VARCHAR(255),
+    ID_USUARIO BIGINT,
+    FOREIGN KEY (ID_USUARIO) REFERENCES USUARIOS(ID_USUARIO)
+);
 
-                    CREATE TABLE CLIENTES (
-                        ID_CLIENTES BIGINT PRIMARY KEY,
-                        NOMBRE_CLIENTE VARCHAR(100),
-                        CORREO VARCHAR(100),
-                        TELEFONO VARCHAR(20),
-                        DIRECCION VARCHAR(255),
-                        FECHA_REGISTRO DATETIME
-                    );
-                    ";
+CREATE TABLE CLIENTES (
+    ID_CLIENTES BIGINT PRIMARY KEY,
+    NOMBRE_CLIENTE VARCHAR(150),
+    CORREO VARCHAR(150),
+    TELEFONO VARCHAR(50),
+    DIRECCION VARCHAR(255),
+    FECHA_REGISTRO DATETIME
+);
+
+CREATE TABLE SERVICIOS (
+    ID_SERVICIOS BIGINT PRIMARY KEY,
+    NOMBRE_SERVICIO VARCHAR(150),
+    DESCRIPCION VARCHAR(255)
+);
+
+CREATE TABLE CONTRATOS (
+    ID_CONTRATO BIGINT PRIMARY KEY,
+    ID_CLIENTE BIGINT,
+    ID_SERVICIO BIGINT,
+    FECHA_INICIO DATE,
+    FECHA_FIN DATE,
+    ESTADO VARCHAR(50),
+    FOREIGN KEY (ID_CLIENTE) REFERENCES CLIENTES(ID_CLIENTES),
+    FOREIGN KEY (ID_SERVICIO) REFERENCES SERVICIOS(ID_SERVICIOS)
+);
+
+CREATE TABLE FACTURAS (
+    ID_FACTURA BIGINT PRIMARY KEY,
+    ID_CONTRATO BIGINT,
+    FECHA_FACTURA DATETIME,
+    MONTO_TOTAL DECIMAL(10,2),
+    METODO_PAGO VARCHAR(50),
+    FOREIGN KEY (ID_CONTRATO) REFERENCES CONTRATOS(ID_CONTRATO)
+);
+
+CREATE TABLE PAGOS (
+    ID_PAGO BIGINT PRIMARY KEY,
+    ID_FACTURA BIGINT,
+    FECHA_PAGO DATETIME,
+    MONTO_PAGO DECIMAL(10,2),
+    ESTADO_PAGO VARCHAR(50),
+    FOREIGN KEY (ID_FACTURA) REFERENCES FACTURAS(ID_FACTURA)
+);
+
+CREATE TABLE SEGUIMIENTO (
+    ID_SEGUIMIENTO BIGINT PRIMARY KEY,
+    ID_CONTRATO BIGINT,
+    FECHA_SEGUIMIENTO DATETIME,
+    DESCRIPCION VARCHAR(255),
+    NIVEL_SATISFACTORIO TINYINT,
+    FOREIGN KEY (ID_CONTRATO) REFERENCES CONTRATOS(ID_CONTRATO)
+);
+
+CREATE TABLE PROVEEDORES (
+    ID_PROVEEDOR BIGINT PRIMARY KEY,
+    NOMBRE_PROVEEDOR VARCHAR(150),
+    TELEFONO VARCHAR(50),
+    CORREO VARCHAR(150),
+    DIRECCION VARCHAR(255)
+);
+
+CREATE TABLE INVENTARIOS (
+    ID_INVENTARIO BIGINT PRIMARY KEY,
+    NOMBRE_PRODUCTO VARCHAR(150),
+    CANTIDAD BIGINT,
+    UNIDAD_MEDIDA VARCHAR(50),
+    FECHA_INGRESO DATE,
+    ESTADO VARCHAR(50),
+    ID_PROVEEDOR BIGINT,
+    FOREIGN KEY (ID_PROVEEDOR) REFERENCES PROVEEDORES(ID_PROVEEDOR)
+);
+
+CREATE TABLE PROYECTOS (
+    ID_PROYECTO BIGINT PRIMARY KEY,
+    NOMBRE_PROYECTO VARCHAR(150),
+    DESCRIPCION VARCHAR(255),
+    FECHA_INICIO DATE,
+    FECHA_FIN DATE,
+    ESTADO VARCHAR(50),
+    ID_USUARIO BIGINT,
+    FOREIGN KEY (ID_USUARIO) REFERENCES USUARIOS(ID_USUARIO)
+);
+
+CREATE TABLE PROYECTO_INVENTARIO (
+    ID_PROYECTO_INVENTARIO BIGINT PRIMARY KEY,
+    ID_PRODUCTO BIGINT,
+    CANTIDAD_USADA BIGINT,
+    ID_PROYECTO BIGINT,
+    FOREIGN KEY (ID_PRODUCTO) REFERENCES INVENTARIOS(ID_INVENTARIO),
+    FOREIGN KEY (ID_PROYECTO) REFERENCES PROYECTOS(ID_PROYECTO)
+);
+
+-- Inserciones iniciales
+INSERT INTO ROL (ID_ROL, NOMBRE_ROL, DESCRIPCION) VALUES
+(1, 'Administrador', 'Acceso total al sistema'),
+(2, 'TÃ©cnico', 'Encargado de procesos'),
+(3, 'Cliente', 'Accede a sus contratos y facturas'),
+(4, 'Gerente', 'Supervisa operaciones'),
+(5, 'Contador', 'Encargado de finanzas');
+
+INSERT INTO USUARIOS (ID_USUARIO, NOMBRE, APELLIDO, CORREO, CLAVE, ID_ROL, FECHA_REGISTRO) VALUES
+(1, 'Carlos', 'Hernandez', 'carlos@example.com', '1234', 1, GETDATE()),
+(2, 'Ana', 'Martinez', 'ana@example.com', 'abcd', 2, GETDATE()),
+(3, 'Luis', 'Perez', 'luis@example.com', 'pass1', 2, GETDATE()),
+(4, 'Maria', 'Lopez', 'maria@example.com', 'pass2', 3, GETDATE()),
+(5, 'Jose', 'Sanchez', 'jose@example.com', 'pass3', 4, GETDATE());
+
+INSERT INTO PROCESOS (ID_PROCESOS, NOMBRE_PROCESO, DESCRIPCION, ID_USUARIO) VALUES
+(1, 'Soldadura', 'Proceso de uniÃ³n de piezas metÃ¡licas', 2),
+(2, 'Mantenimiento', 'Mantenimiento preventivo de maquinaria', 3),
+(3, 'Pintura', 'AplicaciÃ³n de recubrimientos industriales', 2),
+(4, 'Torneado', 'FabricaciÃ³n de piezas cilÃ­ndricas', 3),
+(5, 'RevisiÃ³n', 'InspecciÃ³n de equipos terminados', 2);
+
+INSERT INTO CLIENTES (ID_CLIENTES, NOMBRE_CLIENTE, CORREO, TELEFONO, DIRECCION, FECHA_REGISTRO) VALUES
+(1, 'Juan Perez', 'juan@example.com', '99998888', 'Choluteca', GETDATE()),
+(2, 'Pedro Gomez', 'pedro@example.com', '88887777', 'Tegucigalpa', GETDATE()),
+(3, 'Sofia Diaz', 'sofia@example.com', '97776666', 'San Pedro Sula', GETDATE()),
+(4, 'Andrea Ruiz', 'andrea@example.com', '93334444', 'La Ceiba', GETDATE()),
+(5, 'Ricardo Castro', 'ricardo@example.com', '92221111', 'Comayagua', GETDATE());
+
+INSERT INTO SERVICIOS (ID_SERVICIOS, NOMBRE_SERVICIO, DESCRIPCION) VALUES
+(1, 'Mantenimiento Industrial', 'RevisiÃ³n y reparaciÃ³n de maquinaria'),
+(2, 'ReparaciÃ³n ElÃ©ctrica', 'Servicios elÃ©ctricos industriales'),
+(3, 'CalibraciÃ³n de Equipos', 'Ajuste de precisiÃ³n en equipos'),
+(4, 'ReparaciÃ³n HidrÃ¡ulica', 'Servicio de sistemas hidrÃ¡ulicos'),
+(5, 'Pintura Industrial', 'Pintura protectora en maquinaria');
+
+INSERT INTO CONTRATOS (ID_CONTRATO, ID_CLIENTE, ID_SERVICIO, FECHA_INICIO, FECHA_FIN, ESTADO) VALUES
+(1, 1, 1, '2025-01-01', '2025-06-30', 'Activo'),
+(2, 2, 2, '2025-02-01', '2025-07-31', 'Activo'),
+(3, 3, 3, '2025-03-01', '2025-08-30', 'Pendiente'),
+(4, 4, 4, '2025-04-01', '2025-09-30', 'Finalizado'),
+(5, 5, 5, '2025-05-01', '2025-10-31', 'Activo');
+
+INSERT INTO FACTURAS (ID_FACTURA, ID_CONTRATO, FECHA_FACTURA, MONTO_TOTAL, METODO_PAGO) VALUES
+(1, 1, GETDATE(), 1500.00, 'Efectivo'),
+(2, 2, GETDATE(), 2500.00, 'Transferencia'),
+(3, 3, GETDATE(), 3500.00, 'Tarjeta'),
+(4, 4, GETDATE(), 4500.00, 'Cheque'),
+(5, 5, GETDATE(), 5500.00, 'Efectivo');
+
+INSERT INTO PAGOS (ID_PAGO, ID_FACTURA, FECHA_PAGO, MONTO_PAGO, ESTADO_PAGO) VALUES
+(1, 1, GETDATE(), 1500.00, 'Completado'),
+(2, 2, GETDATE(), 1000.00, 'Pendiente'),
+(3, 3, GETDATE(), 3500.00, 'Completado'),
+(4, 4, GETDATE(), 2000.00, 'Parcial'),
+(5, 5, GETDATE(), 5500.00, 'Completado');
+
+INSERT INTO SEGUIMIENTO (ID_SEGUIMIENTO, ID_CONTRATO, FECHA_SEGUIMIENTO, DESCRIPCION, NIVEL_SATISFACTORIO) VALUES
+(1, 1, GETDATE(), 'Cliente satisfecho con el servicio', 5),
+(2, 2, GETDATE(), 'Cliente solicita mejoras', 3),
+(3, 3, GETDATE(), 'Pendiente revisiÃ³n final', 2),
+(4, 4, GETDATE(), 'Contrato finalizado correctamente', 4),
+(5, 5, GETDATE(), 'Cliente muy satisfecho', 5);
+
+INSERT INTO PROVEEDORES (ID_PROVEEDOR, NOMBRE_PROVEEDOR, TELEFONO, CORREO, DIRECCION) VALUES
+(1, 'Proveedor A', '98765432', 'provA@example.com', 'Tegucigalpa'),
+(2, 'Proveedor B', '97654321', 'provB@example.com', 'San Pedro Sula'),
+(3, 'Proveedor C', '96543210', 'provC@example.com', 'Choluteca'),
+(4, 'Proveedor D', '95432109', 'provD@example.com', 'La Ceiba'),
+(5, 'Proveedor E', '94321098', 'provE@example.com', 'Comayagua');
+
+INSERT INTO INVENTARIOS (ID_INVENTARIO, NOMBRE_PRODUCTO, CANTIDAD, UNIDAD_MEDIDA, FECHA_INGRESO, ESTADO, ID_PROVEEDOR) VALUES
+(1, 'Aceite Industrial', 100, 'Litros', '2025-01-10', 'Disponible', 1),
+(2, 'Motor ElÃ©ctrico', 10, 'Unidades', '2025-02-05', 'Disponible', 2),
+(3, 'PistÃ³n HidrÃ¡ulico', 20, 'Unidades', '2025-03-01', 'Agotado', 3),
+(4, 'Pintura EpÃ³xica', 50, 'Galones', '2025-04-15', 'Disponible', 4),
+(5, 'Tornillos de Acero', 500, 'Unidades', '2025-05-20', 'Disponible', 5);
+
+INSERT INTO PROYECTOS (ID_PROYECTO, NOMBRE_PROYECTO, DESCRIPCION, FECHA_INICIO, FECHA_FIN, ESTADO, ID_USUARIO) VALUES
+(1, 'Proyecto Alfa', 'InstalaciÃ³n de maquinaria', '2025-01-01', '2025-06-01', 'En curso', 2),
+(2, 'Proyecto Beta', 'ReparaciÃ³n planta elÃ©ctrica', '2025-02-01', '2025-07-01', 'Pendiente', 3),
+(3, 'Proyecto Gamma', 'Mantenimiento hidrÃ¡ulico', '2025-03-01', '2025-08-01', 'En curso', 2),
+(4, 'Proyecto Delta', 'Pintura industrial', '2025-04-01', '2025-09-01', 'Finalizado', 3),
+(5, 'Proyecto Ã‰psilon', 'ModernizaciÃ³n de equipos', '2025-05-01', '2025-10-01', 'En curso', 2);
+
+INSERT INTO PROYECTO_INVENTARIO (ID_PROYECTO_INVENTARIO, ID_PRODUCTO, CANTIDAD_USADA, ID_PROYECTO) VALUES
+(1, 1, 20, 1),
+(2, 2, 2, 2),
+(3, 3, 5, 3),
+(4, 4, 10, 4),
+(5, 5, 50, 5);
+";
 
                     SqlCommand cmd = new SqlCommand(script, con);
                     cmd.ExecuteNonQuery();
 
-                    MessageBox.Show("? Base de datos MECANICA_INDUSTRIAL creada correctamente.", "Éxito",
+                    MessageBox.Show("? Base de datos MECANICA_INDUSTRIAL creada correctamente.", "Ã‰xito",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -228,6 +392,20 @@ namespace INICIO
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    
+                    MessageBox.Show("âœ… ConexiÃ³n exitosa con la base de datos MECANICA_INDUSTRIAL.",
+                        "ConexiÃ³n verificada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("âŒ Error al conectar con la base de datos:\n" + ex.Message,
+                    "Error de conexiÃ³n", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             // Centrar todo el grupo de controles
             int centerX = (this.ClientSize.Width - barratitulo.Width) / 2;
             int centerY = (this.ClientSize.Height - barratitulo.Height) / 2;
@@ -241,7 +419,7 @@ namespace INICIO
 
             if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(contra))
             {
-                MessageBox.Show("Debe ingresar usuario y contraseña.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Debe ingresar usuario y contraseÃ±a.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -258,14 +436,14 @@ namespace INICIO
 
                     if (count > 0)
                     {
-                        MessageBox.Show("Inicio de sesión exitoso.", "Bienvenido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Inicio de sesiÃ³n exitoso.", "Bienvenido", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         Menu frmMenu = new Menu();
                         frmMenu.Show();
                         this.Hide();
                     }
                     else
                     {
-                        MessageBox.Show("Usuario o contraseña incorrectos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Usuario o contraseÃ±a incorrectos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
