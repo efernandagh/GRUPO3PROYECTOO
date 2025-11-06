@@ -294,6 +294,23 @@ namespace INICIO
         {
 
         }
+
+        private void btndash_Click(object sender, EventArgs e)
+        {
+            ssubmenuadmin.Visible = false;
+
+            // Crear una instancia del formulario Dashboard
+            Dashboard frmDashboard = new Dashboard();
+
+            // Mostrarlo en pantalla completa
+            frmDashboard.WindowState = FormWindowState.Maximized;
+
+            // Mostrar el formulario
+            frmDashboard.Show();
+
+            // Ocultar el formulario actual (el menú)
+            this.Hide();
+        }
     }
 
 }

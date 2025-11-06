@@ -117,10 +117,42 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnminimizar.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
+        DAAACwwBP0AiyAAAAGRJREFUSEtjGAWkAm8gfgLE/8nEj4HYE4hxApACbBpJwY+AGCeAKSIXENQ/asGo
+        BQTBqAUEAVkWwMRwYWSATQwF4NOECyMDbGIogKACAmDgLaB5cQ2qLCixBGS4BxCPAmIBAwMAiJiLuN5g
+        lGoAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="button4.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
+        DAAACwwBP0AiyAAAALxJREFUSEvtlcsNwjAQBd0EEiVwgD5A1IzoAQ7cCX3Am6BFjuMVOGjhkpFGsZ39
+        OB8laaaVvbzJ+0Q7uZMuBNQSW7xKFwuaytv8nzdYyaNc9rMhC3mQm372pLkBBZifJQUNxqxxjhijzB9R
+        BlDoJFm7SK6ktmaU+SNqAfluOebj/Kqglj/AC8h3jeXODS//hRcQ2iD0FuU7D3nI4a/pWlKgvBXAGueI
+        MZobtPL/BuGfa34W3zSh+FbOfEpKDx2qqDbLUk1pAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnvolver.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
+        DAAACwwBP0AiyAAAASZJREFUSEvdlM0qhUEch18fpWyVhVKuwlZZOpZKuQGEhbLwsXEBx0a5BlmxcQO4
+        Be6CiLIRnmcymvMezssxs/HU0/T/15nfvGc+qi9YxgecC1UBVvH1w5aN3KxgDFi3kZs0YMNGbtwDJ3/D
+        G9z/pXu4hFP4LfdoQA6vcAa7SL/kGusrbbKNp/iIzuFchziEHaSnas1GH4ziDj6jYcc4gB2km99vkExj
+        3IJNG3Vy3RN/a4iXesxGHffIlfz1xp+jQf6FxVhAQy5DVYgJNOQuVIUYQUNeQlWI+CW3oSpE3JOLUBUi
+        nq7tUBVgHg14wnEbuUlv/JaNnPh27WJ8u05wEAO+pE1jLw/wDOMrrEc4jJ/YbBp/qidpFrtwNU1jLz09
+        iziJ/5qqegd7C4BA5AGVxgAAAABJRU5ErkJggg==
+</value>
+  </data>
   <metadata name="timerHora.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
   <metadata name="backgroundWorker1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>125, 17</value>
+  </metadata>
+  <metadata name="backgroundWorker2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>287, 17</value>
   </metadata>
 </root>

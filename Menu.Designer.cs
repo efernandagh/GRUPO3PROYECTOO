@@ -82,6 +82,7 @@
             btnpagos = new Button();
             btnfacturas = new Button();
             btnfacturacion = new Button();
+            btndash = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             Barradetitulo.SuspendLayout();
             Menuvertical.SuspendLayout();
@@ -742,6 +743,7 @@
             // ssubmenuadmin
             // 
             ssubmenuadmin.BackColor = Color.CornflowerBlue;
+            ssubmenuadmin.Controls.Add(btndash);
             ssubmenuadmin.Controls.Add(btnrespaldo);
             ssubmenuadmin.Controls.Add(btnusuarios);
             ssubmenuadmin.Controls.Add(btnroles);
@@ -870,6 +872,21 @@
             btnfacturacion.UseVisualStyleBackColor = false;
             btnfacturacion.Click += btnfacturacion_Click;
             // 
+            // btndash
+            // 
+            btndash.FlatAppearance.BorderSize = 0;
+            btndash.FlatAppearance.MouseOverBackColor = Color.SteelBlue;
+            btndash.FlatStyle = FlatStyle.Flat;
+            btndash.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            btndash.ForeColor = Color.White;
+            btndash.Location = new Point(19, 94);
+            btndash.Name = "btndash";
+            btndash.Size = new Size(85, 23);
+            btndash.TabIndex = 22;
+            btndash.Text = "Dashboard";
+            btndash.UseVisualStyleBackColor = true;
+            btndash.Click += btndash_Click;
+            // 
             // Menu
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -956,5 +973,6 @@
         private Button button4;
         private Button btnsalidapagos;
         private Button btnsalida;
+        private Button btndash;
     }
 }
