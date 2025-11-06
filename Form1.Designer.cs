@@ -88,7 +88,7 @@
             btnguardar.FlatAppearance.MouseDownBackColor = Color.SteelBlue;
             btnguardar.FlatStyle = FlatStyle.Flat;
             btnguardar.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
-            btnguardar.Location = new Point(657, 401);
+            btnguardar.Location = new Point(652, 400);
             btnguardar.Name = "btnguardar";
             btnguardar.Size = new Size(124, 29);
             btnguardar.TabIndex = 5;
