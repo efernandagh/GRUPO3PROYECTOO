@@ -12,16 +12,85 @@ namespace INICIO
 {
     internal class ConexionBD
     {
-        // 🔹 Cadena de conexión centralizada
-        private static readonly string cadenaConexion =
-            "Server=DESKTOP-8QJ2O4S\\ENIAGOMEZ;Database=MECANICA_INDUSTRIAL;Integrated Security=True;TrustServerCertificate=True;";
+        private static string cadenaConexion;
+        private static readonly string rutaConfig = "configuracion.txt";
+        private static readonly string nombreBD = "MECANICA_INDUSTRIAL";
 
-        // 🔹 Método para obtener una conexión abierta
+        static ConexionBD()
+        {
+            // Si el archivo existe, validamos que sea correcto
+            if (File.Exists(rutaConfig))
+            {
+                string contenido = File.ReadAllText(rutaConfig).Trim();
+
+                if (contenido.StartsWith("Server=", StringComparison.OrdinalIgnoreCase))
+                {
+                    cadenaConexion = contenido;
+                }
+                else
+                {
+                    // Archivo viejo o incorrecto -> reconstruir
+                    string servidor = DetectarServidor();
+                    cadenaConexion = $"Server={servidor};Database={nombreBD};Integrated Security=True;TrustServerCertificate=True;";
+                    File.WriteAllText(rutaConfig, cadenaConexion);
+                }
+            }
+            else
+            {
+                // No existe archivo -> crear con servidor detectado
+                string servidor = DetectarServidor();
+                cadenaConexion = $"Server={servidor};Database={nombreBD};Integrated Security=True;TrustServerCertificate=True;";
+                File.WriteAllText(rutaConfig, cadenaConexion);
+            }
+        }
+
         public static SqlConnection ObtenerConexion()
         {
-            SqlConnection conn = new SqlConnection(cadenaConexion);
-            conn.Open();
-            return conn;
+            try
+            {
+                SqlConnection conn = new SqlConnection(cadenaConexion);
+                conn.Open();
+                return conn;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"❌ Error al conectar con la base de datos:\n{ex.Message}", "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw;
+            }
+        }
+
+        private static string DetectarServidor()
+        {
+            string[] posiblesServidores =
+            {
+                Environment.MachineName + "\\SQLEXPRESS",
+                Environment.MachineName + "\\ENIAGOMEZ",
+                Environment.MachineName,
+                "localhost\\SQLEXPRESS",
+                "localhost",
+                "(localdb)\\MSSQLLocalDB"
+            };
+
+            foreach (string servidor in posiblesServidores)
+            {
+                try
+                {
+                    string prueba = $"Server={servidor};Integrated Security=True;TrustServerCertificate=True;";
+                    using (SqlConnection conn = new SqlConnection(prueba))
+                    {
+                        conn.Open();
+                        return servidor;
+                    }
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+
+            MessageBox.Show("No se detectó ninguna instancia de SQL Server. Verifique que esté instalado e iniciado.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Environment.Exit(0);
+            return null;
         }
     }
 }
