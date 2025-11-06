@@ -132,11 +132,7 @@
             lblTitulotaller.TabIndex = 0;
             lblTitulotaller.Text = "TALLER MECANICO INDUSTRIAL ";
             // 
-            // timerHora
-            // 
-            timerHora.Enabled = true;
-            timerHora.Interval = 1000;
-            timerHora.Tick += timerHora_Tick;
+        
             // 
             // panelProyectos
             // 
@@ -315,7 +311,7 @@
             Controls.Add(panelEncabezado);
             Name = "Dashboard";
             Text = "Dashboard";
-            Load += Dashboard_Load;
+           
             panelEncabezado.ResumeLayout(false);
             panelEncabezado.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
