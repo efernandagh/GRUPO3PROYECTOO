@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ClosedXML.Excel;
 using Microsoft.Data.SqlClient;
 
 namespace INICIO
@@ -214,6 +215,55 @@ namespace INICIO
         private void txtbuscar_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnExportar_Click(object sender, EventArgs e)
+        {
+            if (dtvproyectos.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay datos para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                // Crear un DataTable desde el DataGridView
+                DataTable dt = new DataTable();
+
+                foreach (DataGridViewColumn col in dtvproyectos.Columns)
+                {
+                    dt.Columns.Add(col.HeaderText);
+                }
+
+                foreach (DataGridViewRow row in dtvproyectos.Rows)
+                {
+                    if (!row.IsNewRow)
+                    {
+                        dt.Rows.Add(row.Cells.Cast<DataGridViewCell>()
+                            .Select(c => c.Value?.ToString()).ToArray());
+                    }
+                }
+
+                // Guardar archivo
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Excel Workbook|*.xlsx";
+                sfd.FileName = "ConsultaExportada.xlsx";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    using (XLWorkbook wb = new XLWorkbook())
+                    {
+                        wb.Worksheets.Add(dt, "Resultados");
+                        wb.SaveAs(sfd.FileName);
+                    }
+
+                    MessageBox.Show("Datos exportados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
         }
     }
 }

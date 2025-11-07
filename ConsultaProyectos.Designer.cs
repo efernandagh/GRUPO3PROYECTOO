@@ -40,6 +40,7 @@
             cbotabla = new ComboBox();
             label3 = new Label();
             cbDescripcion = new ComboBox();
+            btnExportar = new Button();
             ((System.ComponentModel.ISupportInitialize)dtvproyectos).BeginInit();
             SuspendLayout();
             // 
@@ -187,12 +188,23 @@
             cbDescripcion.TabIndex = 32;
             cbDescripcion.SelectedIndexChanged += cbDescripcion_SelectedIndexChanged;
             // 
+            // btnExportar
+            // 
+            btnExportar.Location = new Point(171, 514);
+            btnExportar.Name = "btnExportar";
+            btnExportar.Size = new Size(94, 29);
+            btnExportar.TabIndex = 33;
+            btnExportar.Text = "Exportar";
+            btnExportar.UseVisualStyleBackColor = true;
+            btnExportar.Click += btnExportar_Click;
+            // 
             // ConsultaProyectos
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SteelBlue;
             ClientSize = new Size(1023, 570);
+            Controls.Add(btnExportar);
             Controls.Add(cbDescripcion);
             Controls.Add(cbotabla);
             Controls.Add(label3);
@@ -229,5 +241,6 @@
         private ComboBox cbotabla;
         private Label label3;
         private ComboBox cbDescripcion;
+        private Button btnExportar;
     }
 }
