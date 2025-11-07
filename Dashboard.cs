@@ -36,7 +36,7 @@ namespace INICIO
 
         private void Dashboard_Load(object sender, EventArgs e)
         {
-            
+
 
         }
 
@@ -95,7 +95,7 @@ namespace INICIO
         private void Dashboard_Load_1(object sender, EventArgs e)
         {
             lblHora.Text = DateTime.Now.ToString("HH:mm:ss");
-            CargarGrafico   ();
+            CargarGrafico();
         }
 
         private void CargarGrafico()
@@ -104,44 +104,77 @@ namespace INICIO
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
-                    
 
-                    // Consultas SQL
-                    SqlCommand cmdProy = new SqlCommand("SELECT COUNT(*) FROM PROYECTOS", con);
-                    SqlCommand cmdCont = new SqlCommand("SELECT COUNT(*) FROM CONTRATOS", con);
-                    SqlCommand cmdCli = new SqlCommand("SELECT COUNT(*) FROM CLIENTES", con);
-                    SqlCommand cmdFact = new SqlCommand("SELECT SUM(MONTO_TOTAL) FROM FACTURAS", con);
 
-                    // Ejecución
-                    int proyectos = Convert.ToInt32(cmdProy.ExecuteScalar());
-                    int contratos = Convert.ToInt32(cmdCont.ExecuteScalar());
-                    int clientes = Convert.ToInt32(cmdCli.ExecuteScalar());
+                    // 🔹 Consulta agrupada por estado
+                    string query = "SELECT ESTADO, COUNT(*) AS TOTAL FROM PROYECTOS GROUP BY ESTADO";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqlDataReader dr = cmd.ExecuteReader();
 
-                    object totalFact = cmdFact.ExecuteScalar();
-                    decimal facturas = (totalFact != DBNull.Value) ? Convert.ToDecimal(totalFact) : 0;
-
-                    // 🔹 Configurar gráfico
+                    // 🔹 Limpiar gráfico
                     grafica.Series.Clear();
                     grafica.ChartAreas.Clear();
+                    grafica.Titles.Clear();
+                    grafica.Legends.Clear();
 
+                    // 🔹 Crear y configurar el área del gráfico
                     ChartArea area = new ChartArea("MainArea");
                     grafica.ChartAreas.Add(area);
 
-                    Series serie = new Series("Totales");
-                    serie.ChartType = SeriesChartType.Column; // Puede ser Pie, Bar, etc.
-                    serie.Points.AddXY("Proyectos", proyectos);
-                    serie.Points.AddXY("Contratos", contratos);
-                    serie.Points.AddXY("Clientes", clientes);
-                    serie.Points.AddXY("Facturas", facturas);
+                    // Quitar márgenes para centrar el pastel
+                    area.Position = new ElementPosition(0, 0, 100, 100);
+                    area.InnerPlotPosition = new ElementPosition(25, 10, 50, 80);
+                    // ↑ Esto centra y ajusta el pastel dentro del área visible
 
-                    serie.Color = Color.CornflowerBlue;
+                    // 🔹 Crear la serie (gráfico pastel)
+                    Series serie = new Series("Proyectos");
+                    serie.ChartType = SeriesChartType.Pie;
                     serie.IsValueShownAsLabel = true;
+                    serie.Label = "#VALX\n#PERCENT{P1}"; // nombre + porcentaje
+                    serie.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+                    serie.LabelForeColor = Color.White;
+                    serie["PieLabelStyle"] = "Inside";
+                    serie["PieStartAngle"] = "90";
 
+                    // 🔹 Cargar datos desde SQL
+                    while (dr.Read())
+                    {
+                        string estado = dr["ESTADO"].ToString();
+                        int total = Convert.ToInt32(dr["TOTAL"]);
+                        serie.Points.AddXY(estado, total);
+                    }
+
+                    // 🔹 Tonos diferentes de azul
+                    Color[] tonosAzules = new Color[]
+                    {
+                Color.FromArgb(70, 130, 180),  // SteelBlue
+                Color.FromArgb(100, 149, 237), // CornflowerBlue
+                Color.FromArgb(135, 206, 235), // SkyBlue
+                Color.FromArgb(176, 224, 230)  // PowderBlue
+                    };
+
+                    for (int i = 0; i < serie.Points.Count; i++)
+                        serie.Points[i].Color = tonosAzules[i % tonosAzules.Length];
+
+                    // 🔹 Agregar serie
                     grafica.Series.Add(serie);
 
-                    grafica.Titles.Clear();
-                    grafica.Titles.Add("Resumen General");
-                    grafica.Titles[0].Font = new Font("Segoe UI", 12, FontStyle.Bold);
+                    // 🔹 Leyenda (opcional, también centrada a la derecha)
+                    Legend leyenda = new Legend("Estados");
+                    leyenda.Docking = Docking.Right;
+                    leyenda.Alignment = StringAlignment.Center;
+                    leyenda.Font = new Font("Segoe UI", 9);
+                    grafica.Legends.Add(leyenda);
+
+                    // 🔹 Título centrado
+                    Title titulo = new Title("Proyectos por Estado",
+                        Docking.Top,
+                        new Font("Segoe UI", 12, FontStyle.Bold),
+                        Color.Black);
+                    titulo.Alignment = ContentAlignment.TopCenter;
+                    grafica.Titles.Add(titulo);
+
+                    dr.Close();
                 }
             }
             catch (Exception ex)
@@ -151,7 +184,10 @@ namespace INICIO
             }
         }
 
- 
+        private void btnSalir_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }
 

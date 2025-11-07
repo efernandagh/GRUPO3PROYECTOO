@@ -29,19 +29,15 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             panelEncabezado = new Panel();
-            btnminimizar = new Button();
-            button4 = new Button();
             pictureBox1 = new PictureBox();
-            btnvolver = new Button();
-            lblHora = new Label();
-            label2 = new Label();
             label1 = new Label();
             lblTitulotaller = new Label();
+            lblHora = new Label();
+            label2 = new Label();
             timerHora = new System.Windows.Forms.Timer(components);
             panelProyectos = new Panel();
             label3 = new Label();
@@ -62,6 +58,7 @@
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             grafica = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            btnSalir = new Button();
             panelEncabezado.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panelProyectos.SuspendLayout();
@@ -78,54 +75,14 @@
             // panelEncabezado
             // 
             panelEncabezado.BackColor = Color.SteelBlue;
-            panelEncabezado.Controls.Add(btnminimizar);
-            panelEncabezado.Controls.Add(button4);
             panelEncabezado.Controls.Add(pictureBox1);
-            panelEncabezado.Controls.Add(btnvolver);
-            panelEncabezado.Controls.Add(lblHora);
-            panelEncabezado.Controls.Add(label2);
             panelEncabezado.Controls.Add(label1);
             panelEncabezado.Controls.Add(lblTitulotaller);
             panelEncabezado.Dock = DockStyle.Top;
             panelEncabezado.Location = new Point(0, 0);
             panelEncabezado.Name = "panelEncabezado";
-            panelEncabezado.Size = new Size(1213, 81);
+            panelEncabezado.Size = new Size(1151, 61);
             panelEncabezado.TabIndex = 0;
-            // 
-            // btnminimizar
-            // 
-            btnminimizar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnminimizar.BackColor = Color.SteelBlue;
-            btnminimizar.BackgroundImage = (Image)resources.GetObject("btnminimizar.BackgroundImage");
-            btnminimizar.FlatAppearance.BorderColor = Color.LightSkyBlue;
-            btnminimizar.FlatAppearance.BorderSize = 0;
-            btnminimizar.FlatAppearance.MouseDownBackColor = Color.LightSkyBlue;
-            btnminimizar.FlatAppearance.MouseOverBackColor = Color.LightSkyBlue;
-            btnminimizar.FlatStyle = FlatStyle.Flat;
-            btnminimizar.Location = new Point(1146, 9);
-            btnminimizar.Name = "btnminimizar";
-            btnminimizar.Size = new Size(26, 25);
-            btnminimizar.TabIndex = 25;
-            btnminimizar.Text = "\r\n";
-            btnminimizar.UseVisualStyleBackColor = false;
-            btnminimizar.Click += btnminimizar_Click;
-            // 
-            // button4
-            // 
-            button4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button4.BackColor = Color.SteelBlue;
-            button4.BackgroundImage = (Image)resources.GetObject("button4.BackgroundImage");
-            button4.FlatAppearance.BorderColor = Color.LightSkyBlue;
-            button4.FlatAppearance.BorderSize = 0;
-            button4.FlatAppearance.MouseDownBackColor = Color.LightSkyBlue;
-            button4.FlatAppearance.MouseOverBackColor = Color.LightSkyBlue;
-            button4.FlatStyle = FlatStyle.Flat;
-            button4.Location = new Point(1178, 9);
-            button4.Name = "button4";
-            button4.Size = new Size(26, 25);
-            button4.TabIndex = 24;
-            button4.UseVisualStyleBackColor = false;
-            button4.Click += button4_Click;
             // 
             // pictureBox1
             // 
@@ -137,49 +94,12 @@
             pictureBox1.TabIndex = 4;
             pictureBox1.TabStop = false;
             // 
-            // btnvolver
-            // 
-            btnvolver.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnvolver.BackColor = Color.SteelBlue;
-            btnvolver.BackgroundImage = (Image)resources.GetObject("btnvolver.BackgroundImage");
-            btnvolver.FlatAppearance.BorderSize = 0;
-            btnvolver.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
-            btnvolver.FlatStyle = FlatStyle.Flat;
-            btnvolver.Location = new Point(1116, 7);
-            btnvolver.Name = "btnvolver";
-            btnvolver.Size = new Size(26, 25);
-            btnvolver.TabIndex = 23;
-            btnvolver.UseVisualStyleBackColor = false;
-            btnvolver.Click += btnvolver_Click;
-            // 
-            // lblHora
-            // 
-            lblHora.AutoSize = true;
-            lblHora.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblHora.ForeColor = Color.White;
-            lblHora.Location = new Point(933, 42);
-            lblHora.Name = "lblHora";
-            lblHora.Size = new Size(94, 25);
-            lblHora.TabIndex = 3;
-            lblHora.Text = "\"00:00:00\"";
-            lblHora.Click += lblHora_Click;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.ForeColor = Color.White;
-            label2.Location = new Point(933, 19);
-            label2.Name = "label2";
-            label2.Size = new Size(102, 15);
-            label2.TabIndex = 2;
-            label2.Text = "PANEL PRINCIPAL";
-            // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(77, 36);
+            label1.Location = new Point(75, 29);
             label1.Name = "label1";
             label1.Size = new Size(116, 32);
             label1.TabIndex = 1;
@@ -196,13 +116,35 @@
             lblTitulotaller.TabIndex = 0;
             lblTitulotaller.Text = "TALLER MECANICO INDUSTRIAL ";
             // 
+            // lblHora
+            // 
+            lblHora.AutoSize = true;
+            lblHora.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblHora.ForeColor = Color.Black;
+            lblHora.Location = new Point(948, 143);
+            lblHora.Name = "lblHora";
+            lblHora.Size = new Size(94, 25);
+            lblHora.TabIndex = 3;
+            lblHora.Text = "\"00:00:00\"";
+            lblHora.Click += lblHora_Click;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.ForeColor = Color.Black;
+            label2.Location = new Point(948, 115);
+            label2.Name = "label2";
+            label2.Size = new Size(102, 15);
+            label2.TabIndex = 2;
+            label2.Text = "PANEL PRINCIPAL";
+            // 
             // panelProyectos
             // 
-            panelProyectos.BackColor = Color.FromArgb(192, 192, 255);
+            panelProyectos.BackColor = Color.FromArgb(192, 255, 255);
             panelProyectos.Controls.Add(label3);
             panelProyectos.Controls.Add(lblProyectos);
             panelProyectos.Controls.Add(pictureBox2);
-            panelProyectos.Location = new Point(240, 115);
+            panelProyectos.Location = new Point(247, 171);
             panelProyectos.Name = "panelProyectos";
             panelProyectos.Size = new Size(200, 100);
             panelProyectos.TabIndex = 1;
@@ -243,7 +185,7 @@
             panelContratos.Controls.Add(btncontratos);
             panelContratos.Controls.Add(label4);
             panelContratos.Controls.Add(pictureBox3);
-            panelContratos.Location = new Point(446, 115);
+            panelContratos.Location = new Point(453, 171);
             panelContratos.Name = "panelContratos";
             panelContratos.Size = new Size(200, 100);
             panelContratos.TabIndex = 2;
@@ -288,7 +230,7 @@
             panelClientes.Controls.Add(btnclientes);
             panelClientes.Controls.Add(label5);
             panelClientes.Controls.Add(pictureBox4);
-            panelClientes.Location = new Point(652, 115);
+            panelClientes.Location = new Point(659, 171);
             panelClientes.Name = "panelClientes";
             panelClientes.Size = new Size(200, 100);
             panelClientes.TabIndex = 3;
@@ -333,7 +275,7 @@
             panelFacturas.Controls.Add(label6);
             panelFacturas.Controls.Add(lblFacturas);
             panelFacturas.Controls.Add(pictureBox5);
-            panelFacturas.Location = new Point(858, 115);
+            panelFacturas.Location = new Point(865, 171);
             panelFacturas.Name = "panelFacturas";
             panelFacturas.Size = new Size(200, 100);
             panelFacturas.TabIndex = 4;
@@ -374,24 +316,43 @@
             grafica.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             grafica.Legends.Add(legend1);
-            grafica.Location = new Point(215, 251);
+            grafica.Location = new Point(412, 355);
             grafica.Name = "grafica";
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             grafica.Series.Add(series1);
-            grafica.Size = new Size(507, 300);
+            grafica.Size = new Size(411, 193);
             grafica.TabIndex = 5;
             grafica.Text = "chart1";
             grafica.Click += grafica_Click;
+            // 
+            // btnSalir
+            // 
+            btnSalir.BackColor = Color.FromArgb(192, 192, 255);
+            btnSalir.FlatAppearance.BorderSize = 0;
+            btnSalir.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
+            btnSalir.FlatStyle = FlatStyle.Flat;
+            btnSalir.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnSalir.Location = new Point(582, 618);
+            btnSalir.Margin = new Padding(3, 2, 3, 2);
+            btnSalir.Name = "btnSalir";
+            btnSalir.Size = new Size(94, 32);
+            btnSalir.TabIndex = 15;
+            btnSalir.Text = "SALIR";
+            btnSalir.UseVisualStyleBackColor = false;
+            btnSalir.Click += btnSalir_Click;
             // 
             // Dashboard
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(192, 192, 255);
-            ClientSize = new Size(1213, 591);
+            ClientSize = new Size(1151, 661);
+            Controls.Add(btnSalir);
+            Controls.Add(lblHora);
             Controls.Add(grafica);
+            Controls.Add(label2);
             Controls.Add(panelFacturas);
             Controls.Add(panelClientes);
             Controls.Add(panelContratos);
@@ -399,6 +360,7 @@
             Controls.Add(panelEncabezado);
             FormBorderStyle = FormBorderStyle.None;
             Name = "Dashboard";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Dashboard";
             Load += Dashboard_Load_1;
             panelEncabezado.ResumeLayout(false);
@@ -418,6 +380,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
             ((System.ComponentModel.ISupportInitialize)grafica).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -446,10 +409,8 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private Button btncontratos;
         private Button btnclientes;
-        private Button btnminimizar;
-        private Button button4;
-        private Button btnvolver;
         private System.ComponentModel.BackgroundWorker backgroundWorker2;
         private System.Windows.Forms.DataVisualization.Charting.Chart grafica;
+        private Button btnSalir;
     }
 }
