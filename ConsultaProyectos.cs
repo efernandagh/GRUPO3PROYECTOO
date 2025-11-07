@@ -140,7 +140,17 @@ namespace INICIO
                 {
                     string query = $"SELECT * FROM {tabla} WHERE {columna} = @valor";
                     SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@valor", valor);
+
+                    // Detectamos si el valor es fecha
+                    DateTime fechaConvertida;
+                    if (DateTime.TryParse(valor, out fechaConvertida))
+                    {
+                        cmd.Parameters.Add("@valor", SqlDbType.Date).Value = fechaConvertida.Date;
+                    }
+                    else
+                    {
+                        cmd.Parameters.Add("@valor", SqlDbType.VarChar).Value = valor;
+                    }
 
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
