@@ -37,6 +37,7 @@
             label2 = new Label();
             label3 = new Label();
             cmbdescripcion = new ComboBox();
+            btnExportar = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvservicio).BeginInit();
             SuspendLayout();
             // 
@@ -144,12 +145,23 @@
             cmbdescripcion.TabIndex = 14;
             cmbdescripcion.SelectedIndexChanged += cmbdescripcion_SelectedIndexChanged;
             // 
+            // btnExportar
+            // 
+            btnExportar.Location = new Point(194, 366);
+            btnExportar.Name = "btnExportar";
+            btnExportar.Size = new Size(75, 23);
+            btnExportar.TabIndex = 15;
+            btnExportar.Text = "Exportar";
+            btnExportar.UseVisualStyleBackColor = true;
+            btnExportar.Click += btnExportar_Click;
+            // 
             // ConsultaServicio
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SteelBlue;
             ClientSize = new Size(849, 409);
+            Controls.Add(btnExportar);
             Controls.Add(cmbdescripcion);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -181,5 +193,6 @@
         private Label label2;
         private Label label3;
         private ComboBox cmbdescripcion;
+        private Button btnExportar;
     }
 }
