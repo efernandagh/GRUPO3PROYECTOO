@@ -1,4 +1,6 @@
 ﻿using ClosedXML.Excel;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -344,6 +346,86 @@ namespace INICIO
             catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+        private void btnpdf_Click(object sender, EventArgs e)
+        {
+            {
+                try
+                {
+                    if (dgvinventario.Rows.Count == 0)
+                    {
+                        MessageBox.Show("No hay datos para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    if (dgvinventario.Columns.Count == 0)
+                    {
+                        MessageBox.Show("No hay columnas para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    SaveFileDialog sfd = new SaveFileDialog();
+                    sfd.Filter = "Archivo PDF|*.pdf";
+                    sfd.FileName = "ServiciosExportados.pdf";
+
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        Document doc = new Document(PageSize.A4);
+                        PdfWriter.GetInstance(doc, new FileStream(sfd.FileName, FileMode.Create));
+                        doc.Open();
+
+                        // Encabezado
+                        var tituloFont = FontFactory.GetFont("Arial", 14, iTextSharp.text.Font.BOLD);
+                        Paragraph encabezado = new Paragraph("C-MISUR\nControl Mecánico Industrial de Servicios y Reparaciones", tituloFont);
+                        encabezado.Alignment = Element.ALIGN_CENTER;
+                        encabezado.SpacingAfter = 12f;
+                        doc.Add(encabezado);
+
+                        // Crear tabla
+                        int columnas = dgvinventario.Columns.Count;
+                        PdfPTable tabla = new PdfPTable(columnas);
+                        tabla.WidthPercentage = 100;
+
+                        // Encabezados de columnas
+                        var headerFont = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
+                        foreach (DataGridViewColumn col in dgvinventario.Columns)
+                        {
+                            string headerText = col.HeaderText ?? "";
+                            PdfPCell celdaHeader = new PdfPCell(new Phrase(headerText, headerFont));
+                            celdaHeader.HorizontalAlignment = Element.ALIGN_CENTER;
+                            celdaHeader.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            celdaHeader.BackgroundColor = new BaseColor(217, 225, 242); // azul claro
+                            tabla.AddCell(celdaHeader);
+                        }
+
+                        // Filas de datos
+                        var cellFont = FontFactory.GetFont("Arial", 9, iTextSharp.text.Font.NORMAL);
+                        foreach (DataGridViewRow fila in dgvinventario.Rows)
+                        {
+                            if (!fila.IsNewRow)
+                            {
+                                foreach (DataGridViewCell celda in fila.Cells)
+                                {
+                                    string texto = celda?.Value?.ToString() ?? "";
+                                    PdfPCell pcell = new PdfPCell(new Phrase(texto, cellFont));
+                                    pcell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                    tabla.AddCell(pcell);
+                                }
+                            }
+                        }
+
+                        doc.Add(tabla);
+                        doc.Close();
+
+                        MessageBox.Show("PDF exportado correctamente C-MISUR.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al exportar a PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }

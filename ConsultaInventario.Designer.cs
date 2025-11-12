@@ -38,6 +38,8 @@
             label1 = new Label();
             cmbdescripcion = new ComboBox();
             btnExportar = new Button();
+            label5 = new Label();
+            btnpdf = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvinventario).BeginInit();
             SuspendLayout();
             // 
@@ -101,7 +103,7 @@
             btnsalir.FlatStyle = FlatStyle.Flat;
             btnsalir.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
             btnsalir.ForeColor = Color.White;
-            btnsalir.Location = new Point(433, 529);
+            btnsalir.Location = new Point(421, 638);
             btnsalir.Name = "btnsalir";
             btnsalir.Size = new Size(94, 29);
             btnsalir.TabIndex = 10;
@@ -140,20 +142,42 @@
             // 
             // btnExportar
             // 
-            btnExportar.Location = new Point(580, 530);
+            btnExportar.Location = new Point(344, 555);
             btnExportar.Name = "btnExportar";
             btnExportar.Size = new Size(94, 29);
             btnExportar.TabIndex = 14;
-            btnExportar.Text = "Exportar";
+            btnExportar.Text = "Excel";
             btnExportar.UseVisualStyleBackColor = true;
             btnExportar.Click += btnExportar_Click;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.ForeColor = Color.White;
+            label5.Location = new Point(436, 523);
+            label5.Name = "label5";
+            label5.Size = new Size(79, 20);
+            label5.TabIndex = 15;
+            label5.Text = "EXPORTAR";
+            // 
+            // btnpdf
+            // 
+            btnpdf.Location = new Point(500, 555);
+            btnpdf.Name = "btnpdf";
+            btnpdf.Size = new Size(94, 29);
+            btnpdf.TabIndex = 16;
+            btnpdf.Text = "PDF";
+            btnpdf.UseVisualStyleBackColor = true;
+            btnpdf.Click += btnpdf_Click;
             // 
             // ConsultaInventario
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SteelBlue;
-            ClientSize = new Size(997, 617);
+            ClientSize = new Size(1014, 700);
+            Controls.Add(btnpdf);
+            Controls.Add(label5);
             Controls.Add(btnExportar);
             Controls.Add(cmbdescripcion);
             Controls.Add(label1);
@@ -186,5 +210,7 @@
         private Label label1;
         private ComboBox cmbdescripcion;
         private Button btnExportar;
+        private Label label5;
+        private Button btnpdf;
     }
 }
