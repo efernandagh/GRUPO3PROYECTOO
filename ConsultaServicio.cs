@@ -1,4 +1,6 @@
 ﻿using ClosedXML.Excel;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -242,8 +244,6 @@ namespace INICIO
 
         private void btnExportar_Click(object sender, EventArgs e)
         {
-            
-        {
             if (dgvservicio.Rows.Count == 0)
             {
                 MessageBox.Show("No hay datos para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -272,17 +272,44 @@ namespace INICIO
                 // Guardar archivo
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.Filter = "Excel Workbook|*.xlsx";
-                sfd.FileName = "ConsultaExportada.xlsx";
+                sfd.FileName = "ServiciosExportados.xlsx";
 
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
                     using (XLWorkbook wb = new XLWorkbook())
                     {
-                        wb.Worksheets.Add(dt, "Resultados");
+                        // Crear hoja y agregar datos
+                        var ws = wb.Worksheets.Add(dt, "Resultados");
+
+                        // Insertar filas para encabezado
+                        ws.Row(1).InsertRowsAbove(2);
+
+                        // Encabezado principal con el nombre de la empresa
+                        ws.Cell("A1").Value = "C-MISUR - Control Mecánico Industrial de Servicios y Reparaciones";
+                        ws.Cell("A1").Style.Font.Bold = true;
+                        ws.Cell("A1").Style.Font.FontSize = 16;
+                        ws.Cell("A1").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        // Combinar celdas del encabezado (depende del número de columnas)
+                        int totalColumnas = dt.Columns.Count;
+                        ws.Range(1, 1, 1, totalColumnas).Merge();
+
+                        // Color de fondo del encabezado
+                        ws.Range(1, 1, 1, totalColumnas).Style.Fill.BackgroundColor = XLColor.FromHtml("#D9E1F2");
+
+                        // (Opcional) Fecha y hora de exportación debajo del título
+                        ws.Cell("A2").Value = "Exportado el " + DateTime.Now.ToString("dd/MM/yyyy hh:mm tt");
+                        ws.Cell("A2").Style.Font.Italic = true;
+                        ws.Range(2, 1, 2, totalColumnas).Merge();
+                        ws.Cell("A2").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        // Ajustar ancho de columnas automáticamente
+                        ws.Columns().AdjustToContents();
+
                         wb.SaveAs(sfd.FileName);
                     }
 
-                    MessageBox.Show("Datos exportados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Datos exportados correctamente C-MISUR.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
@@ -290,6 +317,87 @@ namespace INICIO
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
+        private void btnExportarPDF_Click(object sender, EventArgs e)
+        {
+            
+        {
+            try
+            {
+                if (dgvservicio.Rows.Count == 0)
+                {
+                    MessageBox.Show("No hay datos para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (dgvservicio.Columns.Count == 0)
+                {
+                    MessageBox.Show("No hay columnas para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Archivo PDF|*.pdf";
+                sfd.FileName = "ServiciosExportados.pdf";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    Document doc = new Document(PageSize.A4);
+                    PdfWriter.GetInstance(doc, new FileStream(sfd.FileName, FileMode.Create));
+                    doc.Open();
+
+                    // Encabezado
+                    var tituloFont = FontFactory.GetFont("Arial", 14, iTextSharp.text.Font.BOLD);
+                    Paragraph encabezado = new Paragraph("C-MISUR\nControl Mecánico Industrial de Servicios y Reparaciones", tituloFont);
+                    encabezado.Alignment = Element.ALIGN_CENTER;
+                    encabezado.SpacingAfter = 12f;
+                    doc.Add(encabezado);
+
+                    // Crear tabla
+                    int columnas = dgvservicio.Columns.Count;
+                    PdfPTable tabla = new PdfPTable(columnas);
+                    tabla.WidthPercentage = 100;
+
+                    // Encabezados de columnas
+                    var headerFont = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
+                    foreach (DataGridViewColumn col in dgvservicio.Columns)
+                    {
+                        string headerText = col.HeaderText ?? "";
+                        PdfPCell celdaHeader = new PdfPCell(new Phrase(headerText, headerFont));
+                        celdaHeader.HorizontalAlignment = Element.ALIGN_CENTER;
+                        celdaHeader.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        celdaHeader.BackgroundColor = new BaseColor(217, 225, 242); // azul claro
+                        tabla.AddCell(celdaHeader);
+                    }
+
+                    // Filas de datos
+                    var cellFont = FontFactory.GetFont("Arial", 9, iTextSharp.text.Font.NORMAL);
+                    foreach (DataGridViewRow fila in dgvservicio.Rows)
+                    {
+                        if (!fila.IsNewRow)
+                        {
+                            foreach (DataGridViewCell celda in fila.Cells)
+                            {
+                                string texto = celda?.Value?.ToString() ?? "";
+                                PdfPCell pcell = new PdfPCell(new Phrase(texto, cellFont));
+                                pcell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                tabla.AddCell(pcell);
+                            }
+                        }
+                    }
+
+                    doc.Add(tabla);
+                    doc.Close();
+
+                    MessageBox.Show("PDF exportado correctamente C-MISUR.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al exportar a PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
     }
 }
+

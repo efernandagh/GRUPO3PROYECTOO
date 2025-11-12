@@ -38,6 +38,7 @@
             label3 = new Label();
             cmbdescripcion = new ComboBox();
             btnExportar = new Button();
+            btnExportarPDF = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvservicio).BeginInit();
             SuspendLayout();
             // 
@@ -151,9 +152,19 @@
             btnExportar.Name = "btnExportar";
             btnExportar.Size = new Size(75, 23);
             btnExportar.TabIndex = 15;
-            btnExportar.Text = "Exportar";
+            btnExportar.Text = "Excel";
             btnExportar.UseVisualStyleBackColor = true;
             btnExportar.Click += btnExportar_Click;
+            // 
+            // btnExportarPDF
+            // 
+            btnExportarPDF.Location = new Point(522, 368);
+            btnExportarPDF.Name = "btnExportarPDF";
+            btnExportarPDF.Size = new Size(75, 23);
+            btnExportarPDF.TabIndex = 16;
+            btnExportarPDF.Text = "pdf";
+            btnExportarPDF.UseVisualStyleBackColor = true;
+            btnExportarPDF.Click += btnExportarPDF_Click;
             // 
             // ConsultaServicio
             // 
@@ -161,6 +172,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SteelBlue;
             ClientSize = new Size(849, 409);
+            Controls.Add(btnExportarPDF);
             Controls.Add(btnExportar);
             Controls.Add(cmbdescripcion);
             Controls.Add(label3);
@@ -194,5 +206,6 @@
         private Label label3;
         private ComboBox cmbdescripcion;
         private Button btnExportar;
+        private Button btnExportarPDF;
     }
 }
