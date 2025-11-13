@@ -39,8 +39,8 @@
             button2 = new Button();
             button1 = new Button();
             btnpro = new Button();
-            sqlCommandBuilder1 = new Microsoft.Data.SqlClient.SqlCommandBuilder();
             submenuconsultas = new Panel();
+            sqlCommandBuilder1 = new Microsoft.Data.SqlClient.SqlCommandBuilder();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             SuspendLayout();
@@ -215,6 +215,7 @@
             FormBorderStyle = FormBorderStyle.None;
             Name = "Menuconsultas";
             Text = "Menuconsultas";
+            Load += Menuconsultas_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel2.ResumeLayout(false);

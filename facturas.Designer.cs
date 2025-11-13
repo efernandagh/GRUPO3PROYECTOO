@@ -71,7 +71,7 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(523, 341);
             panel1.TabIndex = 1;
-            panel1.Paint += panel1_Paint;
+           
             // 
             // cboidcontrato
             // 
@@ -80,7 +80,7 @@
             cboidcontrato.Name = "cboidcontrato";
             cboidcontrato.Size = new Size(121, 23);
             cboidcontrato.TabIndex = 18;
-            cboidcontrato.SelectedIndexChanged += cboidcontrato_SelectedIndexChanged;
+            
             // 
             // txtidfactura
             // 
@@ -154,7 +154,7 @@
             cmbMetodoPago.Name = "cmbMetodoPago";
             cmbMetodoPago.Size = new Size(121, 23);
             cmbMetodoPago.TabIndex = 10;
-            cmbMetodoPago.SelectedIndexChanged += cmbMetodoPago_SelectedIndexChanged;
+           
             // 
             // pictureBox1
             // 
@@ -165,7 +165,7 @@
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 2;
             pictureBox1.TabStop = false;
-            pictureBox1.Click += pictureBox1_Click;
+         
             // 
             // dtpFecha
             // 
@@ -238,7 +238,7 @@
             label1.Size = new Size(96, 25);
             label1.TabIndex = 0;
             label1.Text = "FACTURA";
-            label1.Click += label1_Click;
+        
             // 
             // facturas
             // 

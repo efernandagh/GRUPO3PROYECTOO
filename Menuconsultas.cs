@@ -60,5 +60,10 @@ namespace INICIO
         {
             this.WindowState = FormWindowState.Minimized;
         }
+
+        private void Menuconsultas_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
