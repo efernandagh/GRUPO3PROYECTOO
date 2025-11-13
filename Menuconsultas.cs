@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace INICIO
@@ -15,53 +8,52 @@ namespace INICIO
         public Menuconsultas()
         {
             InitializeComponent();
+            this.IsMdiContainer = true; // Hace que este formulario sea un contenedor MDI
+        }
+
+        private void AbrirFormulario(Form formulario)
+        {
+            // Cerrar cualquier formulario hijo que esté abierto
+            foreach (Form frm in this.MdiChildren)
+            {
+                frm.Close();
+            }
+
+            // Configurar el nuevo formulario como hijo del contenedor
+            formulario.MdiParent = this;
+            formulario.Show(); // No se cambia tamaño ni color
         }
 
         private void btnfacturacion_Click(object sender, EventArgs e)
         {
-            Salidapagos frm = new Salidapagos();
-            frm.Show(); // ← esto muestra el formulario
-
-        }
-
-        private void btnvolver_Click(object sender, EventArgs e)
-        {
-            // Mostrar el menú principal de nuevo
-            Menu frmMenu = new Menu();
-            frmMenu.Show();
-
-            // Cerrar este formulario
-            this.Close();
-
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-
-            Application.Exit();
+            AbrirFormulario(new Salidapagos());
         }
 
         private void btnpro_Click(object sender, EventArgs e)
         {
-            ConsultaProyectos frm = new ConsultaProyectos();
-            frm.Show(); // ← esto muestra el formulario
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-
+            AbrirFormulario(new ConsultaProyectos());
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ConsultaServicio frm = new ConsultaServicio();
-            frm.Show();
+            AbrirFormulario(new ConsultaServicio());
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            ConsultaInventario frm = new ConsultaInventario();
-            frm.Show();
+            AbrirFormulario(new ConsultaInventario());
+        }
+
+        private void btnvolver_Click(object sender, EventArgs e)
+        {
+            Menu frmMenu = new Menu();
+            frmMenu.Show();
+            this.Close();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
 
         private void btnminimizar_Click(object sender, EventArgs e)

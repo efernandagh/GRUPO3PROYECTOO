@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Menuconsultas));
             panel1 = new Panel();
+            btnminimizar = new Button();
             button4 = new Button();
             btnvolver = new Button();
             label1 = new Label();
@@ -39,7 +40,7 @@
             button1 = new Button();
             btnpro = new Button();
             sqlCommandBuilder1 = new Microsoft.Data.SqlClient.SqlCommandBuilder();
-            btnminimizar = new Button();
+            submenuconsultas = new Panel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             SuspendLayout();
@@ -56,6 +57,24 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1213, 69);
             panel1.TabIndex = 0;
+            // 
+            // btnminimizar
+            // 
+            btnminimizar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnminimizar.BackColor = Color.SteelBlue;
+            btnminimizar.BackgroundImage = (Image)resources.GetObject("btnminimizar.BackgroundImage");
+            btnminimizar.FlatAppearance.BorderColor = Color.LightSkyBlue;
+            btnminimizar.FlatAppearance.BorderSize = 0;
+            btnminimizar.FlatAppearance.MouseDownBackColor = Color.LightSkyBlue;
+            btnminimizar.FlatAppearance.MouseOverBackColor = Color.LightSkyBlue;
+            btnminimizar.FlatStyle = FlatStyle.Flat;
+            btnminimizar.Location = new Point(1115, 24);
+            btnminimizar.Name = "btnminimizar";
+            btnminimizar.Size = new Size(26, 25);
+            btnminimizar.TabIndex = 22;
+            btnminimizar.Text = "\r\n";
+            btnminimizar.UseVisualStyleBackColor = false;
+            btnminimizar.Click += btnminimizar_Click;
             // 
             // button4
             // 
@@ -107,6 +126,7 @@
             panel2.Controls.Add(button2);
             panel2.Controls.Add(button1);
             panel2.Controls.Add(btnpro);
+            panel2.Controls.Add(submenuconsultas);
             panel2.Dock = DockStyle.Left;
             panel2.Location = new Point(0, 69);
             panel2.Name = "panel2";
@@ -177,23 +197,12 @@
             btnpro.UseVisualStyleBackColor = false;
             btnpro.Click += btnpro_Click;
             // 
-            // btnminimizar
+            // submenuconsultas
             // 
-            btnminimizar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnminimizar.BackColor = Color.SteelBlue;
-            btnminimizar.BackgroundImage = (Image)resources.GetObject("btnminimizar.BackgroundImage");
-            btnminimizar.FlatAppearance.BorderColor = Color.LightSkyBlue;
-            btnminimizar.FlatAppearance.BorderSize = 0;
-            btnminimizar.FlatAppearance.MouseDownBackColor = Color.LightSkyBlue;
-            btnminimizar.FlatAppearance.MouseOverBackColor = Color.LightSkyBlue;
-            btnminimizar.FlatStyle = FlatStyle.Flat;
-            btnminimizar.Location = new Point(1115, 24);
-            btnminimizar.Name = "btnminimizar";
-            btnminimizar.Size = new Size(26, 25);
-            btnminimizar.TabIndex = 22;
-            btnminimizar.Text = "\r\n";
-            btnminimizar.UseVisualStyleBackColor = false;
-            btnminimizar.Click += btnminimizar_Click;
+            submenuconsultas.Location = new Point(12, 72);
+            submenuconsultas.Name = "submenuconsultas";
+            submenuconsultas.Size = new Size(157, 258);
+            submenuconsultas.TabIndex = 2;
             // 
             // Menuconsultas
             // 
@@ -225,5 +234,6 @@
         private Button btnvolver;
         private Button button4;
         private Button btnminimizar;
+        private Panel submenuconsultas;
     }
 }
