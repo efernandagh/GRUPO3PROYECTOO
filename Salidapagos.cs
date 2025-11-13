@@ -1,4 +1,7 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using ClosedXML.Excel;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -229,7 +232,7 @@ namespace INICIO
         private void btnbuscar_Click(object sender, EventArgs e)
         {
 
-          
+
         }
 
         private void btncargar_Click(object sender, EventArgs e)
@@ -323,6 +326,133 @@ namespace INICIO
                 MessageBox.Show("Error al buscar: " + ex.Message);
             }
         }
-    }
 
+        private void btnexcel_Click(object sender, EventArgs e)
+        {
+            if (dtvpagos.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay datos para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                // Crear un DataTable desde el DataGridView
+                DataTable dt = new DataTable();
+
+                foreach (DataGridViewColumn col in dtvpagos.Columns)
+                {
+                    dt.Columns.Add(col.HeaderText);
+                }
+
+                foreach (DataGridViewRow row in dtvpagos.Rows)
+                {
+                    if (!row.IsNewRow)
+                    {
+                        dt.Rows.Add(row.Cells.Cast<DataGridViewCell>()
+                            .Select(c => c.Value?.ToString()).ToArray());
+                    }
+                }
+
+                // Guardar archivo
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Excel Workbook|*.xlsx";
+                sfd.FileName = "ConsultaExportada.xlsx";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    using (XLWorkbook wb = new XLWorkbook())
+                    {
+                        wb.Worksheets.Add(dt, "Resultados");
+                        wb.SaveAs(sfd.FileName);
+                    }
+
+                    MessageBox.Show("Datos exportados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+        private void btnpdf_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dtvpagos.Rows.Count == 0)
+                {
+                    MessageBox.Show("No hay datos para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (dtvpagos.Columns.Count == 0)
+                {
+                    MessageBox.Show("No hay columnas para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Archivo PDF|*.pdf";
+                sfd.FileName = "ServiciosExportados.pdf";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    Document doc = new Document(PageSize.A4);
+                    PdfWriter.GetInstance(doc, new FileStream(sfd.FileName, FileMode.Create));
+                    doc.Open();
+
+                    // Encabezado
+                    var tituloFont = FontFactory.GetFont("Arial", 14, iTextSharp.text.Font.BOLD);
+                    Paragraph encabezado = new Paragraph("C-MISUR\nControl Mecánico Industrial de Servicios y Reparaciones", tituloFont);
+                    encabezado.Alignment = Element.ALIGN_CENTER;
+                    encabezado.SpacingAfter = 12f;
+                    doc.Add(encabezado);
+
+                    // Crear tabla
+                    int columnas = dtvpagos.Columns.Count;
+                    PdfPTable tabla = new PdfPTable(columnas);
+                    tabla.WidthPercentage = 100;
+
+                    // Encabezados de columnas
+                    var headerFont = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
+                    foreach (DataGridViewColumn col in dtvpagos.Columns)
+                    {
+                        string headerText = col.HeaderText ?? "";
+                        PdfPCell celdaHeader = new PdfPCell(new Phrase(headerText, headerFont));
+                        celdaHeader.HorizontalAlignment = Element.ALIGN_CENTER;
+                        celdaHeader.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        celdaHeader.BackgroundColor = new BaseColor(217, 225, 242); // azul claro
+                        tabla.AddCell(celdaHeader);
+                    }
+
+                    // Filas de datos
+                    var cellFont = FontFactory.GetFont("Arial", 9, iTextSharp.text.Font.NORMAL);
+                    foreach (DataGridViewRow fila in dtvpagos.Rows)
+                    {
+                        if (!fila.IsNewRow)
+                        {
+                            foreach (DataGridViewCell celda in fila.Cells)
+                            {
+                                string texto = celda?.Value?.ToString() ?? "";
+                                PdfPCell pcell = new PdfPCell(new Phrase(texto, cellFont));
+                                pcell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                tabla.AddCell(pcell);
+                            }
+                        }
+                    }
+
+                    doc.Add(tabla);
+                    doc.Close();
+
+                    MessageBox.Show("PDF exportado correctamente C-MISUR.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al exportar a PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+    }
+    
 }

@@ -54,8 +54,9 @@
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1213, 69);
+            panel1.Size = new Size(1386, 92);
             panel1.TabIndex = 0;
             // 
             // btnminimizar
@@ -68,9 +69,10 @@
             btnminimizar.FlatAppearance.MouseDownBackColor = Color.LightSkyBlue;
             btnminimizar.FlatAppearance.MouseOverBackColor = Color.LightSkyBlue;
             btnminimizar.FlatStyle = FlatStyle.Flat;
-            btnminimizar.Location = new Point(1115, 24);
+            btnminimizar.Location = new Point(1274, 32);
+            btnminimizar.Margin = new Padding(3, 4, 3, 4);
             btnminimizar.Name = "btnminimizar";
-            btnminimizar.Size = new Size(26, 25);
+            btnminimizar.Size = new Size(30, 33);
             btnminimizar.TabIndex = 22;
             btnminimizar.Text = "\r\n";
             btnminimizar.UseVisualStyleBackColor = false;
@@ -86,9 +88,10 @@
             button4.FlatAppearance.MouseDownBackColor = Color.LightSkyBlue;
             button4.FlatAppearance.MouseOverBackColor = Color.LightSkyBlue;
             button4.FlatStyle = FlatStyle.Flat;
-            button4.Location = new Point(1147, 24);
+            button4.Location = new Point(1311, 32);
+            button4.Margin = new Padding(3, 4, 3, 4);
             button4.Name = "button4";
-            button4.Size = new Size(26, 25);
+            button4.Size = new Size(30, 33);
             button4.TabIndex = 20;
             button4.UseVisualStyleBackColor = false;
             button4.Click += button4_Click;
@@ -101,9 +104,10 @@
             btnvolver.FlatAppearance.BorderSize = 0;
             btnvolver.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
             btnvolver.FlatStyle = FlatStyle.Flat;
-            btnvolver.Location = new Point(1085, 22);
+            btnvolver.Location = new Point(1240, 29);
+            btnvolver.Margin = new Padding(3, 4, 3, 4);
             btnvolver.Name = "btnvolver";
-            btnvolver.Size = new Size(26, 25);
+            btnvolver.Size = new Size(30, 33);
             btnvolver.TabIndex = 2;
             btnvolver.UseVisualStyleBackColor = false;
             btnvolver.Click += btnvolver_Click;
@@ -113,9 +117,9 @@
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(546, 21);
+            label1.Location = new Point(624, 28);
             label1.Name = "label1";
-            label1.Size = new Size(179, 25);
+            label1.Size = new Size(230, 32);
             label1.TabIndex = 0;
             label1.Text = "Menú de consultas";
             // 
@@ -128,9 +132,10 @@
             panel2.Controls.Add(btnpro);
             panel2.Controls.Add(submenuconsultas);
             panel2.Dock = DockStyle.Left;
-            panel2.Location = new Point(0, 69);
+            panel2.Location = new Point(0, 92);
+            panel2.Margin = new Padding(3, 4, 3, 4);
             panel2.Name = "panel2";
-            panel2.Size = new Size(172, 522);
+            panel2.Size = new Size(197, 696);
             panel2.TabIndex = 1;
             // 
             // btnfacturacion
@@ -141,9 +146,10 @@
             btnfacturacion.FlatStyle = FlatStyle.Flat;
             btnfacturacion.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnfacturacion.ForeColor = Color.White;
-            btnfacturacion.Location = new Point(22, 268);
+            btnfacturacion.Location = new Point(25, 357);
+            btnfacturacion.Margin = new Padding(3, 4, 3, 4);
             btnfacturacion.Name = "btnfacturacion";
-            btnfacturacion.Size = new Size(90, 23);
+            btnfacturacion.Size = new Size(115, 31);
             btnfacturacion.TabIndex = 24;
             btnfacturacion.Text = "Facturación";
             btnfacturacion.UseVisualStyleBackColor = false;
@@ -157,9 +163,10 @@
             button2.FlatStyle = FlatStyle.Flat;
             button2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button2.ForeColor = Color.White;
-            button2.Location = new Point(22, 211);
+            button2.Location = new Point(25, 281);
+            button2.Margin = new Padding(3, 4, 3, 4);
             button2.Name = "button2";
-            button2.Size = new Size(90, 23);
+            button2.Size = new Size(103, 31);
             button2.TabIndex = 22;
             button2.Text = "Inventarios";
             button2.UseVisualStyleBackColor = false;
@@ -173,9 +180,10 @@
             button1.FlatStyle = FlatStyle.Flat;
             button1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button1.ForeColor = Color.White;
-            button1.Location = new Point(22, 156);
+            button1.Location = new Point(25, 208);
+            button1.Margin = new Padding(3, 4, 3, 4);
             button1.Name = "button1";
-            button1.Size = new Size(90, 23);
+            button1.Size = new Size(103, 31);
             button1.TabIndex = 21;
             button1.Text = "Servicios";
             button1.UseVisualStyleBackColor = false;
@@ -189,9 +197,10 @@
             btnpro.FlatStyle = FlatStyle.Flat;
             btnpro.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnpro.ForeColor = Color.White;
-            btnpro.Location = new Point(22, 102);
+            btnpro.Location = new Point(25, 136);
+            btnpro.Margin = new Padding(3, 4, 3, 4);
             btnpro.Name = "btnpro";
-            btnpro.Size = new Size(90, 23);
+            btnpro.Size = new Size(103, 31);
             btnpro.TabIndex = 20;
             btnpro.Text = "Proyectos";
             btnpro.UseVisualStyleBackColor = false;
@@ -199,20 +208,22 @@
             // 
             // submenuconsultas
             // 
-            submenuconsultas.Location = new Point(12, 72);
+            submenuconsultas.Location = new Point(14, 96);
+            submenuconsultas.Margin = new Padding(3, 4, 3, 4);
             submenuconsultas.Name = "submenuconsultas";
-            submenuconsultas.Size = new Size(157, 258);
+            submenuconsultas.Size = new Size(179, 344);
             submenuconsultas.TabIndex = 2;
             // 
             // Menuconsultas
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(192, 192, 255);
-            ClientSize = new Size(1213, 591);
+            ClientSize = new Size(1386, 788);
             Controls.Add(panel2);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 4, 3, 4);
             Name = "Menuconsultas";
             Text = "Menuconsultas";
             Load += Menuconsultas_Load;
