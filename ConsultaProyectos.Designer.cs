@@ -41,6 +41,7 @@
             label3 = new Label();
             cbDescripcion = new ComboBox();
             btnExportar = new Button();
+            btnExportarPDF = new Button();
             ((System.ComponentModel.ISupportInitialize)dtvproyectos).BeginInit();
             SuspendLayout();
             // 
@@ -190,13 +191,23 @@
             // 
             // btnExportar
             // 
-            btnExportar.Location = new Point(171, 514);
+            btnExportar.Location = new Point(101, 514);
             btnExportar.Name = "btnExportar";
-            btnExportar.Size = new Size(94, 29);
+            btnExportar.Size = new Size(134, 40);
             btnExportar.TabIndex = 33;
-            btnExportar.Text = "Exportar";
+            btnExportar.Text = "Exportar a Excel";
             btnExportar.UseVisualStyleBackColor = true;
             btnExportar.Click += btnExportar_Click;
+            // 
+            // btnExportarPDF
+            // 
+            btnExportarPDF.Location = new Point(241, 514);
+            btnExportarPDF.Name = "btnExportarPDF";
+            btnExportarPDF.Size = new Size(134, 40);
+            btnExportarPDF.TabIndex = 34;
+            btnExportarPDF.Text = "Exportar a PDF";
+            btnExportarPDF.UseVisualStyleBackColor = true;
+            btnExportarPDF.Click += btnExportarPDF_Click;
             // 
             // ConsultaProyectos
             // 
@@ -204,6 +215,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SteelBlue;
             ClientSize = new Size(1023, 570);
+            Controls.Add(btnExportarPDF);
             Controls.Add(btnExportar);
             Controls.Add(cbDescripcion);
             Controls.Add(cbotabla);
@@ -242,5 +254,6 @@
         private Label label3;
         private ComboBox cbDescripcion;
         private Button btnExportar;
+        private Button btnExportarPDF;
     }
 }

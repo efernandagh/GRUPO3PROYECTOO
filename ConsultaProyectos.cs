@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ClosedXML.Excel;
 using Microsoft.Data.SqlClient;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
 
 namespace INICIO
 {
@@ -274,6 +277,75 @@ namespace INICIO
             {
                 MessageBox.Show("Error: " + ex.Message);
             }
+        }
+        private void ExportarPDF()
+        {
+            if (dtvproyectos.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay datos para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Archivo PDF|*.pdf";
+                sfd.FileName = "ConsultaExportada.pdf";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    // Crear documento PDF
+                    Document doc = new Document(PageSize.A4.Rotate(), 10, 10, 10, 10);
+                    PdfWriter.GetInstance(doc, new FileStream(sfd.FileName, FileMode.Create));
+                    doc.Open();
+
+                    // Título
+                    Paragraph titulo = new Paragraph("Resultados de Consulta - " + cbotabla.Text,
+                        FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16, BaseColor.BLACK));
+                    titulo.Alignment = Element.ALIGN_CENTER;
+                    titulo.SpacingAfter = 20;
+                    doc.Add(titulo);
+
+                    // Crear tabla PDF con el mismo número de columnas
+                    PdfPTable pdfTable = new PdfPTable(dtvproyectos.Columns.Count);
+                    pdfTable.WidthPercentage = 100;
+
+                    // Agregar encabezados
+                    foreach (DataGridViewColumn column in dtvproyectos.Columns)
+                    {
+                        PdfPCell cell = new PdfPCell(new Phrase(column.HeaderText, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.WHITE)));
+                        cell.BackgroundColor = new BaseColor(0, 102, 204); // Azul suave
+                        cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                        pdfTable.AddCell(cell);
+                    }
+
+                    // Agregar filas
+                    foreach (DataGridViewRow row in dtvproyectos.Rows)
+                    {
+                        if (!row.IsNewRow)
+                        {
+                            foreach (DataGridViewCell cell in row.Cells)
+                            {
+                                pdfTable.AddCell(new Phrase(cell.Value?.ToString() ?? ""));
+                            }
+                        }
+                    }
+
+                    doc.Add(pdfTable);
+                    doc.Close();
+
+                    MessageBox.Show("PDF exportado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al exportar PDF: " + ex.Message);
+            }
+        }
+
+        private void btnExportarPDF_Click(object sender, EventArgs e)
+        {
+            ExportarPDF();
         }
     }
 }
