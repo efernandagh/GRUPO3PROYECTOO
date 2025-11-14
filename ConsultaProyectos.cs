@@ -170,42 +170,12 @@ namespace INICIO
         // 🔹 Botón BUSCAR (por si deseas buscar manualmente con texto)
         private void btnbuscar_Click_1(object sender, EventArgs e)
         {
-            string tabla = cbotabla.Text;
-            string columna = cbobuscar.Text;
-            string valor = txtbuscar.Text.Trim();
-
-            if (string.IsNullOrEmpty(valor))
-            {
-                MessageBox.Show("Ingrese un valor para buscar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            try
-            {
-                using (SqlConnection con = ConexionBD.ObtenerConexion())
-                {
-                    string query = $"SELECT * FROM {tabla} WHERE {columna} LIKE '%' + @valor + '%'";
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@valor", valor);
-
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    dtvproyectos.DataSource = dt;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al buscar: " + ex.Message);
-            }
+           
         }
 
         private void btnlimpiar_Click_1(object sender, EventArgs e)
         {
-            txtbuscar.Clear();
-            cbobuscar.SelectedIndex = 0;
-            cbDescripcion.Items.Clear();
-            dtvproyectos.DataSource = null;
+
         }
 
         private void btnsalir_Click_1(object sender, EventArgs e)
