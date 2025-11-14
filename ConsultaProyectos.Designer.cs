@@ -211,7 +211,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SteelBlue;
-            ClientSize = new Size(895, 481);
+            ClientSize = new Size(895, 482);
             Controls.Add(btnExportarPDF);
             Controls.Add(btnExportar);
             Controls.Add(cbDescripcion);
