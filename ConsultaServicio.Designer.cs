@@ -94,7 +94,7 @@
             btnsalir.FlatStyle = FlatStyle.Flat;
             btnsalir.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
             btnsalir.ForeColor = Color.White;
-            btnsalir.Location = new Point(374, 360);
+            btnsalir.Location = new Point(374, 420);
             btnsalir.Margin = new Padding(3, 2, 3, 2);
             btnsalir.Name = "btnsalir";
             btnsalir.Size = new Size(82, 22);
@@ -148,21 +148,31 @@
             // 
             // btnExportar
             // 
-            btnExportar.Location = new Point(194, 366);
+            btnExportar.FlatAppearance.BorderSize = 0;
+            btnExportar.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
+            btnExportar.FlatStyle = FlatStyle.Flat;
+            btnExportar.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic, GraphicsUnit.Point, 0);
+            btnExportar.ForeColor = Color.White;
+            btnExportar.Location = new Point(453, 365);
             btnExportar.Name = "btnExportar";
-            btnExportar.Size = new Size(75, 23);
+            btnExportar.Size = new Size(143, 23);
             btnExportar.TabIndex = 15;
-            btnExportar.Text = "Excel";
+            btnExportar.Text = "Exportar aExcel";
             btnExportar.UseVisualStyleBackColor = true;
             btnExportar.Click += btnExportar_Click;
             // 
             // btnExportarPDF
             // 
-            btnExportarPDF.Location = new Point(522, 368);
+            btnExportarPDF.FlatAppearance.BorderSize = 0;
+            btnExportarPDF.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
+            btnExportarPDF.FlatStyle = FlatStyle.Flat;
+            btnExportarPDF.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic, GraphicsUnit.Point, 0);
+            btnExportarPDF.ForeColor = Color.White;
+            btnExportarPDF.Location = new Point(267, 365);
             btnExportarPDF.Name = "btnExportarPDF";
-            btnExportarPDF.Size = new Size(75, 23);
+            btnExportarPDF.Size = new Size(116, 23);
             btnExportarPDF.TabIndex = 16;
-            btnExportarPDF.Text = "pdf";
+            btnExportarPDF.Text = "Exportar a pdf";
             btnExportarPDF.UseVisualStyleBackColor = true;
             btnExportarPDF.Click += btnExportarPDF_Click;
             // 
@@ -171,7 +181,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SteelBlue;
-            ClientSize = new Size(849, 409);
+            ClientSize = new Size(849, 479);
             Controls.Add(btnExportarPDF);
             Controls.Add(btnExportar);
             Controls.Add(cmbdescripcion);

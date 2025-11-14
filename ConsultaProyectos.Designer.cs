@@ -30,7 +30,6 @@
         {
             label1 = new Label();
             btnbuscar = new Button();
-            txtbuscar = new TextBox();
             cbobuscar = new ComboBox();
             label7 = new Label();
             dtvproyectos = new DataGridView();
@@ -50,9 +49,9 @@
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(659, 76);
+            label1.Location = new Point(577, 57);
             label1.Name = "label1";
-            label1.Size = new Size(84, 20);
+            label1.Size = new Size(67, 15);
             label1.TabIndex = 29;
             label1.Text = "Descripcion";
             // 
@@ -63,31 +62,20 @@
             btnbuscar.FlatStyle = FlatStyle.Flat;
             btnbuscar.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             btnbuscar.ForeColor = Color.White;
-            btnbuscar.Location = new Point(206, 569);
-            btnbuscar.Margin = new Padding(3, 4, 3, 4);
+            btnbuscar.Location = new Point(169, 475);
             btnbuscar.Name = "btnbuscar";
-            btnbuscar.Size = new Size(86, 31);
+            btnbuscar.Size = new Size(75, 23);
             btnbuscar.TabIndex = 28;
             btnbuscar.Text = "Buscar";
             btnbuscar.UseVisualStyleBackColor = true;
             btnbuscar.Click += btnbuscar_Click_1;
             // 
-            // txtbuscar
-            // 
-            txtbuscar.Location = new Point(659, 590);
-            txtbuscar.Margin = new Padding(3, 4, 3, 4);
-            txtbuscar.Name = "txtbuscar";
-            txtbuscar.Size = new Size(189, 27);
-            txtbuscar.TabIndex = 27;
-            txtbuscar.TextChanged += txtbuscar_TextChanged;
-            // 
             // cbobuscar
             // 
             cbobuscar.FormattingEnabled = true;
-            cbobuscar.Location = new Point(424, 74);
-            cbobuscar.Margin = new Padding(3, 4, 3, 4);
+            cbobuscar.Location = new Point(371, 56);
             cbobuscar.Name = "cbobuscar";
-            cbobuscar.Size = new Size(189, 28);
+            cbobuscar.Size = new Size(166, 23);
             cbobuscar.TabIndex = 26;
             cbobuscar.SelectedIndexChanged += cbobuscar_SelectedIndexChanged;
             // 
@@ -96,9 +84,9 @@
             label7.AutoSize = true;
             label7.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
             label7.ForeColor = Color.White;
-            label7.Location = new Point(366, 76);
+            label7.Location = new Point(320, 57);
             label7.Name = "label7";
-            label7.Size = new Size(52, 20);
+            label7.Size = new Size(42, 15);
             label7.TabIndex = 25;
             label7.Text = "Buscar";
             // 
@@ -108,11 +96,10 @@
             dtvproyectos.BorderStyle = BorderStyle.None;
             dtvproyectos.CellBorderStyle = DataGridViewCellBorderStyle.None;
             dtvproyectos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dtvproyectos.Location = new Point(95, 134);
-            dtvproyectos.Margin = new Padding(3, 4, 3, 4);
+            dtvproyectos.Location = new Point(83, 100);
             dtvproyectos.Name = "dtvproyectos";
             dtvproyectos.RowHeadersWidth = 51;
-            dtvproyectos.Size = new Size(843, 362);
+            dtvproyectos.Size = new Size(738, 272);
             dtvproyectos.TabIndex = 24;
             dtvproyectos.CellContentClick += dtvproyectos_CellContentClick;
             // 
@@ -123,10 +110,9 @@
             btnsalir.FlatStyle = FlatStyle.Flat;
             btnsalir.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             btnsalir.ForeColor = Color.White;
-            btnsalir.Location = new Point(494, 523);
-            btnsalir.Margin = new Padding(3, 4, 3, 4);
+            btnsalir.Location = new Point(384, 436);
             btnsalir.Name = "btnsalir";
-            btnsalir.Size = new Size(86, 31);
+            btnsalir.Size = new Size(75, 23);
             btnsalir.TabIndex = 23;
             btnsalir.Text = "Salir";
             btnsalir.UseVisualStyleBackColor = true;
@@ -139,10 +125,9 @@
             btnlimpiar.FlatStyle = FlatStyle.Flat;
             btnlimpiar.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             btnlimpiar.ForeColor = Color.White;
-            btnlimpiar.Location = new Point(114, 569);
-            btnlimpiar.Margin = new Padding(3, 4, 3, 4);
+            btnlimpiar.Location = new Point(88, 475);
             btnlimpiar.Name = "btnlimpiar";
-            btnlimpiar.Size = new Size(86, 31);
+            btnlimpiar.Size = new Size(75, 23);
             btnlimpiar.TabIndex = 22;
             btnlimpiar.Text = "Limpiar";
             btnlimpiar.UseVisualStyleBackColor = true;
@@ -153,19 +138,18 @@
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.White;
-            label2.Location = new Point(408, 22);
+            label2.Location = new Point(357, 16);
             label2.Name = "label2";
-            label2.Size = new Size(219, 23);
+            label2.Size = new Size(168, 17);
             label2.TabIndex = 21;
             label2.Text = "CONSULTA DE PROYECTOS";
             // 
             // cbotabla
             // 
             cbotabla.FormattingEnabled = true;
-            cbotabla.Location = new Point(146, 76);
-            cbotabla.Margin = new Padding(3, 4, 3, 4);
+            cbotabla.Location = new Point(128, 57);
             cbotabla.Name = "cbotabla";
-            cbotabla.Size = new Size(189, 28);
+            cbotabla.Size = new Size(166, 23);
             cbotabla.TabIndex = 31;
             cbotabla.SelectedIndexChanged += cbotabla_SelectedIndexChanged;
             // 
@@ -174,26 +158,33 @@
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
             label3.ForeColor = Color.White;
-            label3.Location = new Point(95, 78);
+            label3.Location = new Point(83, 58);
             label3.Name = "label3";
-            label3.Size = new Size(45, 20);
+            label3.Size = new Size(37, 15);
             label3.TabIndex = 30;
             label3.Text = "Tabla";
             // 
             // cbDescripcion
             // 
             cbDescripcion.FormattingEnabled = true;
-            cbDescripcion.Location = new Point(749, 73);
+            cbDescripcion.Location = new Point(655, 55);
+            cbDescripcion.Margin = new Padding(3, 2, 3, 2);
             cbDescripcion.Name = "cbDescripcion";
-            cbDescripcion.Size = new Size(189, 28);
+            cbDescripcion.Size = new Size(166, 23);
             cbDescripcion.TabIndex = 32;
             cbDescripcion.SelectedIndexChanged += cbDescripcion_SelectedIndexChanged;
             // 
             // btnExportar
             // 
-            btnExportar.Location = new Point(101, 514);
+            btnExportar.FlatAppearance.BorderSize = 0;
+            btnExportar.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
+            btnExportar.FlatStyle = FlatStyle.Flat;
+            btnExportar.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
+            btnExportar.ForeColor = Color.White;
+            btnExportar.Location = new Point(234, 386);
+            btnExportar.Margin = new Padding(3, 2, 3, 2);
             btnExportar.Name = "btnExportar";
-            btnExportar.Size = new Size(134, 40);
+            btnExportar.Size = new Size(117, 30);
             btnExportar.TabIndex = 33;
             btnExportar.Text = "Exportar a Excel";
             btnExportar.UseVisualStyleBackColor = true;
@@ -201,9 +192,15 @@
             // 
             // btnExportarPDF
             // 
-            btnExportarPDF.Location = new Point(241, 514);
+            btnExportarPDF.FlatAppearance.BorderSize = 0;
+            btnExportarPDF.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
+            btnExportarPDF.FlatStyle = FlatStyle.Flat;
+            btnExportarPDF.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
+            btnExportarPDF.ForeColor = Color.White;
+            btnExportarPDF.Location = new Point(501, 386);
+            btnExportarPDF.Margin = new Padding(3, 2, 3, 2);
             btnExportarPDF.Name = "btnExportarPDF";
-            btnExportarPDF.Size = new Size(134, 40);
+            btnExportarPDF.Size = new Size(117, 30);
             btnExportarPDF.TabIndex = 34;
             btnExportarPDF.Text = "Exportar a PDF";
             btnExportarPDF.UseVisualStyleBackColor = true;
@@ -211,10 +208,10 @@
             // 
             // ConsultaProyectos
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SteelBlue;
-            ClientSize = new Size(1023, 570);
+            ClientSize = new Size(895, 481);
             Controls.Add(btnExportarPDF);
             Controls.Add(btnExportar);
             Controls.Add(cbDescripcion);
@@ -222,7 +219,6 @@
             Controls.Add(label3);
             Controls.Add(label1);
             Controls.Add(btnbuscar);
-            Controls.Add(txtbuscar);
             Controls.Add(cbobuscar);
             Controls.Add(label7);
             Controls.Add(dtvproyectos);
@@ -230,6 +226,7 @@
             Controls.Add(btnlimpiar);
             Controls.Add(label2);
             FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 2, 3, 2);
             Name = "ConsultaProyectos";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ConsultaProyectos";
@@ -243,7 +240,6 @@
 
         private Label label1;
         private Button btnbuscar;
-        private TextBox txtbuscar;
         private ComboBox cbobuscar;
         private Label label7;
         private DataGridView dtvproyectos;

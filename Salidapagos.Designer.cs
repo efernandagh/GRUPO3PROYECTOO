@@ -62,8 +62,7 @@
             btnsalir.FlatStyle = FlatStyle.Flat;
             btnsalir.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
             btnsalir.ForeColor = Color.White;
-            btnsalir.Location = new Point(470, 737);
-            btnsalir.Margin = new Padding(3, 4, 3, 4);
+            btnsalir.Location = new Point(426, 482);
             btnsalir.Name = "btnsalir";
             btnsalir.Size = new Size(86, 31);
             btnsalir.TabIndex = 12;
