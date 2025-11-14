@@ -151,7 +151,7 @@
             btnExportar.FlatStyle = FlatStyle.Flat;
             btnExportar.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
             btnExportar.ForeColor = Color.White;
-            btnExportar.Location = new Point(264, 401);
+            btnExportar.Location = new Point(269, 401);
             btnExportar.Margin = new Padding(3, 2, 3, 2);
             btnExportar.Name = "btnExportar";
             btnExportar.Size = new Size(111, 22);
