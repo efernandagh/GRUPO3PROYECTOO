@@ -453,6 +453,21 @@ namespace INICIO
                 MessageBox.Show("Error al exportar a PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void btnsalir_Click_1(object sender, EventArgs e)
+        {
+            DialogResult resultado = MessageBox.Show(
+              "¿Está seguro que desea salir del sistema de inventario?",
+              "Confirmar Salida",
+              MessageBoxButtons.YesNo,
+              MessageBoxIcon.Question);
+
+            // Si el usuario presiona "Sí", cerrar el formulario
+            if (resultado == DialogResult.Yes)
+            {
+                this.Close();
+            }
+        }
     }
-    
+
 }
