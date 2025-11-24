@@ -1,31 +1,24 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
 
 namespace INICIO
 {
     public partial class Form1 : Form
-
     {
-        private string servidor = "Server=DESKTOP-8QJ2O4S\\ENIAGOMEZ;Integrated Security=True;TrustServerCertificate=True;";
-
+        private string servidor = "";
         private ConexionBD conexionDB = new ConexionBD();
-        private string rutaConfig = "configuracion.txt"; // archivo donde guardamos las respuestas
+        private string rutaConfig = "configuracion.txt";
 
         public Form1()
         {
             InitializeComponent();
-
-            
-
         }
 
         private string ObtenerServidorSQL()
         {
-            // Nombre del equipo actual
             string nombrePC = Environment.MachineName;
-
-            // Intentar detectar instancia de SQL Server común
             string[] posiblesInstancias = { "SQLEXPRESS", "MSSQLSERVER", "SQL2019", "ENIAGOMEZ" };
 
             foreach (string instancia in posiblesInstancias)
@@ -36,17 +29,15 @@ namespace INICIO
                     using (SqlConnection con = new SqlConnection(servidorPrueba))
                     {
                         con.Open();
-                        return servidorPrueba; // ✅ Devuelve la cadena que sí funciona
+                        return servidorPrueba;
                     }
                 }
                 catch
                 {
-                    // Si falla, intenta con la siguiente instancia
                     continue;
                 }
             }
 
-            // Si ninguna instancia común funciona, probar sin nombre de instancia
             string servidorDefault = $"Server={nombrePC};Integrated Security=True;TrustServerCertificate=True;";
             try
             {
@@ -60,20 +51,17 @@ namespace INICIO
             {
                 MessageBox.Show("❌ No se pudo conectar a SQL Server en este equipo.\nVerifique que esté instalado y ejecutándose.",
                     "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
-                Environment.Exit(0);
                 return null;
             }
         }
+
         private void VerificarConfiguracion()
         {
             try
             {
-                // Si ya existe el archivo, leemos el contenido
                 if (File.Exists(rutaConfig))
                 {
                     string[] lineas = File.ReadAllLines(rutaConfig);
-
                     bool tieneSQL = Array.Exists(lineas, l => l.Contains("SQL=SI"));
                     bool tieneBD = Array.Exists(lineas, l => l.Contains("BD=SI"));
 
@@ -81,36 +69,34 @@ namespace INICIO
                     {
                         MessageBox.Show("Debe instalar SQL Server antes de continuar.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Application.Exit();
-                        Environment.Exit(0);
                         return;
                     }
 
                     if (!tieneBD)
                     {
-                        DialogResult crearBD = MessageBox.Show("¿Desea crear la base de datos automáticamente?", "Crear Base de Datos", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        DialogResult crearBD = MessageBox.Show("¿Desea crear la base de datos automáticamente?",
+                            "Crear Base de Datos", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (crearBD == DialogResult.Yes)
                             CrearBaseDeDatos();
                         else
                         {
                             MessageBox.Show("No se puede continuar sin la base de datos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Application.Exit();
-                            Environment.Exit(0);
                         }
                     }
-                    else
-                    {
-                        // Todo correcto, continúa con el programa
-                        return;
-                    }
                 }
-            
+                else
+                {
+                    // Si no existe el archivo, verificar directamente la BD
+                    VerificarBaseDeDatos();
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error en la verificación: " + ex.Message);
             }
         }
-      
+
         private void VerificarBaseDeDatos()
         {
             try
@@ -125,11 +111,24 @@ namespace INICIO
 
                     if (existe == 0)
                     {
-                        CrearBaseDeDatos();
+                        DialogResult resultado = MessageBox.Show(
+                            "No se encontró la base de datos MECANICA_INDUSTRIAL.\n¿Desea crearla ahora?",
+                            "Base de datos no encontrada",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Question);
+
+                        if (resultado == DialogResult.Yes)
+                        {
+                            CrearBaseDeDatos();
+                        }
+                        else
+                        {
+                            MessageBox.Show("No se puede continuar sin la base de datos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Application.Exit();
+                        }
                     }
                     else
                     {
-                        // Base de datos ya existe
                         GuardarConfiguracion("SQL=SI", "BD=SI");
                     }
                 }
@@ -161,10 +160,15 @@ namespace INICIO
                 {
                     con.Open();
 
-                    string script = @"
-CREATE DATABASE MECANICA_INDUSTRIAL;
-USE MECANICA_INDUSTRIAL;
+                    // Dividir en comandos separados porque CREATE DATABASE debe ir solo
+                    string crearDB = "CREATE DATABASE MECANICA_INDUSTRIAL;";
+                    SqlCommand cmdDB = new SqlCommand(crearDB, con);
+                    cmdDB.ExecuteNonQuery();
 
+                    // Ahora conectar a la nueva base de datos
+                    con.ChangeDatabase("MECANICA_INDUSTRIAL");
+
+                    string script = @"
 CREATE TABLE ROL (
     ID_ROL BIGINT PRIMARY KEY,
     NOMBRE_ROL VARCHAR(100),
@@ -378,25 +382,37 @@ INSERT INTO PROYECTO_INVENTARIO (ID_PROYECTO_INVENTARIO, ID_PRODUCTO, CANTIDAD_U
                     SqlCommand cmd = new SqlCommand(script, con);
                     cmd.ExecuteNonQuery();
 
-                    MessageBox.Show("? Base de datos MECANICA_INDUSTRIAL creada correctamente.", "Éxito",
+                    GuardarConfiguracion("SQL=SI", "BD=SI");
+
+                    MessageBox.Show("✅ Base de datos MECANICA_INDUSTRIAL creada correctamente.", "Éxito",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("? Error al crear la base de datos: " + ex.Message);
+                MessageBox.Show("❌ Error al crear la base de datos: " + ex.Message);
             }
         }
-
-
 
         private void Form1_Load(object sender, EventArgs e)
         {
             try
             {
+                // PASO 1: Detectar el servidor SQL automáticamente
+                servidor = ObtenerServidorSQL();
+
+                if (servidor == null)
+                {
+                    Application.Exit();
+                    return;
+                }
+
+                // PASO 2: Verificar si existe la base de datos
+                VerificarBaseDeDatos();
+
+                // PASO 3: Intentar conectar a la base de datos
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
-                    
                     MessageBox.Show("✅ Conexión exitosa con la base de datos MECANICA_INDUSTRIAL.",
                         "Conexión verificada", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -406,7 +422,8 @@ INSERT INTO PROYECTO_INVENTARIO (ID_PROYECTO_INVENTARIO, ID_PRODUCTO, CANTIDAD_U
                 MessageBox.Show("❌ Error al conectar con la base de datos:\n" + ex.Message,
                     "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            // Centrar todo el grupo de controles
+
+            // Centrar controles
             int centerX = (this.ClientSize.Width - barratitulo.Width) / 2;
             int centerY = (this.ClientSize.Height - barratitulo.Height) / 2;
             barratitulo.Location = new Point(centerX, centerY);
@@ -456,10 +473,7 @@ INSERT INTO PROYECTO_INVENTARIO (ID_PROYECTO_INVENTARIO, ID_PRODUCTO, CANTIDAD_U
         private void button1_Click_1(object sender, EventArgs e)
         {
             txtnombre.Clear();
-
             txtcontra.Clear();
-
-
             txtnombre.Focus();
         }
 
@@ -468,27 +482,15 @@ INSERT INTO PROYECTO_INVENTARIO (ID_PROYECTO_INVENTARIO, ID_PRODUCTO, CANTIDAD_U
             Application.Exit();
         }
 
-        private void txtnombre_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtcontra_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void panel2_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
+        private void txtnombre_TextChanged(object sender, EventArgs e) { }
+        private void txtcontra_TextChanged(object sender, EventArgs e) { }
+        private void panel2_Paint(object sender, PaintEventArgs e) { }
 
         private void button1_Click_2(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Maximized;
             button1.Visible = false;
             btnrestaurar.Visible = true;
-
         }
 
         private void btnrestaurar_Click(object sender, EventArgs e)
@@ -501,17 +503,9 @@ INSERT INTO PROYECTO_INVENTARIO (ID_PROYECTO_INVENTARIO, ID_PRODUCTO, CANTIDAD_U
         private void btnminimizar_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
-
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-
-        }
+        private void button3_Click(object sender, EventArgs e) { }
+        private void button6_Click(object sender, EventArgs e) { }
     }
 }
