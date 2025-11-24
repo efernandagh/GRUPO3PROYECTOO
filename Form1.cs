@@ -300,6 +300,7 @@ INSERT INTO USUARIOS (ID_USUARIO, NOMBRE, APELLIDO, CORREO, CLAVE, ID_ROL, FECHA
 (3, 'Luis', 'Perez', 'luis@example.com', 'pass1', 2, GETDATE()),
 (4, 'Maria', 'Lopez', 'maria@example.com', 'pass2', 3, GETDATE()),
 (5, 'Jose', 'Sanchez', 'jose@example.com', 'pass3', 4, GETDATE());
+(6, 'Admin', 'Principal', 'admin@example.com', '123', 1, GETDATE());
 
 INSERT INTO PROCESOS (ID_PROCESOS, NOMBRE_PROCESO, DESCRIPCION, ID_USUARIO) VALUES
 (1, 'Soldadura', 'Proceso de unión de piezas metálicas', 2),
