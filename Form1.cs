@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using Microsoft.Data.SqlClient;
 
 namespace INICIO
 {
@@ -508,5 +509,32 @@ INSERT INTO PROYECTO_INVENTARIO (ID_PROYECTO_INVENTARIO, ID_PRODUCTO, CANTIDAD_U
 
         private void button3_Click(object sender, EventArgs e) { }
         private void button6_Click(object sender, EventArgs e) { }
+
+        private void btnayuda_Click(object sender, EventArgs e)
+        {
+            // Ruta del PDF en la carpeta del ejecutable
+            string rutaPdf = Path.Combine(Application.StartupPath, "Manual de usuario login.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
     }
 }

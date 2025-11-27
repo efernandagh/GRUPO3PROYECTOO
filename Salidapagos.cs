@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -466,6 +467,33 @@ namespace INICIO
             if (resultado == DialogResult.Yes)
             {
                 this.Close();
+            }
+        }
+
+        private void btnayuda_Click(object sender, EventArgs e)
+        {
+            // Ruta del PDF en la carpeta del ejecutable
+            string rutaPdf = Path.Combine(Application.StartupPath, "Manual de usuario consulta Facturación.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

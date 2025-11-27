@@ -43,9 +43,11 @@
             button1 = new Button();
             pictureBox1 = new PictureBox();
             panel2 = new Panel();
+            btnayuda = new Button();
             barratitulo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -221,11 +223,28 @@
             // panel2
             // 
             panel2.BackColor = Color.SteelBlue;
+            panel2.Controls.Add(btnayuda);
             panel2.Dock = DockStyle.Bottom;
             panel2.Location = new Point(0, 592);
             panel2.Name = "panel2";
             panel2.Size = new Size(1300, 58);
             panel2.TabIndex = 15;
+            // 
+            // btnayuda
+            // 
+            btnayuda.FlatAppearance.BorderSize = 0;
+            btnayuda.FlatAppearance.MouseOverBackColor = Color.Red;
+            btnayuda.FlatStyle = FlatStyle.Flat;
+            btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
+            btnayuda.ForeColor = Color.White;
+            btnayuda.Location = new Point(1162, 17);
+            btnayuda.Margin = new Padding(3, 2, 3, 2);
+            btnayuda.Name = "btnayuda";
+            btnayuda.Size = new Size(117, 30);
+            btnayuda.TabIndex = 36;
+            btnayuda.Text = "Ayuda";
+            btnayuda.UseVisualStyleBackColor = true;
+            btnayuda.Click += btnayuda_Click;
             // 
             // Form1
             // 
@@ -252,6 +271,7 @@
             barratitulo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            panel2.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -272,5 +292,6 @@
         private Button btnminimizar;
         private Panel panel2;
         private PictureBox pictureBox4;
+        private Button btnayuda;
     }
 }
