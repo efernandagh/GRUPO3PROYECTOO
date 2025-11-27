@@ -44,7 +44,7 @@
             label4 = new Label();
             label3 = new Label();
             label2 = new Label();
-            btnAyuda = new Button();
+            btnayuda = new Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -52,7 +52,7 @@
             // panel1
             // 
             panel1.BackColor = Color.CornflowerBlue;
-            panel1.Controls.Add(btnAyuda);
+            panel1.Controls.Add(btnayuda);
             panel1.Controls.Add(cmbidfaactura);
             panel1.Controls.Add(btnGuardar);
             panel1.Controls.Add(cboEstado);
@@ -236,15 +236,21 @@
             label2.TabIndex = 1;
             label2.Text = "FECHA:";
             // 
-            // btnAyuda
+            // btnayuda
             // 
-            btnAyuda.Location = new Point(393, 265);
-            btnAyuda.Name = "btnAyuda";
-            btnAyuda.Size = new Size(75, 23);
-            btnAyuda.TabIndex = 18;
-            btnAyuda.Text = "AYUDA";
-            btnAyuda.UseVisualStyleBackColor = true;
-            btnAyuda.Click += btnAyuda_Click;
+            btnayuda.FlatAppearance.BorderSize = 0;
+            btnayuda.FlatAppearance.MouseOverBackColor = Color.Red;
+            btnayuda.FlatStyle = FlatStyle.Flat;
+            btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
+            btnayuda.ForeColor = Color.White;
+            btnayuda.Location = new Point(351, 260);
+            btnayuda.Margin = new Padding(3, 2, 3, 2);
+            btnayuda.Name = "btnayuda";
+            btnayuda.Size = new Size(117, 30);
+            btnayuda.TabIndex = 36;
+            btnayuda.Text = "Ayuda";
+            btnayuda.UseVisualStyleBackColor = true;
+            btnayuda.Click += btnayuda_Click_1;
             // 
             // frmPagos
             // 
@@ -280,6 +286,6 @@
         private ComboBox cboEstado;
         private Button btnGuardar;
         private ComboBox cmbidfaactura;
-        private Button btnAyuda;
+        private Button btnayuda;
     }
 }

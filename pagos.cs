@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Data;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace INICIO
@@ -247,6 +248,33 @@ namespace INICIO
                 UseShellExecute = true // abre con la aplicación predeterminada
             };
             System.Diagnostics.Process.Start(psi);
+        }
+
+        private void btnayuda_Click_1(object sender, EventArgs e)
+        {
+            // Ruta del PDF en la carpeta del ejecutable
+            string rutaPdf = Path.Combine(Application.StartupPath, "MANUAL PAGOS.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
     }
 }
