@@ -196,5 +196,18 @@ namespace INICIO
                 txtidfactura.Text = "1";
             }
         }
+
+        private void btnAyuda_Click(object sender, EventArgs e)
+        {
+
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = @"C:\Users\Belen\Downloads\MANUAL FACTURACION.pdf",
+                UseShellExecute = true // esto indica que abra con la app predeterminada
+            };
+            System.Diagnostics.Process.Start(psi);
+        }
+
     }
 }
+

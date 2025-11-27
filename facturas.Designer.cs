@@ -44,6 +44,7 @@
             label3 = new Label();
             label2 = new Label();
             label1 = new Label();
+            btnAyuda = new Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -51,6 +52,7 @@
             // panel1
             // 
             panel1.BackColor = Color.CornflowerBlue;
+            panel1.Controls.Add(btnAyuda);
             panel1.Controls.Add(cboidcontrato);
             panel1.Controls.Add(txtidfactura);
             panel1.Controls.Add(label6);
@@ -71,7 +73,6 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(523, 341);
             panel1.TabIndex = 1;
-           
             // 
             // cboidcontrato
             // 
@@ -80,7 +81,6 @@
             cboidcontrato.Name = "cboidcontrato";
             cboidcontrato.Size = new Size(121, 23);
             cboidcontrato.TabIndex = 18;
-            
             // 
             // txtidfactura
             // 
@@ -154,7 +154,6 @@
             cmbMetodoPago.Name = "cmbMetodoPago";
             cmbMetodoPago.Size = new Size(121, 23);
             cmbMetodoPago.TabIndex = 10;
-           
             // 
             // pictureBox1
             // 
@@ -165,7 +164,6 @@
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 2;
             pictureBox1.TabStop = false;
-         
             // 
             // dtpFecha
             // 
@@ -238,7 +236,16 @@
             label1.Size = new Size(96, 25);
             label1.TabIndex = 0;
             label1.Text = "FACTURA";
-        
+            // 
+            // btnAyuda
+            // 
+            btnAyuda.Location = new Point(30, 306);
+            btnAyuda.Name = "btnAyuda";
+            btnAyuda.Size = new Size(75, 23);
+            btnAyuda.TabIndex = 19;
+            btnAyuda.Text = "AYUDA";
+            btnAyuda.UseVisualStyleBackColor = true;
+            btnAyuda.Click += btnAyuda_Click;
             // 
             // facturas
             // 
@@ -275,5 +282,6 @@
         private TextBox txtidfactura;
         private Label label6;
         private ComboBox cboidcontrato;
+        private Button btnAyuda;
     }
 }
