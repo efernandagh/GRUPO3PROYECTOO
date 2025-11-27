@@ -9,10 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="MANUAL DE USUARIO CONSULTA SERVICIOS.pdf" />
     <None Remove="Manual de usuario proyectos.pdf" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="MANUAL DE USUARIO CONSULTA SERVICIOS.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Manual de usuario proyectos.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
