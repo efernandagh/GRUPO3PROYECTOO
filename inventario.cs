@@ -221,6 +221,16 @@ namespace INICIO
         {
 
         }
+
+        private void btnayuda_Click(object sender, EventArgs e)
+        {
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = @"C:\Users\claro\Documents\MANUAL INVENTARIO.pdf",
+                UseShellExecute = true // esto indica que abra con la app predeterminada
+            };
+            System.Diagnostics.Process.Start(psi);
+        }
     }
 }
     

@@ -47,6 +47,7 @@
             label4 = new Label();
             label2 = new Label();
             label1 = new Label();
+            btnayuda = new Button();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -77,6 +78,7 @@
             // groupBox1
             // 
             groupBox1.BackColor = Color.CornflowerBlue;
+            groupBox1.Controls.Add(btnayuda);
             groupBox1.Controls.Add(btnnuevo);
             groupBox1.Controls.Add(btncancelar);
             groupBox1.Controls.Add(btnlimpiar);
@@ -256,6 +258,16 @@
             label1.TabIndex = 0;
             label1.Text = "Nombre Producto";
             // 
+            // btnayuda
+            // 
+            btnayuda.Location = new Point(406, 17);
+            btnayuda.Name = "btnayuda";
+            btnayuda.Size = new Size(94, 29);
+            btnayuda.TabIndex = 7;
+            btnayuda.Text = "Ayuda";
+            btnayuda.UseVisualStyleBackColor = true;
+            btnayuda.Click += btnayuda_Click;
+            // 
             // inventario
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -294,5 +306,6 @@
         internal Button btncancelar;
         internal Button btnlimpiar;
         internal Button btnnuevo;
+        private Button btnayuda;
     }
 }

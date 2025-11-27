@@ -95,7 +95,7 @@ namespace INICIO
                 cmd.Parameters.AddWithValue("@nombre", txtnombreser.Text);
                 cmd.Parameters.AddWithValue("@descripcion", txtdesc.Text);
 
-                
+
                 MessageBox.Show("Servicio guardado correctamente.");
                 con.Close();
             }
@@ -165,6 +165,16 @@ namespace INICIO
                 MessageBox.Show("❌ Error al generar ID: " + ex.Message);
                 txtidservicio.Text = "1";
             }
+        }
+
+        private void btnayuda_Click(object sender, EventArgs e)
+        {
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = @"C:\Users\claro\OneDrive\Documentos\ServiciosExportados.pdf",
+                UseShellExecute = true // esto indica que abra con la app predeterminada
+            };
+            System.Diagnostics.Process.Start(psi);
         }
     }
 }
