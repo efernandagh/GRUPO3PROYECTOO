@@ -39,6 +39,7 @@
             cmbdescripcion = new ComboBox();
             btnExportar = new Button();
             btnpdf = new Button();
+            btnayuda = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvinventario).BeginInit();
             SuspendLayout();
             // 
@@ -176,12 +177,29 @@
             btnpdf.UseVisualStyleBackColor = true;
             btnpdf.Click += btnpdf_Click;
             // 
+            // btnayuda
+            // 
+            btnayuda.FlatAppearance.BorderSize = 0;
+            btnayuda.FlatAppearance.MouseOverBackColor = Color.Red;
+            btnayuda.FlatStyle = FlatStyle.Flat;
+            btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
+            btnayuda.ForeColor = Color.White;
+            btnayuda.Location = new Point(655, 467);
+            btnayuda.Margin = new Padding(3, 2, 3, 2);
+            btnayuda.Name = "btnayuda";
+            btnayuda.Size = new Size(117, 30);
+            btnayuda.TabIndex = 36;
+            btnayuda.Text = "Ayuda";
+            btnayuda.UseVisualStyleBackColor = true;
+            btnayuda.Click += btnayuda_Click;
+            // 
             // ConsultaInventario
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SteelBlue;
             ClientSize = new Size(887, 525);
+            Controls.Add(btnayuda);
             Controls.Add(btnpdf);
             Controls.Add(btnExportar);
             Controls.Add(cmbdescripcion);
@@ -217,5 +235,6 @@
         private ComboBox cmbdescripcion;
         private Button btnExportar;
         private Button btnpdf;
+        private Button btnayuda;
     }
 }
