@@ -44,6 +44,7 @@
             label4 = new Label();
             label3 = new Label();
             label2 = new Label();
+            btnAyuda = new Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -51,6 +52,7 @@
             // panel1
             // 
             panel1.BackColor = Color.CornflowerBlue;
+            panel1.Controls.Add(btnAyuda);
             panel1.Controls.Add(cmbidfaactura);
             panel1.Controls.Add(btnGuardar);
             panel1.Controls.Add(cboEstado);
@@ -234,6 +236,16 @@
             label2.TabIndex = 1;
             label2.Text = "FECHA:";
             // 
+            // btnAyuda
+            // 
+            btnAyuda.Location = new Point(393, 265);
+            btnAyuda.Name = "btnAyuda";
+            btnAyuda.Size = new Size(75, 23);
+            btnAyuda.TabIndex = 18;
+            btnAyuda.Text = "AYUDA";
+            btnAyuda.UseVisualStyleBackColor = true;
+            btnAyuda.Click += btnAyuda_Click;
+            // 
             // frmPagos
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -268,5 +280,6 @@
         private ComboBox cboEstado;
         private Button btnGuardar;
         private ComboBox cmbidfaactura;
+        private Button btnAyuda;
     }
 }

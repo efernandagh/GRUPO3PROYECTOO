@@ -201,7 +201,7 @@ namespace INICIO
 
         private void frmPagos_Load_1(object sender, EventArgs e)
         {
-            txtPago.Enabled=false;
+            txtPago.Enabled = false;
             GenerarNuevoId();
         }
         // ✅ Función para generar el siguiente ID automáticamente
@@ -237,6 +237,16 @@ namespace INICIO
                 MessageBox.Show("❌ Error al generar ID: " + ex.Message);
                 txtPago.Text = "1";
             }
+        }
+
+        private void btnAyuda_Click(object sender, EventArgs e)
+        {
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = @"C:\Users\Belen\Downloads\MANUAL PAGOS.pdf",
+                UseShellExecute = true // abre con la aplicación predeterminada
+            };
+            System.Diagnostics.Process.Start(psi);
         }
     }
 }
