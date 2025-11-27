@@ -47,12 +47,14 @@
             txtapellidousuarios = new TextBox();
             txtclaveusuario = new TextBox();
             txtcorreousuario = new TextBox();
+            btnAyuda = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
             // 
             panel1.BackColor = Color.CornflowerBlue;
+            panel1.Controls.Add(btnAyuda);
             panel1.Controls.Add(cmbrol);
             panel1.Controls.Add(txtidusuario);
             panel1.Controls.Add(label1);
@@ -281,6 +283,16 @@
             txtcorreousuario.Size = new Size(125, 25);
             txtcorreousuario.TabIndex = 4;
             // 
+            // btnAyuda
+            // 
+            btnAyuda.Location = new Point(324, 369);
+            btnAyuda.Name = "btnAyuda";
+            btnAyuda.Size = new Size(75, 23);
+            btnAyuda.TabIndex = 18;
+            btnAyuda.Text = "AYUDA";
+            btnAyuda.UseVisualStyleBackColor = true;
+            btnAyuda.Click += btnAyuda_Click;
+            // 
             // usuarios
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -319,5 +331,6 @@
         private Label label1;
         private TextBox txtidusuario;
         private ComboBox cmbrol;
+        private Button btnAyuda;
     }
 }

@@ -19,7 +19,7 @@ namespace INICIO
 
     public partial class usuarios : Form
     {
-       
+
         private string conexiontionString;
         private ConexionBD conexionDB = new ConexionBD(); // Instancia de la clase de conexión
 
@@ -36,7 +36,7 @@ namespace INICIO
             {
                 try
                 {
-                    
+
                     string query = "SELECT ID_ROL, NOMBRE_ROL FROM ROL";
                     SqlCommand cmd = new SqlCommand(query, con);
                     SqlDataReader dr = cmd.ExecuteReader();
@@ -72,7 +72,7 @@ namespace INICIO
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
-                    
+
 
                     // Si por alguna razón el ID está vacío, lo regeneramos
                     if (string.IsNullOrWhiteSpace(txtidusuario.Text))
@@ -120,7 +120,7 @@ namespace INICIO
             LimpiarCampos();
         }
 
-       
+
 
 
 
@@ -159,7 +159,7 @@ namespace INICIO
         {
             int siguienteId = 1;
 
-            using (SqlConnection conexion = new SqlConnection(conexiontionString)) 
+            using (SqlConnection conexion = new SqlConnection(conexiontionString))
             {
                 conexion.Open();
                 string consulta = "SELECT ISNULL(MAX(ID_USUARIO), 0) + 1 FROM USUARIOS";
@@ -176,7 +176,7 @@ namespace INICIO
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
-                    
+
                     string consulta = "SELECT ISNULL(MAX(ID_USUARIO), 0) + 1 FROM USUARIOS";
                     SqlCommand cmd = new SqlCommand(consulta, con);
                     object resultado = cmd.ExecuteScalar();
@@ -193,6 +193,16 @@ namespace INICIO
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void btnAyuda_Click(object sender, EventArgs e)
+        {
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = @"C:\Users\Belen\Downloads\MANUAL USUARIOS.pdf",
+                UseShellExecute = true // esto indica que abra con la app predeterminada
+            };
+            System.Diagnostics.Process.Start(psi);
         }
     }
 }

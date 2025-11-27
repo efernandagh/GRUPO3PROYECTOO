@@ -29,25 +29,25 @@ namespace INICIO
         {
             InitializeComponent();
         }
-        
+
         private void roles_Load(object sender, EventArgs e)
         {
             CargarRoles();
-            
-            
+
+
         }
 
-     
-        
 
-   
+
+
+
         public void CargarRoles()
         {
             using (SqlConnection con = ConexionBD.ObtenerConexion())
             {
                 try
                 {
-                    
+
                     string query = "SELECT ID_ROL, NOMBRE_ROL FROM ROL";
                     SqlCommand cmd = new SqlCommand(query, con);
                     SqlDataReader dr = cmd.ExecuteReader();
@@ -82,7 +82,7 @@ namespace INICIO
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
-                    
+
                     string query = "INSERT INTO ROL (ID_ROL ,NOMBRE_ROL, DESCRIPCION) VALUES (@idrol, @Nombre, @Descripcion)";
                     SqlCommand cmd = new SqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@idrol", id);
@@ -113,7 +113,7 @@ namespace INICIO
             txtdescrip.Focus();
         }
 
-        
+
 
 
         private void btneliminar_Click(object sender, EventArgs e)
@@ -130,7 +130,7 @@ namespace INICIO
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
-                    
+
                     string query = "DELETE FROM ROL WHERE ID_ROL = @Id";
                     SqlCommand cmd = new SqlCommand(query, con);
                     cmd.Parameters.AddWithValue("@Id", id);
@@ -172,6 +172,16 @@ namespace INICIO
         private void GroupBox1_Enter(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnAyuda_Click(object sender, EventArgs e)
+        {
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = @"C:\Users\Belen\Downloads\MANUAL ROLES.pdf",
+                UseShellExecute = true // esto indica que abra con la app predeterminada
+            };
+            System.Diagnostics.Process.Start(psi);
         }
     }
 }

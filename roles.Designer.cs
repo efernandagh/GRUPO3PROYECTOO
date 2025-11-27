@@ -38,12 +38,14 @@
             Label3 = new Label();
             Label2 = new Label();
             Label1 = new Label();
+            btnAyuda = new Button();
             GroupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // GroupBox1
             // 
             GroupBox1.BackColor = Color.CornflowerBlue;
+            GroupBox1.Controls.Add(btnAyuda);
             GroupBox1.Controls.Add(cmbnombrerol);
             GroupBox1.Controls.Add(btncancelar);
             GroupBox1.Controls.Add(btneliminar);
@@ -80,7 +82,7 @@
             btncancelar.FlatStyle = FlatStyle.Flat;
             btncancelar.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btncancelar.ForeColor = Color.White;
-            btncancelar.Location = new Point(262, 272);
+            btncancelar.Location = new Point(280, 279);
             btncancelar.Name = "btncancelar";
             btncancelar.Size = new Size(71, 23);
             btncancelar.TabIndex = 10;
@@ -96,7 +98,7 @@
             btneliminar.FlatStyle = FlatStyle.Flat;
             btneliminar.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btneliminar.ForeColor = Color.White;
-            btneliminar.Location = new Point(133, 272);
+            btneliminar.Location = new Point(280, 233);
             btneliminar.Name = "btneliminar";
             btneliminar.Size = new Size(71, 23);
             btneliminar.TabIndex = 9;
@@ -128,7 +130,7 @@
             btnguardar.FlatStyle = FlatStyle.Flat;
             btnguardar.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnguardar.ForeColor = Color.White;
-            btnguardar.Location = new Point(6, 272);
+            btnguardar.Location = new Point(271, 183);
             btnguardar.Name = "btnguardar";
             btnguardar.Size = new Size(80, 23);
             btnguardar.TabIndex = 5;
@@ -169,6 +171,16 @@
             Label1.TabIndex = 0;
             Label1.Text = "Id rol:";
             // 
+            // btnAyuda
+            // 
+            btnAyuda.Location = new Point(32, 275);
+            btnAyuda.Name = "btnAyuda";
+            btnAyuda.Size = new Size(75, 23);
+            btnAyuda.TabIndex = 12;
+            btnAyuda.Text = "AYUDA";
+            btnAyuda.UseVisualStyleBackColor = true;
+            btnAyuda.Click += btnAyuda_Click;
+            // 
             // roles
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -197,5 +209,6 @@
         internal Button btncancelar;
         internal Button btneliminar;
         private ComboBox cmbnombrerol;
+        private Button btnAyuda;
     }
 }
