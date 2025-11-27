@@ -170,7 +170,7 @@ namespace INICIO
         // 🔹 Botón BUSCAR (por si deseas buscar manualmente con texto)
         private void btnbuscar_Click_1(object sender, EventArgs e)
         {
-           
+
         }
 
         private void btnlimpiar_Click_1(object sender, EventArgs e)
@@ -316,6 +316,17 @@ namespace INICIO
         private void btnExportarPDF_Click(object sender, EventArgs e)
         {
             ExportarPDF();
+        }
+
+        private void btnayuda_Click(object sender, EventArgs e)
+        {
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = @"C:\Users\corre\Downloads\Manual de usuario proyectos.pdf",
+                UseShellExecute = true // esto indica que abra con la app predeterminada
+            };
+            System.Diagnostics.Process.Start(psi);
+
         }
     }
 }
