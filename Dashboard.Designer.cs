@@ -59,6 +59,7 @@
             backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             grafica = new System.Windows.Forms.DataVisualization.Charting.Chart();
             btnSalir = new Button();
+            btnayuda = new Button();
             panelEncabezado.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panelProyectos.SuspendLayout();
@@ -343,12 +344,29 @@
             btnSalir.UseVisualStyleBackColor = false;
             btnSalir.Click += btnSalir_Click;
             // 
+            // btnayuda
+            // 
+            btnayuda.FlatAppearance.BorderSize = 0;
+            btnayuda.FlatAppearance.MouseOverBackColor = Color.Red;
+            btnayuda.FlatStyle = FlatStyle.Flat;
+            btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
+            btnayuda.ForeColor = Color.White;
+            btnayuda.Location = new Point(57, 553);
+            btnayuda.Margin = new Padding(3, 2, 3, 2);
+            btnayuda.Name = "btnayuda";
+            btnayuda.Size = new Size(160, 43);
+            btnayuda.TabIndex = 37;
+            btnayuda.Text = "Ayuda";
+            btnayuda.UseVisualStyleBackColor = true;
+            btnayuda.Click += btnayuda_Click;
+            // 
             // Dashboard
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(192, 192, 255);
             ClientSize = new Size(1151, 661);
+            Controls.Add(btnayuda);
             Controls.Add(btnSalir);
             Controls.Add(lblHora);
             Controls.Add(grafica);
@@ -412,5 +430,6 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker2;
         private System.Windows.Forms.DataVisualization.Charting.Chart grafica;
         private Button btnSalir;
+        private Button btnayuda;
     }
 }

@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="MANUAL DASHBOARD.pdf" />
     <None Remove="Manual de usuario consulta Facturación.pdf" />
     <None Remove="Manual de usuario consulta inventario.pdf" />
     <None Remove="MANUAL DE USUARIO CONSULTA SERVICIOS.pdf" />
@@ -23,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="MANUAL DASHBOARD.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Manual de usuario consulta Facturación.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
