@@ -214,7 +214,7 @@
             btnayuda.FlatStyle = FlatStyle.Flat;
             btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
             btnayuda.ForeColor = Color.White;
-            btnayuda.Location = new Point(751, 441);
+            btnayuda.Location = new Point(743, 436);
             btnayuda.Margin = new Padding(3, 2, 3, 2);
             btnayuda.Name = "btnayuda";
             btnayuda.Size = new Size(117, 30);

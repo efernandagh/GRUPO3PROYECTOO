@@ -17,6 +17,7 @@
     <None Remove="Manual de usuario proyectos.pdf" />
     <None Remove="MANUAL FACTURACION.pdf" />
     <None Remove="MANUAL PAGOS.pdf" />
+    <None Remove="MANUAL ROLES.pdf" />
     <None Remove="MANUAL USUARIOS.pdf" />
   </ItemGroup>
 
@@ -43,6 +44,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="MANUAL PAGOS.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MANUAL ROLES.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="MANUAL USUARIOS.pdf">

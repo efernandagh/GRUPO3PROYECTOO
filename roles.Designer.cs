@@ -38,14 +38,14 @@
             Label3 = new Label();
             Label2 = new Label();
             Label1 = new Label();
-            btnAyuda = new Button();
+            btnayuda = new Button();
             GroupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // GroupBox1
             // 
             GroupBox1.BackColor = Color.CornflowerBlue;
-            GroupBox1.Controls.Add(btnAyuda);
+            GroupBox1.Controls.Add(btnayuda);
             GroupBox1.Controls.Add(cmbnombrerol);
             GroupBox1.Controls.Add(btncancelar);
             GroupBox1.Controls.Add(btneliminar);
@@ -171,15 +171,21 @@
             Label1.TabIndex = 0;
             Label1.Text = "Id rol:";
             // 
-            // btnAyuda
+            // btnayuda
             // 
-            btnAyuda.Location = new Point(32, 275);
-            btnAyuda.Name = "btnAyuda";
-            btnAyuda.Size = new Size(75, 23);
-            btnAyuda.TabIndex = 12;
-            btnAyuda.Text = "AYUDA";
-            btnAyuda.UseVisualStyleBackColor = true;
-            btnAyuda.Click += btnAyuda_Click;
+            btnayuda.FlatAppearance.BorderSize = 0;
+            btnayuda.FlatAppearance.MouseOverBackColor = Color.Red;
+            btnayuda.FlatStyle = FlatStyle.Flat;
+            btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
+            btnayuda.ForeColor = Color.White;
+            btnayuda.Location = new Point(20, 279);
+            btnayuda.Margin = new Padding(3, 2, 3, 2);
+            btnayuda.Name = "btnayuda";
+            btnayuda.Size = new Size(117, 30);
+            btnayuda.TabIndex = 36;
+            btnayuda.Text = "Ayuda";
+            btnayuda.UseVisualStyleBackColor = true;
+            btnayuda.Click += btnayuda_Click_1;
             // 
             // roles
             // 
@@ -209,6 +215,6 @@
         internal Button btncancelar;
         internal Button btneliminar;
         private ComboBox cmbnombrerol;
-        private Button btnAyuda;
+        private Button btnayuda;
     }
 }
