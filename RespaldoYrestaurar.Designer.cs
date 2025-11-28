@@ -32,16 +32,18 @@
             btnSalir = new Button();
             btnrestau = new Button();
             btnrestaurar = new Button();
+            btnayuda = new Button();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // groupBox1
             // 
             groupBox1.BackColor = Color.CornflowerBlue;
+            groupBox1.Controls.Add(btnayuda);
             groupBox1.Controls.Add(btnSalir);
             groupBox1.Controls.Add(btnrestau);
             groupBox1.Controls.Add(btnrestaurar);
-            groupBox1.Location = new Point(365, 84);
+            groupBox1.Location = new Point(221, 63);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(405, 307);
             groupBox1.TabIndex = 0;
@@ -97,6 +99,22 @@
             btnrestaurar.UseVisualStyleBackColor = false;
             btnrestaurar.Click += btnrestaurar_Click;
             // 
+            // btnayuda
+            // 
+            btnayuda.FlatAppearance.BorderSize = 0;
+            btnayuda.FlatAppearance.MouseOverBackColor = Color.Red;
+            btnayuda.FlatStyle = FlatStyle.Flat;
+            btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
+            btnayuda.ForeColor = Color.White;
+            btnayuda.Location = new Point(271, 224);
+            btnayuda.Margin = new Padding(3, 2, 3, 2);
+            btnayuda.Name = "btnayuda";
+            btnayuda.Size = new Size(117, 30);
+            btnayuda.TabIndex = 36;
+            btnayuda.Text = "Ayuda";
+            btnayuda.UseVisualStyleBackColor = true;
+            btnayuda.Click += btnayuda_Click;
+            // 
             // RespaldoYrestaurar
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -118,5 +136,6 @@
         private Button btnrestau;
         private Button btnrestaurar;
         private Button btnSalir;
+        private Button btnayuda;
     }
 }
