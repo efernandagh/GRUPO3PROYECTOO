@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Data;
+using System.Diagnostics;
 using System.Windows.Forms;
-using Microsoft.Data.SqlClient;
 
 namespace INICIO
 {
     public partial class clientes : Form
     {
         private string conexiontionString;
-          private ConexionBD conexionDB = new ConexionBD();
+        private ConexionBD conexionDB = new ConexionBD();
         public clientes()
         {
             InitializeComponent();
@@ -35,7 +36,7 @@ namespace INICIO
 
                 try
                 {
-                    
+
                     cmd.ExecuteNonQuery();
                     MessageBox.Show("Cliente guardado correctamente.");
                 }
@@ -47,7 +48,7 @@ namespace INICIO
             }
         }
 
-     
+
 
         private void label2_Click(object sender, EventArgs e)
         {
@@ -113,6 +114,33 @@ namespace INICIO
             {
                 MessageBox.Show("❌ Error al generar ID: " + ex.Message);
                 txtIdcliente.Text = "1";
+            }
+        }
+
+        private void btnayuda_Click(object sender, EventArgs e)
+        {
+            // Ruta del PDF en la carpeta del ejecutable
+            string rutaPdf = Path.Combine(Application.StartupPath, "Manual de Clientes.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }
