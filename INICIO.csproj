@@ -26,6 +26,10 @@
     <None Remove="MANUAL RESPALDO Y RESTAURACION.pdf" />
     <None Remove="MANUAL ROLES.pdf" />
     <None Remove="MANUAL USUARIOS.pdf" />
+    <None Remove="Sección Contratos.pdf" />
+    <None Remove="Sección Procesos.pdf" />
+    <None Remove="Sección Proyectos.pdf" />
+    <None Remove="Sección Seguimiento.pdf" />
     <None Remove="ServiciosExportados.pdf" />
   </ItemGroup>
 
@@ -79,6 +83,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="MANUAL USUARIOS.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sección Contratos.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sección Procesos.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sección Proyectos.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sección Seguimiento.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ServiciosExportados.pdf">

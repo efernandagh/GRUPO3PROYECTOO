@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,7 @@ namespace INICIO
             InitializeComponent();
             Desactivar();
         }
-       
+
         private void procesos_Load(object sender, EventArgs e)
         {
             txtIdPro.Enabled = false;
@@ -30,11 +31,11 @@ namespace INICIO
             // 🔹 Cargar usuarios al iniciar el formulario
             try
             {
-                
+
 
                 using (SqlConnection conn = ConexionBD.ObtenerConexion())
                 {
-                   
+
 
                     string query = "SELECT ID_USUARIO FROM USUARIOS";
                     SqlCommand cmd = new SqlCommand(query, conn);
@@ -87,7 +88,7 @@ namespace INICIO
         }
         public void Desactivar()
         {
-            
+
 
 
         }
@@ -124,11 +125,11 @@ namespace INICIO
         {
 
             using (SqlConnection conexion = ConexionBD.ObtenerConexion())
-           
+
             {
                 try
                 {
-                    
+
 
                     string sql = "INSERT INTO PROCESOS (ID_PROCESOS, NOMBRE_PROCESO, DESCRIPCION, ID_USUARIO ) " +
                                  "VALUES (@ID_PROCESOS, @NOMBRE_PROCESO, @DESCRIPCION, @ID_USUARIO)";
@@ -190,6 +191,34 @@ namespace INICIO
             {
                 MessageBox.Show("❌ Error al generar ID: " + ex.Message);
                 txtIdPro.Text = "1";
+            }
+        }
+
+        private void btnayuda_Click(object sender, EventArgs e)
+        {
+
+            // Ruta del PDF en la carpeta del ejecutable
+            string rutaPdf = Path.Combine(Application.StartupPath, "Sección Procesos.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

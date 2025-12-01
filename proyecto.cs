@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -21,11 +22,11 @@ namespace INICIO
             // 🔹 Cargar usuarios al iniciar el formulario
             try
             {
-                
+
 
                 using (SqlConnection conn = ConexionBD.ObtenerConexion())
                 {
-                    
+
 
                     string query = "SELECT ID_USUARIO FROM USUARIOS";
                     SqlCommand cmd = new SqlCommand(query, conn);
@@ -60,7 +61,7 @@ namespace INICIO
         }
         public void Desactivar()
         {
-            
+
 
         }
         public void Activar()
@@ -70,7 +71,7 @@ namespace INICIO
             Txtestado.Enabled = true;
             cbUsuario.Enabled = true;
             Txtdescripcion.Enabled = true;
-          
+
             btnLimpiar.Enabled = true;
             button1.Enabled = true;
 
@@ -84,7 +85,7 @@ namespace INICIO
             {
                 try
                 {
-                    
+
 
                     string sql = "INSERT INTO PROYECTOS (ID_PROYECTO, NOMBRE_PROYECTO, DESCRIPCION, FECHA_INICIO, FECHA_FIN, ESTADO, ID_USUARIO) " +
                                  "VALUES (@ID_PROYECTO, @NOMBRE_PROYECTO, @DESCRIPCION, @FECHA_INICIO, @FECHA_FIN, @ESTADO, @ID_USUARIO)";
@@ -130,11 +131,11 @@ namespace INICIO
             // 🔹 Cargar usuarios al iniciar el formulario
             try
             {
-                
+
 
                 using (SqlConnection conexion = ConexionBD.ObtenerConexion())
                 {
-                    
+
 
                     string query = "SELECT ID_USUARIO FROM USUARIOS";
                     SqlCommand cmd = new SqlCommand(query, conexion); // conexion es tu SqlConnection
@@ -186,9 +187,9 @@ namespace INICIO
             Txtestado.Clear();
             cbUsuario.SelectedIndex = -1;
 
-            
+
             Txtdescripcion.Clear();
-           
+
 
 
 
@@ -251,6 +252,33 @@ namespace INICIO
             {
                 MessageBox.Show("❌ Error al generar ID: " + ex.Message);
                 Txtidproyecto.Text = "1";
+            }
+        }
+
+        private void btnayuda_Click(object sender, EventArgs e)
+        {
+            // Ruta del PDF en la carpeta del ejecutable
+            string rutaPdf = Path.Combine(Application.StartupPath, "Sección Proyectos.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

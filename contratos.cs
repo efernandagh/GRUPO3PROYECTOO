@@ -1,13 +1,14 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Data.SqlClient;
 
 namespace INICIO
 {
@@ -68,7 +69,7 @@ namespace INICIO
             }
         }
 
-     
+
 
 
         private void ConfigurarFormulario()
@@ -82,7 +83,7 @@ namespace INICIO
 
 
         // 🔹 Cargar proyectos desde la BD al ComboBox
-       
+
 
 
 
@@ -115,7 +116,7 @@ namespace INICIO
                     MessageBox.Show("✅ Contrato guardado correctamente.");
 
                     LimpiarCampos();
-                    
+
                 }
             }
             catch (Exception ex)
@@ -132,7 +133,7 @@ namespace INICIO
             cmbServicio.Enabled = true;
             txtestado.Enabled = true;
             dtpinicio.Enabled = true;
-           
+
             btnGuardar.Enabled = true;
             LimpiarCampos();
         }
@@ -196,6 +197,33 @@ namespace INICIO
             }
         }
 
+        private void btnayuda_Click(object sender, EventArgs e)
+        {
+
+            // Ruta del PDF en la carpeta del ejecutable
+            string rutaPdf = Path.Combine(Application.StartupPath, "Sección Contratos.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
     }
 }
 
