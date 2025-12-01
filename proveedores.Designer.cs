@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             groupBox2 = new GroupBox();
+            btnayuda = new Button();
             txtidproveedor = new TextBox();
             label5 = new Label();
             btncancelar = new Button();
@@ -42,7 +43,6 @@
             label3 = new Label();
             label2 = new Label();
             label1 = new Label();
-            btnayuda = new Button();
             groupBox2.SuspendLayout();
             SuspendLayout();
             // 
@@ -65,30 +65,41 @@
             groupBox2.Controls.Add(label1);
             groupBox2.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic, GraphicsUnit.Point, 0);
             groupBox2.ForeColor = Color.White;
-            groupBox2.Location = new Point(425, 161);
-            groupBox2.Margin = new Padding(3, 4, 3, 4);
+            groupBox2.Location = new Point(372, 121);
             groupBox2.Name = "groupBox2";
-            groupBox2.Padding = new Padding(3, 4, 3, 4);
-            groupBox2.Size = new Size(374, 439);
+            groupBox2.Size = new Size(327, 329);
             groupBox2.TabIndex = 2;
             groupBox2.TabStop = false;
             groupBox2.Text = "Seccion de proveedores";
             groupBox2.Enter += groupBox2_Enter;
             // 
+            // btnayuda
+            // 
+            btnayuda.FlatAppearance.BorderSize = 0;
+            btnayuda.FlatAppearance.MouseOverBackColor = Color.Red;
+            btnayuda.FlatStyle = FlatStyle.Flat;
+            btnayuda.Location = new Point(228, 295);
+            btnayuda.Margin = new Padding(3, 2, 3, 2);
+            btnayuda.Name = "btnayuda";
+            btnayuda.Size = new Size(82, 22);
+            btnayuda.TabIndex = 3;
+            btnayuda.Text = "Ayuda";
+            btnayuda.UseVisualStyleBackColor = true;
+            btnayuda.Click += btnayuda_Click;
+            // 
             // txtidproveedor
             // 
-            txtidproveedor.Location = new Point(134, 24);
-            txtidproveedor.Margin = new Padding(3, 4, 3, 4);
+            txtidproveedor.Location = new Point(117, 18);
             txtidproveedor.Name = "txtidproveedor";
-            txtidproveedor.Size = new Size(139, 29);
+            txtidproveedor.Size = new Size(122, 25);
             txtidproveedor.TabIndex = 11;
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(33, 28);
+            label5.Location = new Point(29, 21);
             label5.Name = "label5";
-            label5.Size = new Size(101, 23);
+            label5.Size = new Size(78, 17);
             label5.TabIndex = 10;
             label5.Text = "Id proveedor";
             // 
@@ -97,10 +108,9 @@
             btncancelar.FlatAppearance.BorderSize = 0;
             btncancelar.FlatAppearance.MouseOverBackColor = SystemColors.ActiveBorder;
             btncancelar.FlatStyle = FlatStyle.Flat;
-            btncancelar.Location = new Point(244, 320);
-            btncancelar.Margin = new Padding(3, 4, 3, 4);
+            btncancelar.Location = new Point(214, 240);
             btncancelar.Name = "btncancelar";
-            btncancelar.Size = new Size(86, 31);
+            btncancelar.Size = new Size(75, 23);
             btncancelar.TabIndex = 9;
             btncancelar.Text = "Cancelar";
             btncancelar.UseVisualStyleBackColor = true;
@@ -111,10 +121,9 @@
             btnlimpiar.FlatAppearance.BorderSize = 0;
             btnlimpiar.FlatAppearance.MouseOverBackColor = SystemColors.ActiveBorder;
             btnlimpiar.FlatStyle = FlatStyle.Flat;
-            btnlimpiar.Location = new Point(134, 320);
-            btnlimpiar.Margin = new Padding(3, 4, 3, 4);
+            btnlimpiar.Location = new Point(117, 240);
             btnlimpiar.Name = "btnlimpiar";
-            btnlimpiar.Size = new Size(86, 31);
+            btnlimpiar.Size = new Size(75, 23);
             btnlimpiar.TabIndex = 8;
             btnlimpiar.Text = "Limpiar";
             btnlimpiar.UseVisualStyleBackColor = true;
@@ -122,10 +131,9 @@
             // 
             // textBox4
             // 
-            textBox4.Location = new Point(134, 219);
-            textBox4.Margin = new Padding(3, 4, 3, 4);
+            textBox4.Location = new Point(117, 164);
             textBox4.Name = "textBox4";
-            textBox4.Size = new Size(139, 29);
+            textBox4.Size = new Size(122, 25);
             textBox4.TabIndex = 7;
             // 
             // button1
@@ -133,10 +141,9 @@
             button1.FlatAppearance.BorderSize = 0;
             button1.FlatAppearance.MouseOverBackColor = SystemColors.ActiveBorder;
             button1.FlatStyle = FlatStyle.Flat;
-            button1.Location = new Point(33, 320);
-            button1.Margin = new Padding(3, 4, 3, 4);
+            button1.Location = new Point(29, 240);
             button1.Name = "button1";
-            button1.Size = new Size(86, 31);
+            button1.Size = new Size(75, 23);
             button1.TabIndex = 3;
             button1.Text = "Guardar";
             button1.UseVisualStyleBackColor = true;
@@ -144,83 +151,69 @@
             // 
             // textBox3
             // 
-            textBox3.Location = new Point(134, 165);
-            textBox3.Margin = new Padding(3, 4, 3, 4);
+            textBox3.Location = new Point(117, 124);
             textBox3.Name = "textBox3";
-            textBox3.Size = new Size(139, 29);
+            textBox3.Size = new Size(122, 25);
             textBox3.TabIndex = 6;
             // 
             // textBox2
             // 
-            textBox2.Location = new Point(134, 113);
-            textBox2.Margin = new Padding(3, 4, 3, 4);
+            textBox2.Location = new Point(117, 85);
             textBox2.Name = "textBox2";
-            textBox2.Size = new Size(139, 29);
+            textBox2.Size = new Size(122, 25);
             textBox2.TabIndex = 5;
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(134, 69);
-            textBox1.Margin = new Padding(3, 4, 3, 4);
+            textBox1.Location = new Point(117, 52);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(139, 29);
+            textBox1.Size = new Size(122, 25);
             textBox1.TabIndex = 4;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(33, 223);
+            label4.Location = new Point(29, 167);
             label4.Name = "label4";
-            label4.Size = new Size(77, 23);
+            label4.Size = new Size(60, 17);
             label4.TabIndex = 3;
             label4.Text = "Direccion";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(33, 176);
+            label3.Location = new Point(29, 132);
             label3.Name = "label3";
-            label3.Size = new Size(55, 23);
+            label3.Size = new Size(44, 17);
             label3.TabIndex = 2;
             label3.Text = "correo";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(33, 117);
+            label2.Location = new Point(29, 88);
             label2.Name = "label2";
-            label2.Size = new Size(72, 23);
+            label2.Size = new Size(55, 17);
             label2.TabIndex = 1;
             label2.Text = "Telefono";
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(33, 69);
+            label1.Location = new Point(29, 52);
             label1.Name = "label1";
-            label1.Size = new Size(83, 23);
+            label1.Size = new Size(64, 17);
             label1.TabIndex = 0;
             label1.Text = "Proveedor";
             // 
-            // btnayuda
-            // 
-            btnayuda.Location = new Point(260, 393);
-            btnayuda.Name = "btnayuda";
-            btnayuda.Size = new Size(94, 29);
-            btnayuda.TabIndex = 3;
-            btnayuda.Text = "Ayuda";
-            btnayuda.UseVisualStyleBackColor = true;
-            btnayuda.Click += btnayuda_Click;
-            // 
             // proveedores
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(192, 192, 255);
-            ClientSize = new Size(1080, 643);
+            ClientSize = new Size(945, 482);
             Controls.Add(groupBox2);
             FormBorderStyle = FormBorderStyle.None;
-            Margin = new Padding(3, 4, 3, 4);
             Name = "proveedores";
             Text = "proveedores";
             Load += proveedores_Load;

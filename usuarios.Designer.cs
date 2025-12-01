@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             panel1 = new Panel();
+            btnAyuda = new Button();
             cmbrol = new ComboBox();
             txtidusuario = new TextBox();
             label1 = new Label();
@@ -47,7 +48,6 @@
             txtapellidousuarios = new TextBox();
             txtclaveusuario = new TextBox();
             txtcorreousuario = new TextBox();
-            btnAyuda = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -81,6 +81,19 @@
             panel1.Size = new Size(421, 406);
             panel1.TabIndex = 7;
             panel1.Paint += panel1_Paint;
+            // 
+            // btnAyuda
+            // 
+            btnAyuda.FlatAppearance.BorderSize = 0;
+            btnAyuda.FlatAppearance.MouseOverBackColor = Color.Red;
+            btnAyuda.FlatStyle = FlatStyle.Flat;
+            btnAyuda.Location = new Point(324, 369);
+            btnAyuda.Name = "btnAyuda";
+            btnAyuda.Size = new Size(75, 23);
+            btnAyuda.TabIndex = 18;
+            btnAyuda.Text = "AYUDA";
+            btnAyuda.UseVisualStyleBackColor = true;
+            btnAyuda.Click += btnAyuda_Click;
             // 
             // cmbrol
             // 
@@ -282,16 +295,6 @@
             txtcorreousuario.Name = "txtcorreousuario";
             txtcorreousuario.Size = new Size(125, 25);
             txtcorreousuario.TabIndex = 4;
-            // 
-            // btnAyuda
-            // 
-            btnAyuda.Location = new Point(324, 369);
-            btnAyuda.Name = "btnAyuda";
-            btnAyuda.Size = new Size(75, 23);
-            btnAyuda.TabIndex = 18;
-            btnAyuda.Text = "AYUDA";
-            btnAyuda.UseVisualStyleBackColor = true;
-            btnAyuda.Click += btnAyuda_Click;
             // 
             // usuarios
             // 
