@@ -2356,3 +2356,93 @@ namespace INICIO
         }
     }
 }
+
+## MANUAL TECNICO MENU DE CONSULTAS
+
+using DocumentFormat.OpenXml.Bibliography;
+using System;
+using System.Windows.Forms;
+
+namespace INICIO
+{
+    //Se define la clase Menuconsultas, la cual hereda de Form,
+    //indicando que se trata de una ventana principal del sistema dentro del namespace INICIO.
+    public partial class Menuconsultas : Form
+    {
+        //Esto permite trabajar con múltiples consultas dentro de una sola ventana principal.
+        public Menuconsultas()
+        {
+            InitializeComponent();
+            this.IsMdiContainer = true; // Hace que este formulario sea un contenedor MDI
+        }
+
+        private void AbrirFormulario(Form formulario)
+        {
+            // Cerrar cualquier formulario hijo que esté abierto
+            foreach (Form frm in this.MdiChildren)
+            {
+                frm.Close();
+            }
+
+            // Configurar el nuevo formulario como hijo del contenedor
+            formulario.MdiParent = this;
+            formulario.Show(); // No se cambia tamaño ni color
+        }
+
+        //Abre el formulario Salidapagos, correspondiente al módulo de:
+        //Consulta de facturas
+        //Consulta de pago
+//Exportación de reportes financieros
+        private void btnfacturacion_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario(new Salidapagos());
+        }
+
+        //Carga el formulario de Consulta de Proyectos, donde se gestionan:
+        //Proyectos
+        //Seguimientos
+//Contratos
+//Procesos
+        private void btnpro_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario(new ConsultaProyectos());
+        }
+
+        //Abre el módulo de Consulta de Servicios, permitiendo visualizar y exportar información de servicios prestados.
+        private void button1_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario(new ConsultaServicio());
+        }
+
+        //Carga el formulario de Consulta de Inventario, donde se pueden revisar y exportar datos relacionados con el inventario de productos.
+        private void button2_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario(new ConsultaInventario());
+        }
+
+        //Vuelve al menú principal de la aplicación.
+        private void btnvolver_Click(object sender, EventArgs e)
+        {
+            Menu frmMenu = new Menu();
+            frmMenu.Show();
+            this.Close();
+        }
+        //Cierra completamente la aplicación.
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        //Minimiza la ventana actual a la barra de tareas.
+        private void btnminimizar_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+        //Evento Load del formulario Menuconsultas
+        private void Menuconsultas_Load(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
+
