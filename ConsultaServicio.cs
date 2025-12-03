@@ -13,15 +13,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace INICIO
 {
     public partial class ConsultaServicio : Form
     {
+        //Inicializa todos los componentes gráficos del formulario.
         public ConsultaServicio()
         {
             InitializeComponent();
         }
+        //Carga las tablas disponibles para consulta y prepara los combos.
+
         private void InicializarCombos()
         {
             try
@@ -44,6 +48,7 @@ namespace INICIO
             }
         }
 
+        //Pregunta al usuario si desea cerrar el formulario.
 
 
         private void btnsalir_Click(object sender, EventArgs e)
@@ -111,6 +116,8 @@ namespace INICIO
             if (cbmbuscar.Items.Count > 0)
                 cbmbuscar.SelectedIndex = 0;
         }
+
+        //Restablece los combos, limpia el datagridview, elimina cualquier filtro aplicado
         private void btnlimpiar_Click(object sender, EventArgs e)
         {
             cmbdescripcion.SelectedIndex = 0;
@@ -118,6 +125,7 @@ namespace INICIO
             dgvservicio.DataSource = null;
         }
 
+        //Permite la búsqueda manual por filtro.
         private void btnbuscar_Click(object sender, EventArgs e)
         {
             string tabla = cmbtabla.Text;
@@ -151,6 +159,7 @@ namespace INICIO
 
         }
 
+        //Permite la búsqueda manual por filtro.
         private void cbmbuscar_SelectedIndexChanged(object sender, EventArgs e)
         {
             string tabla = cmbtabla.Text;
@@ -190,12 +199,15 @@ namespace INICIO
             }
         }
 
+        //Se ejecuta al cargar el formulario e inicializa todos los combos llamando a: InicializarCombos();
         private void ConsultaServicio_Load(object sender, EventArgs e)
         {
 
             InicializarCombos();
         }
 
+        //Cada vez que cambia la columna:
+       // Se recargan los valores disponibles con CargarDescripcion().
         private void cmbbuscar_SelectedIndexChanged(object sender, EventArgs e)
         {
             string tablaSeleccionada = cmbtabla.Text;
@@ -211,6 +223,8 @@ namespace INICIO
 
         }
 
+        //Este evento se ejecuta automáticamente cuando el usuario selecciona un valor en el ComboBox cmbdescripcion.
+       // Su objetivo es realizar una búsqueda inmediata en la base de datos según el valor seleccionado y mostrar los resultados en el DataGridView dgvservicio.
         private void cmbdescripcion_SelectedIndexChanged(object sender, EventArgs e)
         {
             string tabla = cmbtabla.Text;
@@ -243,6 +257,7 @@ namespace INICIO
             }
         }
 
+        //Generación de reportes en formato Excel para control administrativo.
         private void btnExportar_Click(object sender, EventArgs e)
         {
             if (dgvservicio.Rows.Count == 0)
@@ -319,6 +334,7 @@ namespace INICIO
             }
         }
 
+        //Generación de reportes en formato Excel para control administrativo.
         private void btnExportarPDF_Click(object sender, EventArgs e)
         {
 
@@ -399,7 +415,8 @@ namespace INICIO
                 }
             }
         }
-
+        //Este evento se ejecuta cuando el usuario presiona el botón “Ayuda”.
+       // Su función es abrir el Manual de Usuario en formato PDF correspondiente al módulo de Consulta de Servicios, directamente desde la carpeta donde se encuentra el ejecutable del sistema.
         private void btnayuda_Click(object sender, EventArgs e)
         {// Ruta del PDF en la carpeta del ejecutable
             string rutaPdf = Path.Combine(Application.StartupPath, "MANUAL DE USUARIO CONSULTA SERVICIOS.pdf");

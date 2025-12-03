@@ -104,7 +104,7 @@
             txtnombre.Name = "txtnombre";
             txtnombre.Size = new Size(134, 23);
             txtnombre.TabIndex = 6;
-            txtnombre.TextChanged += txtnombre_TextChanged;
+          
             // 
             // txtcontra
             // 
@@ -113,7 +113,7 @@
             txtcontra.Size = new Size(134, 23);
             txtcontra.TabIndex = 9;
             txtcontra.UseSystemPasswordChar = true;
-            txtcontra.TextChanged += txtcontra_TextChanged;
+           
             // 
             // button2
             // 
