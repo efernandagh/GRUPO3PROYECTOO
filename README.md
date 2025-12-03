@@ -114,6 +114,25 @@ Los siguientes casos de uso son considerados críticos y deben ser validados en 
 - Los reportes deben generarse sin pérdida de información.
 - La interfaz debe responder de forma rápida y estable.
 
+## Base de Datos
+
+### Motor Soportado
+El sistema C-MISUR utiliza exclusivamente el siguiente motor de base de datos:
+
+- **SQL Server**
+
+### Tablas Principales
+Las principales tablas utilizadas en el sistema son:
+
+- **Clientes**: Almacena la información de los clientes del taller.
+- **Facturas**: Registra las facturas generadas por los servicios prestados.
+- **Usuarios**: Controla el acceso al sistema mediante credenciales y roles.
+- **Servicios**: Contiene el catálogo de servicios ofrecidos.
+- **Inventario**: Administra los productos, repuestos y herramientas.
+- **Órdenes de Trabajo**: Registra los trabajos realizados en el taller.
+- **Pagos**: Almacena los registros de pagos efectuados por los clientes.
+
+Estas tablas permiten la correcta integración entre los módulos administrativos y operativos del sistema.
 
 
 
