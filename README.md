@@ -1498,3 +1498,861 @@ namespace INICIO
         }
     }
 }
+
+PARTE ADMINISTRATIVA
+ROLES:
+
+
+namespace INICIO
+{// Instancia de la clase de conexión
+    public partial class roles : Form
+    {
+        private string conexiontionString;
+        private ConexionBD conexionDB = new ConexionBD(); 
+
+
+
+
+        public roles()
+        {
+            InitializeComponent();
+        }
+
+        private void roles_Load(object sender, EventArgs e)
+        {
+            CargarRoles();
+
+
+        }
+
+
+
+
+        // Método que carga los roles disponibles desde la base de datos y los muestra en un ComboBox
+        // Establece una conexión con la base de datos usando el patrón 'using' para garantizar su cierre automático
+        // Define la consulta SQL para obtener el ID y nombre de todos los roles
+        // Crea el comando SQL con la consulta y la conexión
+        // Ejecuta la consulta y obtiene un lector de datos
+        public void CargarRoles()
+        {
+            using (SqlConnection con = ConexionBD.ObtenerConexion())
+            {
+                try
+                {
+
+                    string query = "SELECT ID_ROL, NOMBRE_ROL FROM ROL";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    DataTable dt = new DataTable();
+                    dt.Load(dr);
+
+                    cmbnombrerol.DataSource = dt;
+                    cmbnombrerol.DisplayMember = "NOMBRE_ROL";
+                    cmbnombrerol.ValueMember = "ID_ROL";
+                    cmbnombrerol.SelectedIndex = -1;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("❌ Error al cargar roles: " + ex.Message);
+                }
+            }
+        }
+        // Evento del botón guardar que inserta un nuevo rol en la base de datos
+        // Obtiene y valida los datos ingresados en los campos del formulario
+        // Valida que los campos obligatorios no estén vacíos
+        // Refrescar roles en el formulario de usuarios
+        private void btnguardar_Click(object sender, EventArgs e)
+        {
+            string id = txtidrol.Text.Trim();
+            string nombre = cmbnombrerol.Text.Trim();
+            string descripcion = txtdescrip.Text.Trim();
+
+            if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(descripcion))
+            {
+                MessageBox.Show("Por favor, completa todos los campos.");
+                return;
+            }
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+
+                    string query = "INSERT INTO ROL (ID_ROL ,NOMBRE_ROL, DESCRIPCION) VALUES (@idrol, @Nombre, @Descripcion)";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@idrol", id);
+                    cmd.Parameters.AddWithValue("@Nombre", nombre);
+                    cmd.Parameters.AddWithValue("@Descripcion", descripcion);
+
+                    cmd.ExecuteNonQuery();
+                    MessageBox.Show("✅ Rol guardado correctamente en SQL.");
+
+                    
+                    foreach (Form f in Application.OpenForms)
+                    {
+                        if (f is usuarios)
+                        {
+                            ((usuarios)f).CargarRoles();
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("❌ Error al guardar: " + ex.Message);
+            }
+
+            cmbnombrerol.Text = "";
+            txtdescrip.Clear();
+            txtdescrip.Focus();
+        }
+
+
+
+        // Evento del botón eliminar que borra un rol de la base de datos por su ID
+        // Valida que se haya ingresado un ID de rol
+        // Ejecuta la eliminación del rol en la tabla ROL
+        // Verifica si se eliminó algún registro y muestra el resultado
+        // Limpia todos los campos después de la operación
+        private void btneliminar_Click(object sender, EventArgs e)
+        {
+            string id = txtidrol.Text;
+
+            if (id == "")
+            {
+                MessageBox.Show("Ingresa el Id del rol a eliminar.");
+                return;
+            }
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+
+                    string query = "DELETE FROM ROL WHERE ID_ROL = @Id";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@Id", id);
+
+                    int filas = cmd.ExecuteNonQuery();
+
+                    if (filas > 0)
+                        MessageBox.Show("🗑️ Rol eliminado correctamente");
+                    else
+                        MessageBox.Show("No se encontró un rol con ese Id.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("❌ Error al eliminar: " + ex.Message);
+            }
+
+
+            txtidrol.Clear();
+            cmbnombrerol.Text = "";
+            txtdescrip.Clear();
+            txtdescrip.Focus();
+        }
+
+
+
+        // Preguntar si está seguro de salir
+        private void btncancelar_Click(object sender, EventArgs e)
+        {
+            DialogResult resultado = MessageBox.Show("¿Está seguro que desea salir?",
+                "Confirmar salida", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                this.Close();
+            }
+        }
+
+        private void GroupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+        // esto indica que abra con la app predeterminada
+
+        private void btnAyuda_Click(object sender, EventArgs e)
+        {
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = @"C:\Users\Belen\Downloads\MANUAL ROLES.pdf",
+                UseShellExecute = true 
+            };
+            System.Diagnostics.Process.Start(psi);
+        }
+        // Ruta del PDF en la carpeta del ejecutable
+        private void btnayuda_Click_1(object sender, EventArgs e)
+        {
+            
+            string rutaPdf = Path.Combine(Application.StartupPath, "MANUAL ROLES.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+    }
+}
+
+USUARIOS:
+
+
+using Microsoft.Data.SqlClient; // Asegúrate de tener la referencia a Microsoft.Data.SqlClient
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.Common;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+
+namespace INICIO
+{
+
+
+    public partial class usuarios : Form
+    {
+        // Instancia de la clase de conexión
+        private string conexiontionString;
+        private ConexionBD conexionDB = new ConexionBD(); 
+
+        public usuarios()
+        {
+            InitializeComponent();
+        }
+
+
+        //Método para cargar roles en el ComboBox
+        public void CargarRoles()
+        {
+            using (SqlConnection con = ConexionBD.ObtenerConexion())
+            {
+                try
+                {
+
+                    string query = "SELECT ID_ROL, NOMBRE_ROL FROM ROL";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    DataTable dt = new DataTable();
+                    dt.Load(dr);
+
+                    cmbrol.DataSource = dt;
+                    cmbrol.DisplayMember = "NOMBRE_ROL";
+                    cmbrol.ValueMember = "ID_ROL";
+                    cmbrol.SelectedIndex = -1;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("❌ Error al cargar roles: " + ex.Message);
+                }
+            }
+        }
+        // validaciones básicas
+        // Si por alguna razón el ID está vacío, lo regeneramos
+        // limpiar y generar ID nuevo
+        private void btnGuardar_Click(object sender, EventArgs e)
+        {
+            
+            if (string.IsNullOrWhiteSpace(txtnombreusuario.Text) ||
+                string.IsNullOrWhiteSpace(txtapellidousuarios.Text) ||
+                string.IsNullOrWhiteSpace(txtcorreousuario.Text) ||
+                string.IsNullOrWhiteSpace(txtclaveusuario.Text) ||
+                cmbrol.SelectedIndex == -1)
+            {
+                MessageBox.Show("Por favor, completa todos los campos.");
+                return;
+            }
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+
+
+                    
+                    if (string.IsNullOrWhiteSpace(txtidusuario.Text))
+                        GenerarNuevoId();
+
+                    string query = @"INSERT INTO USUARIOS 
+                                     (ID_USUARIO, NOMBRE, APELLIDO, CORREO, CLAVE, ID_ROL, FECHA_REGISTRO)
+                                     VALUES (@ID, @NOMBRE, @APELLIDO, @CORREO, @CLAVE, @ROL, @FECHA)";
+
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@ID", Convert.ToInt64(txtidusuario.Text));
+                    cmd.Parameters.AddWithValue("@NOMBRE", txtnombreusuario.Text);
+                    cmd.Parameters.AddWithValue("@APELLIDO", txtapellidousuarios.Text);
+                    cmd.Parameters.AddWithValue("@CORREO", txtcorreousuario.Text);
+                    cmd.Parameters.AddWithValue("@CLAVE", txtclaveusuario.Text);
+                    cmd.Parameters.AddWithValue("@ROL", cmbrol.SelectedValue);
+                    cmd.Parameters.AddWithValue("@FECHA", DateTime.Now);
+
+                    cmd.ExecuteNonQuery();
+                    MessageBox.Show("✅ Usuario guardado correctamente.");
+
+                    
+                    LimpiarCampos();
+                    GenerarNuevoId();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("❌ Error al guardar: " + ex.Message);
+            }
+        }
+
+        //elimna contenido o datos de los campos
+        private void btneliminar_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("¿Deseas eliminar los datos ingresados?",
+                "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                MessageBox.Show("🗑️ Datos eliminados correctamente.",
+                    "Eliminado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            LimpiarCampos();
+        }
+
+
+
+
+
+        // MÉTODO PARA LIMPIAR CAMPOS
+        private void LimpiarCampos()
+        {
+            txtnombreusuario.Clear();
+            txtapellidousuarios.Clear();
+            txtcorreousuario.Clear();
+            txtclaveusuario.Clear();
+            cmbrol.Text = "";
+            dtpfecha.Value = DateTime.Now;
+        }
+
+        private void btncancelar_Click(object sender, EventArgs e)
+        {
+            LimpiarCampos();
+            MessageBox.Show("Operación cancelada.");
+        }
+
+        private void txtnombreusuario_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        // No permitir editar el ID
+        // Llamar a función que genera el ID automáticamente
+
+        private void usuarios_Load(object sender, EventArgs e)
+        {
+            txtidusuario.Enabled = false;
+            CargarRoles();
+            dtpfecha.Value = DateTime.Now;
+            txtidusuario.Enabled = false; 
+            GenerarNuevoId(); 
+        }
+        // Función para generar el siguiente ID automáticamente
+        private int ObtenerSiguienteIdUsuario()
+        {
+            int siguienteId = 1;
+
+            using (SqlConnection conexion = new SqlConnection(conexiontionString))
+            {
+                conexion.Open();
+                string consulta = "SELECT ISNULL(MAX(ID_USUARIO), 0) + 1 FROM USUARIOS";
+                SqlCommand comando = new SqlCommand(consulta, conexion);
+                siguienteId = Convert.ToInt32(comando.ExecuteScalar());
+            }
+
+            return siguienteId;
+        }
+        //Asegurarse de que este método exista y tenga este nombre EXACTO
+        private void GenerarNuevoId()
+        {
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+
+                    string consulta = "SELECT ISNULL(MAX(ID_USUARIO), 0) + 1 FROM USUARIOS";
+                    SqlCommand cmd = new SqlCommand(consulta, con);
+                    object resultado = cmd.ExecuteScalar();
+                    txtidusuario.Text = (resultado != null) ? resultado.ToString() : "1";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("❌ Error al generar ID: " + ex.Message);
+                txtidusuario.Text = "1";
+            }
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+        // Ruta del PDF en la carpeta del ejecutable
+        private void btnAyuda_Click(object sender, EventArgs e)
+        {
+            
+            string rutaPdf = Path.Combine(Application.StartupPath, "MANUAL USUARIOS.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+    }
+}
+
+RESPALDO Y RESTAURACION:
+
+namespace INICIO
+{
+    public partial class RespaldoYrestaurar : Form
+    {
+        private ConexionBD conexionDB = new ConexionBD();
+        public RespaldoYrestaurar()
+        {
+            InitializeComponent();
+        }
+
+        private void RespaldoYrestaurar_Load(object sender, EventArgs e)
+        {
+
+
+        }
+
+        // Crear respaldo
+        // Evento del botón que crea un respaldo (backup) de la base de datos
+        // Define la ruta del archivo de respaldo en el escritorio del usuario
+        // Ejecuta el comando BACKUP DATABASE para crear el archivo .bak
+        // Muestra mensaje de éxito con la ubicación del respaldo o error si falla
+        private void btnCrearBackup_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string backupPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                    "MECANICA_INDUSTRIAL.bak"
+                );
+
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"BACKUP DATABASE MECANICA_INDUSTRIAL TO DISK = '{backupPath}'";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.ExecuteNonQuery();
+                }
+
+                MessageBox.Show($"✅ Respaldo creado correctamente en:\n{backupPath}",
+                    "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"❌ Error al crear el respaldo:\n{ex.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        // Evento del botón que restaura la base de datos desde un archivo de respaldo
+        // Abre un diálogo para que el usuario seleccione el archivo .bak
+        // Se conecta a la base de datos master para ejecutar la restauración
+        // Pone la base de datos en modo usuario único, restaura desde el archivo y vuelve a modo multiusuario
+        // Muestra mensaje de éxito o error según el resultado de la operación
+        // Se usa la base "master" para ejecutar el RESTORE
+        private void btnrestau_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog open = new OpenFileDialog();
+                open.Filter = "Archivos de respaldo (*.bak)|*.bak";
+                open.Title = "Selecciona un archivo de respaldo";
+
+                if (open.ShowDialog() == DialogResult.OK)
+                {
+                    string backupFile = open.FileName;
+
+                    
+                    string masterConnection = "Server=DESKTOP-8QJ2O4S\\ENIAGOMEZ;Database=master;Integrated Security=True;TrustServerCertificate=True;";
+
+                    using (SqlConnection con = new SqlConnection(masterConnection))
+                    {
+                        con.Open();
+
+                        string restoreQuery = @"
+                            ALTER DATABASE MECANICA_INDUSTRIAL SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+                            RESTORE DATABASE MECANICA_INDUSTRIAL FROM DISK = @backupFile WITH REPLACE;
+                            ALTER DATABASE MECANICA_INDUSTRIAL SET MULTI_USER;
+                        ";
+
+                        SqlCommand cmd = new SqlCommand(restoreQuery, con);
+                        cmd.Parameters.AddWithValue("@backupFile", backupFile);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    MessageBox.Show("✅ Base de datos restaurada correctamente.",
+                        "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"❌ Error al restaurar el respaldo:\n{ex.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        // Ruta donde se guardará el respaldo
+        // Verificar si la carpeta existe, si no, crearla
+        //  Crear respaldo de la base de datos
+        private void btnrestaurar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                
+                string carpetaRespaldo = @"C:\RespaldoSQL";
+                string backupPath = Path.Combine(carpetaRespaldo, "MECANICA_INDUSTRIAL.bak");
+
+                
+                if (!Directory.Exists(carpetaRespaldo))
+                {
+                    Directory.CreateDirectory(carpetaRespaldo);
+                }
+
+                /
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"BACKUP DATABASE MECANICA_INDUSTRIAL TO DISK = '{backupPath}' WITH FORMAT, INIT;";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.ExecuteNonQuery();
+                }
+
+                MessageBox.Show($"✅ Respaldo creado correctamente en:\n{backupPath}",
+                    "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"❌ Error al crear el respaldo:\n{ex.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        // Preguntar si realmente quiere salir
+        // Si el usuario presiona "Sí", cerrar el formulario
+        private void btnSalir_Click(object sender, EventArgs e)
+        {
+
+            
+            DialogResult resultado = MessageBox.Show(
+                "¿Está seguro que desea salir del sistema de facturas?",
+                "Confirmar Salida",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            
+            if (resultado == DialogResult.Yes)
+            {
+                this.Close();
+            }
+        }
+        // Ruta del PDF en la carpeta del ejecutable
+        private void btnayuda_Click(object sender, EventArgs e)
+        {
+            
+            string rutaPdf = Path.Combine(Application.StartupPath, "MANUAL RESPALDO Y RESTAURACION.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
+
+DASHBOARD:
+
+
+namespace INICIO
+{
+    public partial class Dashboard : Form
+    {
+        private ConexionBD conexionDB = new ConexionBD();
+
+        public Dashboard()
+        {
+            InitializeComponent();
+
+        }
+
+        private void timerHora_Tick(object sender, EventArgs e)
+        {
+
+            lblHora.Text = DateTime.Now.ToString("HH:mm:ss");
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Dashboard_Load(object sender, EventArgs e)
+        {
+
+
+        }
+
+        private Chart GetGrafica()
+        {
+            return grafica;
+        }
+
+
+
+        // Mostrar el menú principal de nuevo
+        // Cerrar este formulario
+        // Abre el formulario de contratos como diálogo modal
+        // Abre el formulario de clientes como diálogo modal
+        // Actualiza la etiqueta con la hora actual en formato HH:mm:ss
+        // Vuelve al menú principal, abre el formulario Menu y cierra el actual
+        // Minimiza la ventana del formulario
+        // Cierra completamente la aplicación
+        // Evento click del gráfico (sin implementación)
+        // Evento de carga del Dashboard: inicializa la hora y carga el gráfico
+        private void btncontratos_Click(object sender, EventArgs e)
+        {
+            contratos formContratos = new contratos();
+            formContratos.ShowDialog();
+        }
+
+        private void btnclientes_Click(object sender, EventArgs e)
+        {
+            clientes formClientes = new clientes();
+            formClientes.ShowDialog();
+        }
+
+        private void lblHora_Click(object sender, EventArgs e)
+        {
+            lblHora.Text = DateTime.Now.ToString("HH:mm:ss");
+
+        }
+        
+        private void btnvolver_Click(object sender, EventArgs e)
+        {
+            
+            Menu frmMenu = new Menu();
+            frmMenu.Show();
+
+            
+            this.Close();
+        }
+
+        private void btnminimizar_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+
+            Application.Exit();
+        }
+
+        private void grafica_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Dashboard_Load_1(object sender, EventArgs e)
+        {
+            lblHora.Text = DateTime.Now.ToString("HH:mm:ss");
+            CargarGrafico();
+        }
+        // Consulta agrupada por estado
+        // Limpiar gráfico
+        // Crear y configurar el área del gráfico
+        // Quitar márgenes para centrar el pastel
+        // Esto centra y ajusta el pastel dentro del área visible
+        // Crear la serie (gráfico pastel)
+        // nombre + porcentaje
+        // Carga datos desde SQL
+        // Tonos diferentes de azul
+        // Agregar serie
+        // Leyenda (opcional, también centrada a la derecha)
+        private void CargarGrafico()
+        {
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+
+
+                    
+                    string query = "SELECT ESTADO, COUNT(*) AS TOTAL FROM PROYECTOS GROUP BY ESTADO";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    
+                    grafica.Series.Clear();
+                    grafica.ChartAreas.Clear();
+                    grafica.Titles.Clear();
+                    grafica.Legends.Clear();
+
+                    
+                    ChartArea area = new ChartArea("MainArea");
+                    grafica.ChartAreas.Add(area);
+
+                    
+                    area.Position = new ElementPosition(0, 0, 100, 100);
+                    area.InnerPlotPosition = new ElementPosition(25, 10, 50, 80);
+                    
+                    
+                    Series serie = new Series("Proyectos");
+                    serie.ChartType = SeriesChartType.Pie;
+                    serie.IsValueShownAsLabel = true;
+                    serie.Label = "#VALX\n#PERCENT{P1}"; 
+                    serie.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+                    serie.LabelForeColor = Color.White;
+                    serie["PieLabelStyle"] = "Inside";
+                    serie["PieStartAngle"] = "90";
+
+                    
+                    while (dr.Read())
+                    {
+                        string estado = dr["ESTADO"].ToString();
+                        int total = Convert.ToInt32(dr["TOTAL"]);
+                        serie.Points.AddXY(estado, total);
+                    }
+
+                    
+                    Color[] tonosAzules = new Color[]
+                    {
+                Color.FromArgb(70, 130, 180),  
+                Color.FromArgb(100, 149, 237), 
+                Color.FromArgb(135, 206, 235), 
+                Color.FromArgb(176, 224, 230)  
+                    };
+
+                    for (int i = 0; i < serie.Points.Count; i++)
+                        serie.Points[i].Color = tonosAzules[i % tonosAzules.Length];
+
+                    
+                    grafica.Series.Add(serie);
+
+                    
+                    Legend leyenda = new Legend("Estados");
+                    leyenda.Docking = Docking.Right;
+                    leyenda.Alignment = StringAlignment.Center;
+                    leyenda.Font = new Font("Segoe UI", 9);
+                    grafica.Legends.Add(leyenda);
+
+                   
+                    Title titulo = new Title("Proyectos por Estado",
+                        Docking.Top,
+                        new Font("Segoe UI", 12, FontStyle.Bold),
+                        Color.Black);
+                    titulo.Alignment = ContentAlignment.TopCenter;
+                    grafica.Titles.Add(titulo);
+
+                    dr.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar el gráfico: " + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        //salir
+        private void btnSalir_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        // Ruta del PDF en la carpeta del ejecutable 
+        private void btnayuda_Click(object sender, EventArgs e)
+        {
+            
+            string rutaPdf = Path.Combine(Application.StartupPath, "MANUAL DASHBOARD.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+    }
+}
