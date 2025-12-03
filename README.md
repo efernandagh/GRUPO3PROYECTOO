@@ -147,7 +147,7 @@ Estas tablas permiten la correcta integración entre los módulos administrativo
 - **Lenguaje:** C#
 - **Framework:** .NET Framework 4.7 o superior
 
-MANUAL TECNICO LOGIN
+## MANUAL TECNICO LOGIN
 
 using ClosedXML.Excel;
 using iTextSharp.text;
