@@ -599,7 +599,7 @@ namespace INICIO
     }
 }
 
-##MANUAL TECNICO MENU
+## MANUAL TECNICO MENU
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -951,7 +951,7 @@ namespace INICIO
 }
 
 
-##MANUAL TECNICO FACTURACION
+## MANUAL TECNICO FACTURACION
 FACTURAS:
 
 using Microsoft.Data.SqlClient;
