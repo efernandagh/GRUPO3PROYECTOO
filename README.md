@@ -38,6 +38,84 @@ Este sistema fue desarrollado utilizando las siguientes tecnologías:
 ###  Sistema Operativo
 - **Windows** – Plataforma donde se ejecuta el sistema.
 
+  ## Pruebas del Sistema
+
+### 1. Cómo probar la aplicación
+
+Para realizar pruebas funcionales del sistema C-MISUR se recomienda seguir los siguientes pasos:
+
+1. Ejecutar la aplicación desde Visual Studio.
+2. Verificar que la conexión a la base de datos esté correctamente configurada.
+3. Utilizar usuarios de prueba previamente registrados en el sistema.
+4. Insertar datos de ejemplo en las tablas principales:
+   - CLIENTES
+   - SERVICIOS
+   - INVENTARIO
+5. Probar los módulos principales:
+   - Registro de clientes
+   - Consulta de servicios
+   - Generación de reportes
+   - Exportación a Excel y PDF
+
+#### Usuarios de prueba (ejemplo)
+- **Usuario:** admin  
+  **Contraseña:** admin123  
+  **Rol:** Administrador  
+
+- **Usuario:** usuario1  
+  **Contraseña:** user123  
+  **Rol:** Usuario estándar  
+
+#### Datos de ejemplo
+- Clientes de prueba con nombre, correo, teléfono y dirección.
+- Servicios de prueba con nombre y descripción.
+- Registros simulados de inventario y órdenes de trabajo.
+
+---
+
+### 2. Casos de Uso Críticos a Validar
+
+Los siguientes casos de uso son considerados críticos y deben ser validados en cada prueba del sistema:
+
+1. **Inicio de sesión del usuario**
+   - Verificar acceso correcto con credenciales válidas.
+   - Validar bloqueo de acceso con credenciales incorrectas.
+
+2. **Registro de clientes**
+   - Agregar nuevos clientes.
+   - Validar campos obligatorios.
+   - Evitar registros duplicados.
+
+3. **Consulta de servicios**
+   - Búsqueda por nombre, ID o descripción.
+   - Visualización correcta en el DataGridView.
+   - Filtros dinámicos por campo.
+
+4. **Exportación de reportes**
+   - Exportar datos a Excel.
+   - Exportar datos a PDF.
+   - Verificar integridad de los datos exportados.
+
+5. **Gestión de inventario**
+   - Ingreso de nuevos productos.
+   - Actualización de existencias.
+   - Validación de stock mínimo.
+
+6. **Salida segura del sistema**
+   - Confirmación al cerrar sesión.
+   - Protección contra cierre accidental del programa.
+
+---
+
+### 3. Resultados Esperados de las Pruebas
+
+- El sistema debe responder sin errores durante las operaciones.
+- Los datos deben almacenarse correctamente en la base de datos.
+- Los reportes deben generarse sin pérdida de información.
+- La interfaz debe responder de forma rápida y estable.
+
+
+
 
 MANUAL TECNICO LOGIN
 
