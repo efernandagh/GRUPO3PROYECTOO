@@ -14,10 +14,12 @@ namespace INICIO
 {
     public partial class inventario : Form
     {
+        //Instancia para manejar la conexión
         private ConexionBD conexionDB = new ConexionBD();
         private string conexiontionString;
 
-
+        
+        //Carga los componentes del formulario
         public inventario()
         {
             InitializeComponent();
@@ -25,6 +27,7 @@ namespace INICIO
         // ✅ Cargar valores únicos de UNIDAD_MEDIDA en el ComboBox
         private void CargarUnidades()
         {
+            // Realiza la carga de unidades de medida desde la base de datos
             try
             {
                 cmbunidad.Items.Clear(); // Limpiar por si se vuelve a cargar
@@ -37,11 +40,11 @@ namespace INICIO
 
                     while (reader.Read())
                     {
-                        cmbunidad.Items.Add(reader["UNIDAD_MEDIDA"].ToString());
+                        cmbunidad.Items.Add(reader["UNIDAD_MEDIDA"].ToString()); // Agregar solo valores únicos
                     }
                 }
 
-                if (cmbunidad.Items.Count == 0)
+                if (cmbunidad.Items.Count == 0) 
                 {
                     MessageBox.Show("No se encontraron unidades de medida en la tabla INVENTARIOS.");
                 }
@@ -51,6 +54,8 @@ namespace INICIO
                 MessageBox.Show("Error al cargar unidades de medida: " + ex.Message);
             }
         }
+
+        // 🔸 Función para abrir la conexión a la base de datos
         private SqlConnection AbrirConexion()
         {
             return ConexionBD.ObtenerConexion();
@@ -58,6 +63,7 @@ namespace INICIO
         // 🔸 Cargar ComboBox con los servicios al iniciar
         private void servicios_Load(object sender, EventArgs e)
         {
+            // Cargar unidades de medida en el ComboBox al cargar el formulario
 
             using (SqlConnection conn = Conectar())
             {
@@ -65,7 +71,7 @@ namespace INICIO
                 SqlCommand cmd = new SqlCommand(query, conn);
                 SqlDataReader reader = cmd.ExecuteReader();
 
-                while (reader.Read())
+                while (reader.Read()) 
                 {
                     cmbunidad.Items.Add(reader["UNIDAD_MEDIDA"].ToString());
                 }
@@ -73,10 +79,15 @@ namespace INICIO
                 conn.Close();
             }
         }
+
+        //Centraliza el acceso a la base de datos y permite reutilización y mantenimiento más fácil
+        //🔸 Función para abrir la conexión a la base de datos
         private SqlConnection Conectar()
         {
             return ConexionBD.ObtenerConexion();
         }
+
+        // Configuración inicial al cargar el formulario
         private void inventario_Load(object sender, EventArgs e)
         {
             txtidinventario.Enabled = false;
@@ -84,6 +95,7 @@ namespace INICIO
             CargarUnidades();
         }
 
+        // Guarda un nuevo inventario en la base de datos
         private void Button1_Click(object sender, EventArgs e)
         {
             using (SqlConnection conn = Conectar())
@@ -98,13 +110,14 @@ namespace INICIO
                 cmd.Parameters.AddWithValue("@estado", txtestado.Text);
                 cmd.Parameters.AddWithValue("@ID_PROVEEDOR", Convert.ToInt64(txtidpro.Text));
 
-
+                
                 cmd.ExecuteNonQuery();
                 MessageBox.Show("Inventario guardado correctamente.");
                 conn.Close();
             }
         }
 
+        // Limpia todos los campos del formulario para editar un inventario existente
         private void btneditar_Click(object sender, EventArgs e)
         {
             // Limpiar todos los campos
@@ -124,9 +137,7 @@ namespace INICIO
         }
 
 
-
-
-
+        // Función para limpiar todos los campos del formulario 
         private void LimpiarCampos()
         {
             txtidinventario.Clear();
@@ -139,16 +150,19 @@ namespace INICIO
 
         }
 
+        // Limpia los campos al hacer clic en el botón "Limpiar"
         private void btnlimpiar_Click(object sender, EventArgs e)
         {
             LimpiarCampos();
         }
 
+        // Cierra el formulario al hacer clic en el botón "Cancelar"
         private void btncancelar_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        // Guarda un nuevo inventario en la base de datos al hacer clic en el botón "Nuevo"
         private void btnnuevo_Click(object sender, EventArgs e)
         {
 
@@ -171,7 +185,7 @@ namespace INICIO
 
                     cmd.ExecuteNonQuery();
                 }
-
+                
                 MessageBox.Show("✅ Inventario guardado correctamente.");
                 LimpiarCampos();
             }
@@ -197,12 +211,12 @@ namespace INICIO
             return siguienteId;
         }
 
-
+        // ✅ Genera un nuevo ID para el inventario al cargar el formulario
         private void GenerarNuevoId()
         {
             try
             {
-                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                using (SqlConnection con = ConexionBD.ObtenerConexion()) // Abrir conexión
                 {
 
                     string consulta = "SELECT ISNULL(MAX(ID_INVENTARIO), 0) + 1 FROM INVENTARIOS";
@@ -212,17 +226,19 @@ namespace INICIO
                 }
             }
             catch (Exception ex)
-            {
-                MessageBox.Show("❌ Error al generar ID: " + ex.Message);
+            { 
+                MessageBox.Show("❌ Error al generar ID: " + ex.Message); // Mostrar mensaje de error
                 txtidinventario.Text = "1";
             }
         }
 
+      
         private void label7_Click(object sender, EventArgs e)
         {
 
         }
 
+        // Abre el manual de inventario en PDF al hacer clic en el botón de ayuda
         private void btnayuda_Click(object sender, EventArgs e)
         {
             // Ruta del PDF en la carpeta del ejecutable
@@ -230,6 +246,7 @@ namespace INICIO
 
             if (File.Exists(rutaPdf))
             {
+                // Abre el PDF con la aplicación predeterminada del sistema
                 try
                 {
                     ProcessStartInfo psi = new ProcessStartInfo
@@ -248,6 +265,11 @@ namespace INICIO
             {
                 MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }
