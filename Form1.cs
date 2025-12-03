@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Azure;
+using iTextSharp.text.pdf.codec.wmf;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -8,15 +10,25 @@ namespace INICIO
 {
     public partial class Form1 : Form
     {
+        //servidor: almacena la cadena de conexión al servidor SQL.
+        //conexionDB: gestiona la conexión a la base de datos.
+       // rutaConfig: archivo donde se guarda el estado de SQL y la base de datos.
         private string servidor = "";
         private ConexionBD conexionDB = new ConexionBD();
         private string rutaConfig = "configuracion.txt";
 
+        //Inicializa todos los controles gráficos del formulario.
         public Form1()
         {
             InitializeComponent();
         }
 
+        //Obtiene el nombre del equipo.
+        //Prueba distintas instancias de SQL Server:SQLEXPRESS,  MSSQLSERVER, SQL2019
+        //Intenta conectarse automáticamente.
+        //Si ninguna instancia funciona, intenta conectar al servidor por defecto.
+        //Si falla, muestra un mensaje de error crítico
+        //Automatiza la detección del servidor SQL sin intervención del usuario.
         private string ObtenerServidorSQL()
         {
             string nombrePC = Environment.MachineName;
@@ -55,6 +67,12 @@ namespace INICIO
                 return null;
             }
         }
+
+        //Este método revisa si existe el archivo configuracion.txt y valida:
+        //Si SQL está instalado (SQL=SI) ,Si la base de datos existe(BD= SI)
+        //Si no hay SQL → se cierra el sistema
+       // Si no existe la base de datos → pregunta si desea crearla
+//Si no existe el archivo → se verifica directamente la base de datos
 
         private void VerificarConfiguracion()
         {
@@ -98,6 +116,11 @@ namespace INICIO
             }
         }
 
+        //Se conecta a la base master.
+        //Consulta si existe la base MECANICA_INDUSTRIAL.
+        //Si no existe:  Pregunta si desea crearla.
+       // Si el usuario responde NO → el sistema se cierra.
+       // Si existe → guarda el estado en el archivo de configuración.
         private void VerificarBaseDeDatos()
         {
             try
@@ -140,6 +163,7 @@ namespace INICIO
             }
         }
 
+        //Guarda en el archivo configuracion.txt:Estado del SQL Server, Estado de la base de datos.
         private void GuardarConfiguracion(string sql, string bd)
         {
             try
@@ -152,6 +176,7 @@ namespace INICIO
             }
         }
 
+        //Este método realiza automáticamente
         private void CrearBaseDeDatos()
         {
             try
@@ -169,7 +194,10 @@ namespace INICIO
                     // Ahora conectar a la nueva base de datos
                     con.ChangeDatabase("MECANICA_INDUSTRIAL");
 
+                    //Creación de todas las tablas:
+                    //Todas con claves primarias y foráneas correctamente definidas.
                     string script = @"
+
 CREATE TABLE ROL (
     ID_ROL BIGINT PRIMARY KEY,
     NOMBRE_ROL VARCHAR(100),
@@ -396,6 +424,7 @@ INSERT INTO PROYECTO_INVENTARIO (ID_PROYECTO_INVENTARIO, ID_PRODUCTO, CANTIDAD_U
             }
         }
 
+
         private void Form1_Load(object sender, EventArgs e)
         {
             try
@@ -428,9 +457,14 @@ INSERT INTO PROYECTO_INVENTARIO (ID_PROYECTO_INVENTARIO, ID_PRODUCTO, CANTIDAD_U
             // Centrar controles
             int centerX = (this.ClientSize.Width - barratitulo.Width) / 2;
             int centerY = (this.ClientSize.Height - barratitulo.Height) / 2;
-            barratitulo.Location = new Point(centerX, centerY);
+            barratitulo.Location = new System.Drawing.Point(centerX, centerY);
         }
 
+        //Valida que usuario y contraseña no estén vacíos.
+        //Consulta la tabla USUARIOS.
+        // Compara: NOMBRE, CLAVE
+        //Si existe coincidencia: Muestra mensaje de bienvenida,Abre el formulario Menu, Oculta el formulario de login. 
+        //Si no existe: Muestra mensaje de error.
         private void button1_Click(object sender, EventArgs e)
         {
             string nombre = txtnombre.Text.Trim();
@@ -471,37 +505,35 @@ INSERT INTO PROYECTO_INVENTARIO (ID_PROYECTO_INVENTARIO, ID_PRODUCTO, CANTIDAD_U
                 MessageBox.Show("Error al conectar con la base de datos:\n" + ex.Message);
             }
         }
-
+        //Limpia los campos: Usuario, Contraseña
         private void button1_Click_1(object sender, EventArgs e)
         {
             txtnombre.Clear();
             txtcontra.Clear();
             txtnombre.Focus();
         }
-
+        //Cierra completamente la aplicación.
         private void button2_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
-        private void txtnombre_TextChanged(object sender, EventArgs e) { }
-        private void txtcontra_TextChanged(object sender, EventArgs e) { }
-        private void panel2_Paint(object sender, PaintEventArgs e) { }
 
+        //Maximiza la ventana y oculta el botón.
         private void button1_Click_2(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Maximized;
             button1.Visible = false;
             btnrestaurar.Visible = true;
         }
-
+        //Restaura la ventana a su tamaño normal.
         private void btnrestaurar_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Normal;
             btnrestaurar.Visible = false;
             button1.Visible = true;
         }
-
+        //Minimiza la ventana.
         private void btnminimizar_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
@@ -510,6 +542,9 @@ INSERT INTO PROYECTO_INVENTARIO (ID_PROYECTO_INVENTARIO, ID_PRODUCTO, CANTIDAD_U
         private void button3_Click(object sender, EventArgs e) { }
         private void button6_Click(object sender, EventArgs e) { }
 
+        //Busca el archivo:Manual de usuario login.pdf
+        //Si existe: Lo abre automáticamente con el visor predeterminado.
+        //Si no existe:Muestra advertencia.
         private void btnayuda_Click(object sender, EventArgs e)
         {
             // Ruta del PDF en la carpeta del ejecutable
