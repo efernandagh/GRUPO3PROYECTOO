@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             panel1 = new Panel();
+            btnayuda = new Button();
             cmbidfaactura = new ComboBox();
             btnGuardar = new Button();
             cboEstado = new ComboBox();
@@ -44,7 +45,6 @@
             label4 = new Label();
             label3 = new Label();
             label2 = new Label();
-            btnayuda = new Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -52,9 +52,8 @@
             // panel1
             // 
             panel1.BackColor = Color.CornflowerBlue;
-            panel1.Controls.Add(btnayuda);
-            panel1.Controls.Add(cmbidfaactura);
             panel1.Controls.Add(btnGuardar);
+            panel1.Controls.Add(cmbidfaactura);
             panel1.Controls.Add(cboEstado);
             panel1.Controls.Add(btnSalir);
             panel1.Controls.Add(btnLimpiar);
@@ -74,6 +73,23 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(494, 305);
             panel1.TabIndex = 1;
+            panel1.Paint += panel1_Paint;
+            // 
+            // btnayuda
+            // 
+            btnayuda.FlatAppearance.BorderSize = 0;
+            btnayuda.FlatAppearance.MouseOverBackColor = Color.Red;
+            btnayuda.FlatStyle = FlatStyle.Flat;
+            btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
+            btnayuda.ForeColor = Color.White;
+            btnayuda.Location = new Point(601, 452);
+            btnayuda.Margin = new Padding(3, 2, 3, 2);
+            btnayuda.Name = "btnayuda";
+            btnayuda.Size = new Size(117, 30);
+            btnayuda.TabIndex = 36;
+            btnayuda.Text = "Ayuda";
+            btnayuda.UseVisualStyleBackColor = true;
+            btnayuda.Click += btnayuda_Click_1;
             // 
             // cmbidfaactura
             // 
@@ -90,7 +106,7 @@
             btnGuardar.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
             btnGuardar.FlatStyle = FlatStyle.Flat;
             btnGuardar.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnGuardar.Location = new Point(366, 142);
+            btnGuardar.Location = new Point(366, 183);
             btnGuardar.Name = "btnGuardar";
             btnGuardar.Size = new Size(102, 38);
             btnGuardar.TabIndex = 16;
@@ -114,7 +130,7 @@
             btnSalir.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
             btnSalir.FlatStyle = FlatStyle.Flat;
             btnSalir.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnSalir.Location = new Point(366, 221);
+            btnSalir.Location = new Point(366, 254);
             btnSalir.Margin = new Padding(3, 2, 3, 2);
             btnSalir.Name = "btnSalir";
             btnSalir.Size = new Size(94, 32);
@@ -130,7 +146,7 @@
             btnLimpiar.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
             btnLimpiar.FlatStyle = FlatStyle.Flat;
             btnLimpiar.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnLimpiar.Location = new Point(366, 185);
+            btnLimpiar.Location = new Point(366, 125);
             btnLimpiar.Margin = new Padding(3, 2, 3, 2);
             btnLimpiar.Name = "btnLimpiar";
             btnLimpiar.Size = new Size(94, 32);
@@ -236,28 +252,13 @@
             label2.TabIndex = 1;
             label2.Text = "FECHA:";
             // 
-            // btnayuda
-            // 
-            btnayuda.FlatAppearance.BorderSize = 0;
-            btnayuda.FlatAppearance.MouseOverBackColor = Color.Red;
-            btnayuda.FlatStyle = FlatStyle.Flat;
-            btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
-            btnayuda.ForeColor = Color.White;
-            btnayuda.Location = new Point(351, 260);
-            btnayuda.Margin = new Padding(3, 2, 3, 2);
-            btnayuda.Name = "btnayuda";
-            btnayuda.Size = new Size(117, 30);
-            btnayuda.TabIndex = 36;
-            btnayuda.Text = "Ayuda";
-            btnayuda.UseVisualStyleBackColor = true;
-            btnayuda.Click += btnayuda_Click_1;
-            // 
             // frmPagos
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(192, 192, 255);
             ClientSize = new Size(1041, 513);
+            Controls.Add(btnayuda);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
             Name = "frmPagos";

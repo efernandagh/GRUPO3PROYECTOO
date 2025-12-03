@@ -8,7 +8,7 @@ namespace INICIO
 {
     public partial class frmPagos : Form
     {
-
+        //conexion a la base de datos
         private ConexionBD conexionDB = new ConexionBD();
         private string conexiontionString;
         public frmPagos()
@@ -30,7 +30,7 @@ namespace INICIO
         }
 
 
-        // ✅ Cargar al iniciar el formulario
+        //  Cargar al iniciar el formulario
         private void frmPagos_Load(object sender, EventArgs e)
         {
             txtPago.Enabled = false;
@@ -38,18 +38,18 @@ namespace INICIO
             dtpFecha.Format = DateTimePickerFormat.Custom;
             dtpFecha.CustomFormat = "dd/MM/yyyy";
 
-            // 🔹 Cargar estados de pago
+            // Cargar estados de pago
             cboEstado.Items.Clear();
             cboEstado.Items.Add("Pendiente");
             cboEstado.Items.Add("Pagado");
             cboEstado.Items.Add("Cancelado");
             cboEstado.SelectedIndex = 0;
 
-            // 🔹 Cargar facturas desde la base de datos
+            // Cargar facturas desde la base de datos
             CargarFacturas();
         }
 
-        // ✅ Cargar los ID_FACTURA en el ComboBox
+        // Cargar los ID_FACTURA en el ComboBox
         private void CargarFacturas()
         {
             try
@@ -84,14 +84,14 @@ namespace INICIO
 
 
 
-        // ✅ Botón Limpiar
+        //  Botón Limpiar
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             LimpiarCampos();
             MessageBox.Show("Formulario limpiado correctamente.", "Limpieza", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        // ✅ Método para limpiar todos los campos
+        // Método para limpiar todos los campos
         private void LimpiarCampos()
         {
             txtPago.Clear();
@@ -102,7 +102,7 @@ namespace INICIO
             txtPago.Focus();
         }
 
-        // ✅ Botón Salir
+        // Botón Salir
         private void btnSalir_Click(object sender, EventArgs e)
         {
             DialogResult resultado = MessageBox.Show("¿Está seguro que desea salir?",
@@ -112,7 +112,7 @@ namespace INICIO
                 this.Close();
         }
 
-        // ✅ Validar entrada numérica en txtMonto
+        // Validar entrada numérica en txtMonto
         private void txtMonto_KeyPress(object sender, KeyPressEventArgs e)
         {
             // Permitir solo números, punto decimal y teclas de control
@@ -132,7 +132,7 @@ namespace INICIO
         {
             try
             {
-                // ✅ VALIDACIONES
+                // VALIDACIONES
                 if (cmbidfaactura.SelectedIndex == -1)
                 {
                     MessageBox.Show("Seleccione una factura.", "Advertencia");
@@ -159,14 +159,14 @@ namespace INICIO
 
                 using (SqlConnection conn = ConexionBD.ObtenerConexion())
                 {
-                    // ✅ Generar nuevo ID_PAGO manualmente
+                    // Generar nuevo ID_PAGO manualmente
                     long nuevoId = 0;
                     using (SqlCommand cmdId = new SqlCommand("SELECT ISNULL(MAX(ID_PAGO), 0) + 1 FROM PAGOS", conn))
                     {
                         nuevoId = Convert.ToInt64(cmdId.ExecuteScalar());
                     }
 
-                    // ✅ Insertar el nuevo pago
+                    // Insertar el nuevo pago
                     string query = @"INSERT INTO PAGOS (ID_PAGO, ID_FACTURA, FECHA_PAGO, MONTO_PAGO, ESTADO_PAGO)
                              VALUES (@idpago, @idfactura, @fecha, @monto, @estado)";
 
@@ -205,7 +205,7 @@ namespace INICIO
             txtPago.Enabled = false;
             GenerarNuevoId();
         }
-        // ✅ Función para generar el siguiente ID automáticamente
+        // Función para generar el siguiente ID automáticamente
         private int ObtenerSiguienteIdUsuario()
         {
             int siguienteId = 1;
@@ -226,7 +226,7 @@ namespace INICIO
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
-
+                    //genera automaticamente el pagoid
                     string consulta = "SELECT ISNULL(MAX(ID_PAGO), 0) + 1 FROM PAGOS";
                     SqlCommand cmd = new SqlCommand(consulta, con);
                     object resultado = cmd.ExecuteScalar();
@@ -275,6 +275,11 @@ namespace INICIO
             {
                 MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
