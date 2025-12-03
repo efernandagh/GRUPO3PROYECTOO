@@ -4317,6 +4317,495 @@ namespace INICIO
 
 }
 
+## MANUAL TECNICO INVENTARIO
+using Microsoft.Data.SqlClient;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace INICIO
+{
+    public partial class inventario : Form
+    {
+        //Instancia para manejar la conexión
+        private ConexionBD conexionDB = new ConexionBD();
+        private string conexiontionString;
+
+        
+        //Carga los componentes del formulario
+        public inventario()
+        {
+            InitializeComponent();
+        }
+        // ✅ Cargar valores únicos de UNIDAD_MEDIDA en el ComboBox
+        private void CargarUnidades()
+        {
+            // Realiza la carga de unidades de medida desde la base de datos
+            try
+            {
+                cmbunidad.Items.Clear(); // Limpiar por si se vuelve a cargar
+
+                using (SqlConnection conn = Conectar())
+                {
+                    string query = "SELECT DISTINCT UNIDAD_MEDIDA FROM INVENTARIOS WHERE UNIDAD_MEDIDA IS NOT NULL";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        cmbunidad.Items.Add(reader["UNIDAD_MEDIDA"].ToString()); // Agregar solo valores únicos
+                    }
+                }
+
+                if (cmbunidad.Items.Count == 0) 
+                {
+                    MessageBox.Show("No se encontraron unidades de medida en la tabla INVENTARIOS.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar unidades de medida: " + ex.Message);
+            }
+        }
+
+        // 🔸 Función para abrir la conexión a la base de datos
+        private SqlConnection AbrirConexion()
+        {
+            return ConexionBD.ObtenerConexion();
+        }
+        // 🔸 Cargar ComboBox con los servicios al iniciar
+        private void servicios_Load(object sender, EventArgs e)
+        {
+            // Cargar unidades de medida en el ComboBox al cargar el formulario
+
+            using (SqlConnection conn = Conectar())
+            {
+                string query = "SELECT UNIDAD_MEDIDA FROM INVENTARIOS";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read()) 
+                {
+                    cmbunidad.Items.Add(reader["UNIDAD_MEDIDA"].ToString());
+                }
+
+                conn.Close();
+            }
+        }
+
+        //Centraliza el acceso a la base de datos y permite reutilización y mantenimiento más fácil
+        //🔸 Función para abrir la conexión a la base de datos
+        private SqlConnection Conectar()
+        {
+            return ConexionBD.ObtenerConexion();
+        }
+
+        // Configuración inicial al cargar el formulario
+        private void inventario_Load(object sender, EventArgs e)
+        {
+            txtidinventario.Enabled = false;
+            GenerarNuevoId();
+            CargarUnidades();
+        }
+
+        // Guarda un nuevo inventario en la base de datos
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            using (SqlConnection conn = Conectar())
+            {
+                string query = "INSERT INTO INVENTARIOS (ID_INVENTARIO, NOMBRE_PRODUCTO, CANTIDAD, UNIDAD_MEDIDA, FECHA_INGRESO, ESTADO, ID_PROVEEDOR) VALUES (@id, @nombre, @cantidad, @unidad, @fecha, @estado, @ID_PROVEEDOR)";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", Convert.ToInt64(txtidinventario.Text));
+                cmd.Parameters.AddWithValue("@nombre", txtnombrepro.Text);
+                cmd.Parameters.AddWithValue("@cantidad", txtcantidad.Text);
+                cmd.Parameters.AddWithValue("@unidad", cmbunidad.Text);
+                cmd.Parameters.AddWithValue("@fecha", Convert.ToDateTime(dtpfecha.Text));
+                cmd.Parameters.AddWithValue("@estado", txtestado.Text);
+                cmd.Parameters.AddWithValue("@ID_PROVEEDOR", Convert.ToInt64(txtidpro.Text));
+
+                
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("Inventario guardado correctamente.");
+                conn.Close();
+            }
+        }
+
+        // Limpia todos los campos del formulario para editar un inventario existente
+        private void btneditar_Click(object sender, EventArgs e)
+        {
+            // Limpiar todos los campos
+            txtidinventario.Clear();
+            txtnombrepro.Text = "";
+            txtcantidad.Clear();
+            cmbunidad.Items.Clear();
+            dtpfecha.Text = "";
+            txtestado.Clear();
+            txtidpro.Clear();
+
+
+            // Poner el foco en el primer campo
+            txtidinventario.Focus();
+
+            MessageBox.Show("Formulario limpiado", "Limpiar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+
+        // Función para limpiar todos los campos del formulario 
+        private void LimpiarCampos()
+        {
+            txtidinventario.Clear();
+            txtnombrepro.Text = "";
+            txtcantidad.Clear();
+            cmbunidad.Items.Clear();
+            dtpfecha.Text = "";
+            txtestado.Clear();
+            txtidpro.Clear();
+
+        }
+
+        // Limpia los campos al hacer clic en el botón "Limpiar"
+        private void btnlimpiar_Click(object sender, EventArgs e)
+        {
+            LimpiarCampos();
+        }
+
+        // Cierra el formulario al hacer clic en el botón "Cancelar"
+        private void btncancelar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        // Guarda un nuevo inventario en la base de datos al hacer clic en el botón "Nuevo"
+        private void btnnuevo_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+                using (SqlConnection conn = Conectar())
+                {
+                    string query = @"INSERT INTO INVENTARIOS 
+                    (ID_INVENTARIO, NOMBRE_PRODUCTO, CANTIDAD, UNIDAD_MEDIDA, FECHA_INGRESO, ESTADO, ID_PROVEEDOR) 
+                    VALUES (@id, @nombre, @cantidad, @unidad, @fecha, @estado, @ID_PROVEEDOR)";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@id", Convert.ToInt64(txtidinventario.Text));
+                    cmd.Parameters.AddWithValue("@nombre", txtnombrepro.Text);
+                    cmd.Parameters.AddWithValue("@cantidad", txtcantidad.Text);
+                    cmd.Parameters.AddWithValue("@unidad", cmbunidad.Text);
+                    cmd.Parameters.AddWithValue("@fecha", dtpfecha.Value);
+                    cmd.Parameters.AddWithValue("@estado", txtestado.Text);
+                    cmd.Parameters.AddWithValue("@ID_PROVEEDOR", Convert.ToInt64(txtidpro.Text));
+
+                    cmd.ExecuteNonQuery();
+                }
+                
+                MessageBox.Show("✅ Inventario guardado correctamente.");
+                LimpiarCampos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al guardar inventario: " + ex.Message);
+            }
+        }
+
+        // ✅ Función para generar el siguiente ID automáticamente
+        private int ObtenerSiguienteIdUsuario()
+        {
+            int siguienteId = 1;
+
+            using (SqlConnection conexion = new SqlConnection(conexiontionString))
+            {
+                conexion.Open();
+                string consulta = "SELECT ISNULL(MAX(ID_INVENTARIO), 0) + 1 FROM INVENTARIOS";
+                SqlCommand comando = new SqlCommand(consulta, conexion);
+                siguienteId = Convert.ToInt32(comando.ExecuteScalar());
+            }
+
+            return siguienteId;
+        }
+
+        // ✅ Genera un nuevo ID para el inventario al cargar el formulario
+        private void GenerarNuevoId()
+        {
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion()) // Abrir conexión
+                {
+
+                    string consulta = "SELECT ISNULL(MAX(ID_INVENTARIO), 0) + 1 FROM INVENTARIOS";
+                    SqlCommand cmd = new SqlCommand(consulta, con);
+                    object resultado = cmd.ExecuteScalar();
+                    txtidinventario.Text = (resultado != null) ? resultado.ToString() : "1";
+                }
+            }
+            catch (Exception ex)
+            { 
+                MessageBox.Show("❌ Error al generar ID: " + ex.Message); // Mostrar mensaje de error
+                txtidinventario.Text = "1";
+            }
+        }
+
+      
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        // Abre el manual de inventario en PDF al hacer clic en el botón de ayuda
+        private void btnayuda_Click(object sender, EventArgs e)
+        {
+            // Ruta del PDF en la carpeta del ejecutable
+            string rutaPdf = Path.Combine(Application.StartupPath, "Manual d Inventario.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                // Abre el PDF con la aplicación predeterminada del sistema
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
+
+   ## MANUAL TECNICO SERVICIOS
+   using Microsoft.Data.SqlClient;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace INICIO
+{
+    public partial class servicios : Form // Clase parcial para el formulario de servicios
+    {
+        private ConexionBD conexionDB = new ConexionBD(); // Instancia de la clase de conexión
+        private string conexion; // Cadena de conexión a la base de datos
+        private string conexiontionString;
+
+
+        
+        public servicios() // Constructor del formulario
+        {
+            InitializeComponent();
+        }
+        private SqlConnection Conectar() // Función para conectar a la base de datos
+        {
+            SqlConnection conn = new SqlConnection(conexion);
+            conn.Open();
+            return conn;
+        }
+
+        // 🔸 Cargar ComboBox con los servicios al iniciar
+        private void servicios_Load(object sender, EventArgs e)
+        {
+            using (SqlConnection conn = Conectar()) 
+            {
+                // Cargar los nombres de los servicios en el ComboBox
+                string query = "SELECT NOMBRE_SERVICIO FROM SERVICIOS";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                // Limpiar los ítems actuales
+                while (reader.Read()) 
+                {
+                    txtnombreser.Items.Add(reader["NOMBRE_SERVICIO"].ToString());
+                }
+
+                conn.Close();
+            }
+        }
+
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        // Salir del formulario
+        private void button2_Click(object sender, EventArgs e)
+        {// Preguntar si está seguro de salir
+            DialogResult resultado = MessageBox.Show("¿Está seguro que desea salir?",
+                "Confirmar salida", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                this.Close();
+            }
+        }
+
+
+        private void txtnombredelservicio_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtdesc_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        // Guardar nuevo servicio en la base de datos
+        private void button1_Click(object sender, EventArgs e)
+        {
+            using (SqlConnection con = ConexionBD.ObtenerConexion()) 
+            {
+                string query = "INSERT INTO SERVICIOS (ID_SERVICIOS, NOMBRE_SERVICIO, DESCRIPCION) VALUES (@id, @nombre, @descripcion)";
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@id", txtidservicio.Text);
+                cmd.Parameters.AddWithValue("@nombre", txtnombreser.Text);
+                cmd.Parameters.AddWithValue("@descripcion", txtdesc.Text);
+
+
+                MessageBox.Show("Servicio guardado correctamente.");
+                con.Close();
+            }
+        }
+
+
+        // Limpiar formulario para nuevo servicio
+        private void btneditar_Click(object sender, EventArgs e)
+        {
+            // Limpiar todos los campos
+            txtidservicio.Clear();
+            txtnombreser.Text = "";
+            txtdesc.Clear();
+
+
+            // Poner el foco en el primer campo
+            txtidservicio.Focus();
+
+            MessageBox.Show("Formulario limpiado", "Limpiar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+
+
+
+        // ✅ Función para limpiar los campos del formulario
+        private void LimpiarCampos()
+        {
+            txtidservicio.Clear();
+            txtnombreser.Text = "";
+            txtdesc.Clear();
+        }
+
+        // 🔹 Evento Load del formulario para inicializar componentes
+        private void servicios_Load_1(object sender, EventArgs e)
+        {
+            txtidservicio.Enabled = false; // No permitir editar el ID
+            GenerarNuevoId(); // 🔹 Llamar a función que genera el ID automáticamente
+        }
+        // ✅ Función para generar el siguiente ID automáticamente
+        private int ObtenerSiguienteIdUsuario() 
+        {
+            int siguienteId = 1;
+            
+            using (SqlConnection conexion = new SqlConnection(conexiontionString)) 
+            {
+                conexion.Open();
+                string consulta = "SELECT ISNULL(MAX(ID_SERVICIOS), 0) + 1 FROM SERVICIOS";
+                SqlCommand comando = new SqlCommand(consulta, conexion);
+                siguienteId = Convert.ToInt32(comando.ExecuteScalar());
+            }
+
+            return siguienteId;
+        }
+
+        // 🔹 Función para generar un nuevo ID de servicio
+        private void GenerarNuevoId()
+        {
+            try
+            {
+                // Conectar a la base de datos y obtener el siguiente ID
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    // Consulta SQL para obtener el siguiente ID disponible
+                    string consulta = "SELECT ISNULL(MAX(ID_USUARIO), 0) + 1 FROM USUARIOS";
+                    SqlCommand cmd = new SqlCommand(consulta, con);
+                    object resultado = cmd.ExecuteScalar();
+                    txtidservicio.Text = (resultado != null) ? resultado.ToString() : "1";
+                }
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show("❌ Error al generar ID: " + ex.Message);
+                txtidservicio.Text = "1";
+            }
+        }
+
+        // Abrir el manual de usuario en PDF
+        private void btnayuda_Click(object sender, EventArgs e)
+        {
+            // Ruta del PDF en la carpeta del ejecutable
+            string rutaPdf = Path.Combine(Application.StartupPath, "Manual de Servicios.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                try
+                {
+                    // Abrir el PDF con la aplicación predeterminada del sistema
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); // Notificar si hay un error al abrir el PDF
+                }
+            }
+            else 
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning); // Notificar si no se encuentra el archivo
+            }
+        }
+    }
+}
+
 
 
 
