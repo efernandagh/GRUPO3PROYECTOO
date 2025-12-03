@@ -134,7 +134,18 @@ Las principales tablas utilizadas en el sistema son:
 
 Estas tablas permiten la correcta integración entre los módulos administrativos y operativos del sistema.
 
+## Equipo de Desarrollo
 
+- **Enia Gomez** – 
+- **Helen Sanchez** – 
+- **Alejandro Callison** –
+- - **Aron**
+
+## Entorno de Desarrollo
+
+- **IDE:** Visual Studio 2022 (v17.x)
+- **Lenguaje:** C#
+- **Framework:** .NET Framework 4.7 o superior
 
 MANUAL TECNICO LOGIN
 
