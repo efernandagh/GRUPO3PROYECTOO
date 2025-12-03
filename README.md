@@ -2,6 +2,22 @@ TALLER MECANICO INDUSTRIAL C-MISUR
 
 El sistema informático desarrollado para C-MISUR es una aplicación de gestión administrativa y operativa, creada en Visual Studio, que permite centralizar, organizar y digitalizar los procesos principales del taller mecánico industrial.
 
+TECNOLOGIAS
+Lenguaje de Programación
+C#: Lenguaje principal del sistema. Permite desarrollar aplicaciones robustas, seguras y orientadas a objetos bajo la plataforma .NET.
+ Entorno de Desarrollo
+Visual Studio: Entorno de desarrollo integrado utilizado para la programación, depuración y compilación del sistema.
+ Tipo de Aplicación
+Windows Forms: Framework para el desarrollo de aplicaciones de escritorio con interfaz gráfica amigable para el usuario.
+ Base de Datos
+SQL Server: Gestor de base de datos relacional utilizado para almacenar y administrar la información de clientes, servicios, usuarios e inventarios del sistema.
+ Librerías Utilizadas
+Microsoft.Data.SqlClient: Permite la conexión entre la aplicación y la base de datos SQL Server.
+ClosedXML: Librería utilizada para la exportación de datos a archivos Excel (.xlsx).
+iTextSharp: Librería empleada para la generación de reportes en formato PDF.
+Sistema Operativo
+Windows 10: Sistema operativo en el cual se ejecuta el sistema.
+
 MANUAL TECNICO LOGIN
 
 using ClosedXML.Excel;
@@ -23,13 +39,16 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace INICIO
 {
+    
     public partial class ConsultaServicio : Form
+    
     {
         //Inicializa todos los componentes gráficos del formulario.
         public ConsultaServicio()
         {
             InitializeComponent();
         }
+        
         //Carga las tablas disponibles para consulta y prepara los combos.
 
         private void InicializarCombos()
