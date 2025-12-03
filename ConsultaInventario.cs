@@ -16,13 +16,20 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace INICIO
 {
+    //Representa el módulo encargado de consultar información de inventarios y proveedores, con opciones de búsqueda, filtrado y exportación.
+    //
     public partial class ConsultaInventario : Form
     {
+        //Inicializa todos los controles gráficos definidos en el diseñador.
         public ConsultaInventario()
         {
             InitializeComponent();
         }
-
+        //Limpia el ComboBox de tablas, Carga las tablas:
+        //INVENTARIOS
+        // PROVEEDORES
+        //Selecciona automáticamente la primera opción. Carga:Columnas disponibles,Datos completos en el DataGridView.
+        //Prepara el entorno de consultas al abrir el formulario.
         private void InicializarCombos()
         {
             try
@@ -44,7 +51,8 @@ namespace INICIO
             }
         }
 
-
+        //Muestra una confirmación de salida mediante MessageBox.
+        //Si el usuario confirma, se cierra el formulario.
         private void btnsalir_Click(object sender, EventArgs e)
         {
             DialogResult resultado = MessageBox.Show(
@@ -60,6 +68,10 @@ namespace INICIO
             }
         }
 
+        //Realiza un SELECT DISTINCT sobre la columna seleccionada.
+        //Llena el ComboBox cmbdescripcion con valores únicos.
+        //Permite seleccionar datos reales existentes en la base.
+        //Facilita la búsqueda sin que el usuario escriba manualmente.
         private void CargarDescripcion(string tabla, string columna)
         {
             cmbdescripcion.Items.Clear();
@@ -88,17 +100,20 @@ namespace INICIO
                 MessageBox.Show("Error al cargar descripciones: " + ex.Message);
             }
         }
-
+        //Permite mostrar todos los registros disponibles sin filtros.
         private void CargarDatos(string tabla)
         {
             try
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
+                    //Ejecuta un SELECT * FROM tabla.
                     string query = $"SELECT * FROM {tabla}";
                     SqlDataAdapter da = new SqlDataAdapter(query, con);
+                    //Llena un DataTable
                     DataTable dt = new DataTable();
                     da.Fill(dt);
+                   // Asigna los datos al DataGridView.
                     dgvinventario.DataSource = dt;
                 }
             }
@@ -145,14 +160,16 @@ namespace INICIO
         }
 
 
-
+        //Permite iniciar una nueva consulta desde cero
         private void btnlimpiar_Click(object sender, EventArgs e)
         {
             cmbbuscar.SelectedIndex = 0;
             cmbdescripcion.SelectedIndex = 0;
             dgvinventario.DataSource = null;
         }
-
+        //Permite realizar búsquedas parciales por texto.
+        //Valida que el campo no esté vacío.//Ejecuta un SELECT usando LIKE.
+        //Muestra los resultados en el DataGridView.
         private void btnbuscar_Click(object sender, EventArgs e)
         {
             string tabla = cmbtabla.Text;
@@ -184,7 +201,7 @@ namespace INICIO
                 MessageBox.Show("Error al buscar: " + ex.Message);
             }
         }
-
+        //Carga automáticamente todas las opciones al abrir el formulario.
         private void ConsultaInventario_Load_1(object sender, EventArgs e)
         {
 
@@ -213,7 +230,12 @@ namespace INICIO
         {
 
         }
+        //Detecta automáticamente el tipo de dato:Fecha,Entero,Decimal,Texto
+        //Ejecuta la consulta adecuada según el tipo.
 
+        //Muestra los resultados filtrados.
+
+       // Si no hay resultados, notifica al usuario.
         private void cmbdescripcion_SelectedIndexChanged(object sender, EventArgs e)
         {
             string tabla = cmbtabla.Text;
@@ -300,7 +322,7 @@ namespace INICIO
         {
             InicializarCombos();
         }
-
+        //Generación de reportes en formato Excel para control administrativo.
         private void btnExportar_Click(object sender, EventArgs e)
         {
             if (dgvinventario.Rows.Count == 0)
@@ -349,7 +371,7 @@ namespace INICIO
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
-
+        //Permite acceso a documentación del usuario final.
         private void btnpdf_Click(object sender, EventArgs e)
         {
             {
