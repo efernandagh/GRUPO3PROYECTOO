@@ -2445,4 +2445,1869 @@ namespace INICIO
         }
     }
 }
+## MANUAL TECNICO CONSULTA DE PROYECTOS
+using ClosedXML.Excel;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Microsoft.Data.SqlClient;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using static ClosedXML.Excel.XLPredefinedFormat;
+using static System.Resources.ResXFileRef;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+
+namespace INICIO
+{
+
+    //Define el formulario ConsultaProyectos, perteneciente al espacio de nombres INICIO.
+    //Este formulario se encarga de realizar consultas dinámicas sobre varias tablas del sistema.
+    public partial class ConsultaProyectos : Form
+    {
+        //Inicializa todos los controles gráficos definidos en el diseñador (ComboBox, DataGridView, botones, etc.).
+        public ConsultaProyectos()
+        {
+            InitializeComponent();
+        }
+
+        //Preparar el entorno de búsqueda antes de que el usuario interactúe.
+        private void ConsultaProyectos_Load(object sender, EventArgs e)
+        {
+            // 🔹 Llenar ComboBox de tablas
+            cbotabla.Items.Add("PROYECTOS");
+            cbotabla.Items.Add("SEGUIMIENTO");
+            cbotabla.Items.Add("CONTRATOS");
+            cbotabla.Items.Add("PROCESOS");
+            cbotabla.SelectedIndex = 0;
+
+            // 🔹 Cargar columnas iniciales
+            CargarColumnas("PROYECTOS");
+        }
+
+        // 🔹 Cuando cambia la tabla
+        private void cbotabla_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string tablaSeleccionada = cbotabla.Text;
+            CargarColumnas(tablaSeleccionada);
+
+            // Limpiar combos dependientes
+            cbDescripcion.Items.Clear();
+            cbDescripcion.Text = "";
+        }
+
+        // Se cargan sus columnas en el cbobuscar para permitir búsquedas dinámicas sin escribir consultas manualmente.
+        private void CargarColumnas(string tabla)
+        {
+            cbobuscar.Items.Clear();
+
+            switch (tabla)
+            {
+                case "PROYECTOS":
+                    cbobuscar.Items.AddRange(new string[] {
+                        "ID_PROYECTO", "NOMBRE_PROYECTO", "DESCRIPCION",
+                        "FECHA_INICIO", "FECHA_FIN", "ESTADO", "ID_USUARIO"
+                    });
+                    break;
+
+                case "SEGUIMIENTO":
+                    cbobuscar.Items.AddRange(new string[] {
+                        "ID_SEGUIMIENTO", "ID_CONTRATO", "FECHA_SEGUIMIENTO",
+                        "DESCRIPCION", "NIVEL_SATISFACTORIO"
+                    });
+                    break;
+
+                case "CONTRATOS":
+                    cbobuscar.Items.AddRange(new string[] {
+                        "ID_CONTRATO", "ID_CLIENTE", "ID_SERVICIO",
+                        "FECHA_INICIO", "FECHA_FIN", "ESTADO"
+                    });
+                    break;
+
+                case "PROCESOS":
+                    cbobuscar.Items.AddRange(new string[] {
+                        "ID_PROCESOS", "NOMBRE_PROCESO", "DESCRIPCION", "ID_USUARIO"
+                    });
+                    break;
+            }
+
+            if (cbobuscar.Items.Count > 0)
+                cbobuscar.SelectedIndex = 0;
+        }
+
+        //  Cuando cambia el campo "Buscar"
+        //Se cargan automáticamente sus valores únicos desde la base de datos.
+        //Esto permite búsquedas por lista sin escribir texto manual.
+        private void cbobuscar_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string tabla = cbotabla.Text;
+            string columna = cbobuscar.Text;
+
+            if (!string.IsNullOrEmpty(tabla) && !string.IsNullOrEmpty(columna))
+            {
+                CargarDescripcion(tabla, columna);
+            }
+        }
+
+        // 🔹 Cargar los valores distintos del campo seleccionado
+        private void CargarDescripcion(string tabla, string columna)
+        {
+            cbDescripcion.Items.Clear();
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    //llena el cbDescripcion con los valores únicos existentes en la base de datos.
+                    //Evita duplicados y evita errores de escritura por parte del usuario.
+                    string query = $"SELECT DISTINCT {columna} FROM {tabla}";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+                        cbDescripcion.Items.Add(dr[columna].ToString());
+                    }
+
+                    dr.Close();
+
+                    if (cbDescripcion.Items.Count > 0)
+                        cbDescripcion.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar descripciones: " + ex.Message);
+            }
+        }
+
+        // 🔹 Buscar registros al seleccionar una descripción
+        //Esto permite búsquedas automáticas sin necesidad de escribir consultas SQL.
+        private void cbDescripcion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string tabla = cbotabla.Text;
+            string columna = cbobuscar.Text;
+            string valor = cbDescripcion.Text;
+
+            if (string.IsNullOrEmpty(valor))
+                return;
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    //Detecta automáticamente si el valor es una fecha o texto
+                    string query = $"SELECT * FROM {tabla} WHERE {columna} = @valor";
+                    SqlCommand cmd = new SqlCommand(query, con);
+
+                    // Detectamos si el valor es fecha
+                    DateTime fechaConvertida;
+                    if (DateTime.TryParse(valor, out fechaConvertida))
+                    {
+                        cmd.Parameters.Add("@valor", SqlDbType.Date).Value = fechaConvertida.Date;
+                    }
+                    else
+                    {
+                        cmd.Parameters.Add("@valor", SqlDbType.VarChar).Value = valor;
+                    }
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dtvproyectos.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al buscar registros: " + ex.Message);
+            }
+        }
+
+        // 🔹 Botón BUSCAR (por si deseas buscar manualmente con texto)
+        private void btnbuscar_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnlimpiar_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        //Muestra un mensaje de confirmación antes de cerrar el formulario.
+        //Previene cierres accidentales del sistema.
+        private void btnsalir_Click_1(object sender, EventArgs e)
+        {
+            DialogResult resultado = MessageBox.Show(
+                "¿Está seguro que desea salir del sistema?",
+                "Confirmar salida",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+                this.Close();
+        }
+
+        private void dtvproyectos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void txtbuscar_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        //Valida que existan datos en el DataGridView.
+      //  Convierte los datos a DataTable.
+       // Solicita la ruta mediante SaveFileDialog.
+        //Exporta el archivo usando ClosedXML.
+        private void btnExportar_Click(object sender, EventArgs e)
+        {
+            if (dtvproyectos.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay datos para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                // Crear un DataTable desde el DataGridView
+                DataTable dt = new DataTable();
+
+                foreach (DataGridViewColumn col in dtvproyectos.Columns)
+                {
+                    dt.Columns.Add(col.HeaderText);
+                }
+
+                foreach (DataGridViewRow row in dtvproyectos.Rows)
+                {
+                    if (!row.IsNewRow)
+                    {
+                        dt.Rows.Add(row.Cells.Cast<DataGridViewCell>()
+                            .Select(c => c.Value?.ToString()).ToArray());
+                    }
+                }
+
+                // Guardar archivo
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Excel Workbook|*.xlsx";
+                sfd.FileName = "ConsultaExportada.xlsx";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    using (XLWorkbook wb = new XLWorkbook())
+                    {
+                        wb.Worksheets.Add(dt, "Resultados");
+                        wb.SaveAs(sfd.FileName);
+                    }
+
+                    MessageBox.Show("Datos exportados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+        //Genera un archivo PDF en formato horizontal.
+        //Agrega un título dinámico con el nombre de la tabla.
+        //Crea una tabla con los datos del DataGridView.
+        //Aplica formato a encabezados.
+      //  Guarda el archivo automáticamente.
+        private void ExportarPDF()
+        {
+            if (dtvproyectos.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay datos para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Archivo PDF|*.pdf";
+                sfd.FileName = "ConsultaExportada.pdf";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    // Crear documento PDF
+                    Document doc = new Document(PageSize.A4.Rotate(), 10, 10, 10, 10);
+                    PdfWriter.GetInstance(doc, new FileStream(sfd.FileName, FileMode.Create));
+                    doc.Open();
+
+                    // Título
+                    Paragraph titulo = new Paragraph("Resultados de Consulta - " + cbotabla.Text,
+                        FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16, BaseColor.BLACK));
+                    titulo.Alignment = Element.ALIGN_CENTER;
+                    titulo.SpacingAfter = 20;
+                    doc.Add(titulo);
+
+                    // Crear tabla PDF con el mismo número de columnas
+                    PdfPTable pdfTable = new PdfPTable(dtvproyectos.Columns.Count);
+                    pdfTable.WidthPercentage = 100;
+
+                    // Agregar encabezados
+                    foreach (DataGridViewColumn column in dtvproyectos.Columns)
+                    {
+                        PdfPCell cell = new PdfPCell(new Phrase(column.HeaderText, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.WHITE)));
+                        cell.BackgroundColor = new BaseColor(0, 102, 204); // Azul suave
+                        cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                        pdfTable.AddCell(cell);
+                    }
+
+                    // Agregar filas
+                    foreach (DataGridViewRow row in dtvproyectos.Rows)
+                    {
+                        if (!row.IsNewRow)
+                        {
+                            foreach (DataGridViewCell cell in row.Cells)
+                            {
+                                pdfTable.AddCell(new Phrase(cell.Value?.ToString() ?? ""));
+                            }
+                        }
+                    }
+
+                    doc.Add(pdfTable);
+                    doc.Close();
+
+                    MessageBox.Show("PDF exportado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al exportar PDF: " + ex.Message);
+            }
+        }
+
+        private void btnExportarPDF_Click(object sender, EventArgs e)
+        {
+            ExportarPDF();
+        }
+
+        //Permite abrir el Manual de Usuario en PDF
+        private void btnayuda_Click(object sender, EventArgs e)
+        {
+            // Ruta del PDF en la carpeta del ejecutable
+            string rutaPdf = Path.Combine(Application.StartupPath, "Manual de usuario proyectos.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+    }
+}
+## MANUAL TECNICO CONSULTA DE SERVICIOS
+
+using ClosedXML.Excel;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Microsoft.Data.SqlClient;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
+
+namespace INICIO
+{
+    public partial class ConsultaServicio : Form
+    {
+        //Inicializa todos los componentes gráficos del formulario.
+        public ConsultaServicio()
+        {
+            InitializeComponent();
+        }
+        //Carga las tablas disponibles para consulta y prepara los combos.
+
+        private void InicializarCombos()
+        {
+            try
+            {
+                cmbtabla.Items.Clear();
+                cmbtabla.Items.Add("CLIENTES");
+                cmbtabla.Items.Add("SERVICIOS");
+
+                if (cmbtabla.Items.Count > 0)
+                {
+                    cmbtabla.SelectedIndex = 0;
+                    CargarColumnas(cmbtabla.SelectedItem.ToString());
+                    CargarDescripcion(cmbtabla.Text, cbmbuscar.Text);
+                    CargarDatos(cmbtabla.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al inicializar combos: " + ex.Message);
+            }
+        }
+
+        //Pregunta al usuario si desea cerrar el formulario.
+
+
+        private void btnsalir_Click(object sender, EventArgs e)
+        {
+            // Preguntar si realmente quiere salir
+            DialogResult resultado = MessageBox.Show(
+                "¿Está seguro que desea salir de su Consulta de Servicios?",
+                "Confirmar Salida",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            // Si el usuario presiona "Sí", cerrar el formulario
+            if (resultado == DialogResult.Yes)
+            {
+                this.Close();
+            }
+        }
+
+        // 🔹 Cargar todos los datos de la tabla seleccionada
+        private void CargarDatos(string tabla)
+        {
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"SELECT * FROM {tabla}";
+                    SqlDataAdapter da = new SqlDataAdapter(query, con);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dgvservicio.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar datos: " + ex.Message);
+            }
+        }
+        // 🔹 Cargar columnas según la tabla seleccionada
+        private void CargarColumnas(string tabla)
+        {
+            cbmbuscar.Items.Clear();
+
+            if (tabla == "CLIENTES")
+            {
+                cbmbuscar.Items.AddRange(new string[]
+                {
+                    "ID_CLIENTES",
+                    "NOMBRE_CLIENTE",
+                    "CORREO",
+                    "TELEFONO",
+                    "DIRECCION",
+                    "FECHA_REGISTRO"
+                });
+            }
+            else if (tabla == "SERVICIOS")
+            {
+                cbmbuscar.Items.AddRange(new string[]
+                {
+                    "ID_SERVICIOS",
+                    "NOMBRE_SERVICIO",
+                    "DESCRIPCION"
+                });
+            }
+
+            if (cbmbuscar.Items.Count > 0)
+                cbmbuscar.SelectedIndex = 0;
+        }
+
+        //Restablece los combos, limpia el datagridview, elimina cualquier filtro aplicado
+        private void btnlimpiar_Click(object sender, EventArgs e)
+        {
+            cmbdescripcion.SelectedIndex = 0;
+            cbmbuscar.SelectedIndex = 0;
+            dgvservicio.DataSource = null;
+        }
+
+        //Permite la búsqueda manual por filtro.
+        private void btnbuscar_Click(object sender, EventArgs e)
+        {
+            string tabla = cmbtabla.Text;
+            string columna = cbmbuscar.Text;
+            string valor = cmbdescripcion.Text.Trim();
+
+            if (string.IsNullOrEmpty(valor))
+            {
+                MessageBox.Show("Ingrese un valor para buscar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"SELECT * FROM {tabla} WHERE {columna} LIKE '%' + @valor + '%'";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@valor", valor);
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dgvservicio.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al buscar: " + ex.Message);
+            }
+
+        }
+
+        //Permite la búsqueda manual por filtro.
+        private void cbmbuscar_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string tabla = cmbtabla.Text;
+            string columna = cbmbuscar.Text;
+
+            if (!string.IsNullOrEmpty(tabla) && !string.IsNullOrEmpty(columna))
+            {
+                CargarDescripcion(tabla, columna);
+            }
+        }
+
+        // 🔹 Cargar los valores distintos del campo seleccionado
+        private void CargarDescripcion(string tabla, string columna)
+        {
+            cmbdescripcion.Items.Clear();
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"SELECT DISTINCT {columna} FROM {tabla}";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    while (dr.Read())
+                        cmbdescripcion.Items.Add(dr[columna].ToString());
+
+                    dr.Close();
+
+                    if (cmbdescripcion.Items.Count > 0)
+                        cmbdescripcion.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar descripciones: " + ex.Message);
+            }
+        }
+
+        //Se ejecuta al cargar el formulario e inicializa todos los combos llamando a: InicializarCombos();
+        private void ConsultaServicio_Load(object sender, EventArgs e)
+        {
+
+            InicializarCombos();
+        }
+
+        //Cada vez que cambia la columna:
+       // Se recargan los valores disponibles con CargarDescripcion().
+        private void cmbbuscar_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string tablaSeleccionada = cmbtabla.Text;
+            CargarColumnas(tablaSeleccionada);
+
+            // Limpiar combos dependientes
+            cmbdescripcion.Items.Clear();
+            cmbdescripcion.Text = "";
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        //Este evento se ejecuta automáticamente cuando el usuario selecciona un valor en el ComboBox cmbdescripcion.
+       // Su objetivo es realizar una búsqueda inmediata en la base de datos según el valor seleccionado y mostrar los resultados en el DataGridView dgvservicio.
+        private void cmbdescripcion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string tabla = cmbtabla.Text;
+            string columna = cbmbuscar.Text;
+            string valor = cmbdescripcion.Text.Trim();
+
+            if (string.IsNullOrEmpty(valor))
+            {
+                MessageBox.Show("Seleccione un valor para buscar.", "Atención");
+                return;
+            }
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"SELECT * FROM {tabla} WHERE {columna} LIKE '%' + @valor + '%'";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@valor", valor);
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dgvservicio.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al buscar: " + ex.Message);
+            }
+        }
+
+        //Generación de reportes en formato Excel para control administrativo.
+        private void btnExportar_Click(object sender, EventArgs e)
+        {
+            if (dgvservicio.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay datos para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                // Crear un DataTable desde el DataGridView
+                DataTable dt = new DataTable();
+
+                foreach (DataGridViewColumn col in dgvservicio.Columns)
+                {
+                    dt.Columns.Add(col.HeaderText);
+                }
+
+                foreach (DataGridViewRow row in dgvservicio.Rows)
+                {
+                    if (!row.IsNewRow)
+                    {
+                        dt.Rows.Add(row.Cells.Cast<DataGridViewCell>()
+                            .Select(c => c.Value?.ToString()).ToArray());
+                    }
+                }
+
+                // Guardar archivo
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Excel Workbook|*.xlsx";
+                sfd.FileName = "ServiciosExportados.xlsx";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    using (XLWorkbook wb = new XLWorkbook())
+                    {
+                        // Crear hoja y agregar datos
+                        var ws = wb.Worksheets.Add(dt, "Resultados");
+
+                        // Insertar filas para encabezado
+                        ws.Row(1).InsertRowsAbove(2);
+
+                        // Encabezado principal con el nombre de la empresa
+                        ws.Cell("A1").Value = "C-MISUR - Control Mecánico Industrial de Servicios y Reparaciones";
+                        ws.Cell("A1").Style.Font.Bold = true;
+                        ws.Cell("A1").Style.Font.FontSize = 16;
+                        ws.Cell("A1").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        // Combinar celdas del encabezado (depende del número de columnas)
+                        int totalColumnas = dt.Columns.Count;
+                        ws.Range(1, 1, 1, totalColumnas).Merge();
+
+                        // Color de fondo del encabezado
+                        ws.Range(1, 1, 1, totalColumnas).Style.Fill.BackgroundColor = XLColor.FromHtml("#D9E1F2");
+
+                        // (Opcional) Fecha y hora de exportación debajo del título
+                        ws.Cell("A2").Value = "Exportado el " + DateTime.Now.ToString("dd/MM/yyyy hh:mm tt");
+                        ws.Cell("A2").Style.Font.Italic = true;
+                        ws.Range(2, 1, 2, totalColumnas).Merge();
+                        ws.Cell("A2").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                        // Ajustar ancho de columnas automáticamente
+                        ws.Columns().AdjustToContents();
+
+                        wb.SaveAs(sfd.FileName);
+                    }
+
+                    MessageBox.Show("Datos exportados correctamente C-MISUR.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+        //Generación de reportes en formato Excel para control administrativo.
+        private void btnExportarPDF_Click(object sender, EventArgs e)
+        {
+
+            {
+                try
+                {
+                    if (dgvservicio.Rows.Count == 0)
+                    {
+                        MessageBox.Show("No hay datos para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    if (dgvservicio.Columns.Count == 0)
+                    {
+                        MessageBox.Show("No hay columnas para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    SaveFileDialog sfd = new SaveFileDialog();
+                    sfd.Filter = "Archivo PDF|*.pdf";
+                    sfd.FileName = "ServiciosExportados.pdf";
+
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        Document doc = new Document(PageSize.A4);
+                        PdfWriter.GetInstance(doc, new FileStream(sfd.FileName, FileMode.Create));
+                        doc.Open();
+
+                        // Encabezado
+                        var tituloFont = FontFactory.GetFont("Arial", 14, iTextSharp.text.Font.BOLD);
+                        Paragraph encabezado = new Paragraph("C-MISUR\nControl Mecánico Industrial de Servicios y Reparaciones", tituloFont);
+                        encabezado.Alignment = Element.ALIGN_CENTER;
+                        encabezado.SpacingAfter = 12f;
+                        doc.Add(encabezado);
+
+                        // Crear tabla
+                        int columnas = dgvservicio.Columns.Count;
+                        PdfPTable tabla = new PdfPTable(columnas);
+                        tabla.WidthPercentage = 100;
+
+                        // Encabezados de columnas
+                        var headerFont = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
+                        foreach (DataGridViewColumn col in dgvservicio.Columns)
+                        {
+                            string headerText = col.HeaderText ?? "";
+                            PdfPCell celdaHeader = new PdfPCell(new Phrase(headerText, headerFont));
+                            celdaHeader.HorizontalAlignment = Element.ALIGN_CENTER;
+                            celdaHeader.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            celdaHeader.BackgroundColor = new BaseColor(217, 225, 242); // azul claro
+                            tabla.AddCell(celdaHeader);
+                        }
+
+                        // Filas de datos
+                        var cellFont = FontFactory.GetFont("Arial", 9, iTextSharp.text.Font.NORMAL);
+                        foreach (DataGridViewRow fila in dgvservicio.Rows)
+                        {
+                            if (!fila.IsNewRow)
+                            {
+                                foreach (DataGridViewCell celda in fila.Cells)
+                                {
+                                    string texto = celda?.Value?.ToString() ?? "";
+                                    PdfPCell pcell = new PdfPCell(new Phrase(texto, cellFont));
+                                    pcell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                    tabla.AddCell(pcell);
+                                }
+                            }
+                        }
+
+                        doc.Add(tabla);
+                        doc.Close();
+
+                        MessageBox.Show("PDF exportado correctamente C-MISUR.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al exportar a PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+        //Este evento se ejecuta cuando el usuario presiona el botón “Ayuda”.
+       // Su función es abrir el Manual de Usuario en formato PDF correspondiente al módulo de Consulta de Servicios, directamente desde la carpeta donde se encuentra el ejecutable del sistema.
+        private void btnayuda_Click(object sender, EventArgs e)
+        {// Ruta del PDF en la carpeta del ejecutable
+            string rutaPdf = Path.Combine(Application.StartupPath, "MANUAL DE USUARIO CONSULTA SERVICIOS.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+    }
+}
+
+## MANUAL TECNICO CONSULTA DE INVENTARIOS
+using ClosedXML.Excel;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Microsoft.Data.SqlClient;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+
+namespace INICIO
+{
+    //Representa el módulo encargado de consultar información de inventarios y proveedores, con opciones de búsqueda, filtrado y exportación.
+   
+    public partial class ConsultaInventario : Form
+    {
+        //Inicializa todos los controles gráficos definidos en el diseñador.
+        public ConsultaInventario()
+        {
+            InitializeComponent();
+        }
+        //Limpia el ComboBox de tablas, Carga las tablas:
+        //INVENTARIOS
+        // PROVEEDORES
+        //Selecciona automáticamente la primera opción. Carga:Columnas disponibles,Datos completos en el DataGridView.
+        //Prepara el entorno de consultas al abrir el formulario.
+        private void InicializarCombos()
+        {
+            try
+            {
+                cmbtabla.Items.Clear();
+                cmbtabla.Items.Add("INVENTARIOS");
+                cmbtabla.Items.Add("PROVEEDORES");
+
+                if (cmbtabla.Items.Count > 0)
+                {
+                    cmbtabla.SelectedIndex = 0;
+                    CargarColumnas(cmbtabla.SelectedItem.ToString());
+                    CargarDatos(cmbtabla.SelectedItem.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al inicializar combos: " + ex.Message);
+            }
+        }
+
+        //Muestra una confirmación de salida mediante MessageBox.
+        //Si el usuario confirma, se cierra el formulario.
+        private void btnsalir_Click(object sender, EventArgs e)
+        {
+            DialogResult resultado = MessageBox.Show(
+               "¿Está seguro que desea salir del sistema de inventario?",
+               "Confirmar Salida",
+               MessageBoxButtons.YesNo,
+               MessageBoxIcon.Question);
+
+            // Si el usuario presiona "Sí", cerrar el formulario
+            if (resultado == DialogResult.Yes)
+            {
+                this.Close();
+            }
+        }
+
+        //Realiza un SELECT DISTINCT sobre la columna seleccionada.
+        //Llena el ComboBox cmbdescripcion con valores únicos.
+        //Permite seleccionar datos reales existentes en la base.
+        //Facilita la búsqueda sin que el usuario escriba manualmente.
+        private void CargarDescripcion(string tabla, string columna)
+        {
+            cmbdescripcion.Items.Clear();
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"SELECT DISTINCT {columna} FROM {tabla}";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+                        cmbdescripcion.Items.Add(dr[columna].ToString());
+                    }
+
+                    dr.Close();
+
+                    if (cmbdescripcion.Items.Count > 0)
+                        cmbdescripcion.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar descripciones: " + ex.Message);
+            }
+        }
+        //Permite mostrar todos los registros disponibles sin filtros.
+        private void CargarDatos(string tabla)
+        {
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    //Ejecuta un SELECT * FROM tabla.
+                    string query = $"SELECT * FROM {tabla}";
+                    SqlDataAdapter da = new SqlDataAdapter(query, con);
+                    //Llena un DataTable
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                   // Asigna los datos al DataGridView.
+                    dgvinventario.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar datos: " + ex.Message);
+            }
+        }
+
+        // 🔹 Cargar columnas según la tabla seleccionada
+        private void CargarColumnas(string tabla)
+        {
+            cmbbuscar.Items.Clear();
+
+            switch (tabla)
+            {
+                case "INVENTARIOS":
+                    cmbbuscar.Items.AddRange(new string[]
+                    {
+                        "ID_INVENTARIO",
+                        "NOMBRE_PRODUCTO",
+                        "CANTIDAD",
+                        "UNIDAD_MEDIDA",
+                        "FECHA_INGRESO",
+                        "ESTADO",
+                        "ID_PROVEEDOR"
+                    });
+                    break;
+
+                case "PROVEEDORES":
+                    cmbbuscar.Items.AddRange(new string[]
+                    {
+                        "ID_PROVEEDOR",
+                        "NOMBRE_PROVEEDOR",
+                        "TELEFONO",
+                        "CORREO",
+                        "DIRECCION"
+                    });
+                    break;
+            }
+
+            if (cmbbuscar.Items.Count > 0)
+                cmbbuscar.SelectedIndex = 0;
+        }
+
+
+        //Permite iniciar una nueva consulta desde cero
+        private void btnlimpiar_Click(object sender, EventArgs e)
+        {
+            cmbbuscar.SelectedIndex = 0;
+            cmbdescripcion.SelectedIndex = 0;
+            dgvinventario.DataSource = null;
+        }
+        //Permite realizar búsquedas parciales por texto.
+        //Valida que el campo no esté vacío.//Ejecuta un SELECT usando LIKE.
+        //Muestra los resultados en el DataGridView.
+        private void btnbuscar_Click(object sender, EventArgs e)
+        {
+            string tabla = cmbtabla.Text;
+            string columna = cmbbuscar.Text;
+            string valor = cmbdescripcion.Text.Trim();
+
+            if (string.IsNullOrEmpty(valor))
+            {
+                MessageBox.Show("Ingrese un valor para buscar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"SELECT * FROM {tabla} WHERE {columna} LIKE '%' + @valor + '%'";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@valor", valor);
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dgvinventario.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al buscar: " + ex.Message);
+            }
+        }
+        //Carga automáticamente todas las opciones al abrir el formulario.
+        private void ConsultaInventario_Load_1(object sender, EventArgs e)
+        {
+
+            InicializarCombos();
+        }
+
+        private void cmbtabla_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string tablaSeleccionada = cmbtabla.Text;
+            CargarColumnas(tablaSeleccionada);
+
+            // limpiar y recargar descripciones y datos
+            cmbdescripcion.Items.Clear();
+            cmbdescripcion.Text = "";
+            CargarDescripcion(tablaSeleccionada, cmbbuscar.Text);
+            CargarDatos(tablaSeleccionada);
+        }
+
+        private void cmbbuscar_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // cuando cambia la columna, recargar posibles descripciones
+            CargarDescripcion(cmbtabla.Text, cmbbuscar.Text);
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+        //Detecta automáticamente el tipo de dato:Fecha,Entero,Decimal,Texto
+        //Ejecuta la consulta adecuada según el tipo.
+
+        //Muestra los resultados filtrados.
+
+       // Si no hay resultados, notifica al usuario.
+        private void cmbdescripcion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string tabla = cmbtabla.Text;
+            string columna = cmbbuscar.Text;
+            string valor = cmbdescripcion.Text;
+
+            if (string.IsNullOrEmpty(valor))
+                return;
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.Connection = con;
+
+                    // Si columna es fecha, convertir y comparar por fecha (sin hora)
+                    if (columna.ToUpper().Contains("FECHA"))
+                    {
+                        if (!DateTime.TryParse(valor, out DateTime fecha))
+                        {
+                            MessageBox.Show("Formato de fecha inválido en la descripción.");
+                            return;
+                        }
+
+                        cmd.CommandText = $"SELECT * FROM {tabla} WHERE CONVERT(date, {columna}) = @valor";
+                        cmd.Parameters.AddWithValue("@valor", fecha.Date);
+                    }
+                    else if (columna.ToUpper().Contains("CANTIDAD") ||
+                             columna.ToUpper().Contains("ID") && int.TryParse(valor, out _))
+                    {
+                        // buscar por valor numérico entero si aplica
+                        if (int.TryParse(valor, out int intVal))
+                        {
+                            cmd.CommandText = $"SELECT * FROM {tabla} WHERE {columna} = @valor";
+                            cmd.Parameters.AddWithValue("@valor", intVal);
+                        }
+                        else
+                        {
+                            // si no es entero, usar LIKE (texto)
+                            cmd.CommandText = $"SELECT * FROM {tabla} WHERE {columna} LIKE '%' + @valor + '%'";
+                            cmd.Parameters.AddWithValue("@valor", valor);
+                        }
+                    }
+                    else if (columna.ToUpper().Contains("MONTO") || columna.ToUpper().Contains("PRECIO"))
+                    {
+                        // intentar decimal
+                        if (decimal.TryParse(valor, out decimal decVal))
+                        {
+                            cmd.CommandText = $"SELECT * FROM {tabla} WHERE {columna} = @valor";
+                            cmd.Parameters.AddWithValue("@valor", decVal);
+                        }
+                        else
+                        {
+                            cmd.CommandText = $"SELECT * FROM {tabla} WHERE {columna} LIKE '%' + @valor + '%'";
+                            cmd.Parameters.AddWithValue("@valor", valor);
+                        }
+                    }
+                    else
+                    {
+                        // búsqueda de texto por defecto
+                        cmd.CommandText = $"SELECT * FROM {tabla} WHERE {columna} LIKE '%' + @valor + '%'";
+                        cmd.Parameters.AddWithValue("@valor", valor);
+                    }
+
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+                        dgvinventario.DataSource = dt;
+
+                        if (dt.Rows.Count == 0)
+                            MessageBox.Show("No se encontraron registros para la selección.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al buscar: " + ex.Message);
+            }
+        }
+
+        private void ConsultaInventario_Load(object sender, EventArgs e)
+        {
+            InicializarCombos();
+        }
+        //Generación de reportes en formato Excel para control administrativo.
+        private void btnExportar_Click(object sender, EventArgs e)
+        {
+            if (dgvinventario.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay datos para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                // Crear un DataTable desde el DataGridView
+                DataTable dt = new DataTable();
+
+                foreach (DataGridViewColumn col in dgvinventario.Columns)
+                {
+                    dt.Columns.Add(col.HeaderText);
+                }
+
+                foreach (DataGridViewRow row in dgvinventario.Rows)
+                {
+                    if (!row.IsNewRow)
+                    {
+                        dt.Rows.Add(row.Cells.Cast<DataGridViewCell>()
+                            .Select(c => c.Value?.ToString()).ToArray());
+                    }
+                }
+
+                // Guardar archivo
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Excel Workbook|*.xlsx";
+                sfd.FileName = "ConsultaExportada.xlsx";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    using (XLWorkbook wb = new XLWorkbook())
+                    {
+                        wb.Worksheets.Add(dt, "Resultados");
+                        wb.SaveAs(sfd.FileName);
+                    }
+
+                    MessageBox.Show("Datos exportados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+        //Permite acceso a documentación del usuario final.
+        private void btnpdf_Click(object sender, EventArgs e)
+        {
+            {
+                try
+                {
+                    if (dgvinventario.Rows.Count == 0)
+                    {
+                        MessageBox.Show("No hay datos para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    if (dgvinventario.Columns.Count == 0)
+                    {
+                        MessageBox.Show("No hay columnas para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    SaveFileDialog sfd = new SaveFileDialog();
+                    sfd.Filter = "Archivo PDF|*.pdf";
+                    sfd.FileName = "ServiciosExportados.pdf";
+
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        Document doc = new Document(PageSize.A4);
+                        PdfWriter.GetInstance(doc, new FileStream(sfd.FileName, FileMode.Create));
+                        doc.Open();
+
+                        // Encabezado
+                        var tituloFont = FontFactory.GetFont("Arial", 14, iTextSharp.text.Font.BOLD);
+                        Paragraph encabezado = new Paragraph("C-MISUR\nControl Mecánico Industrial de Servicios y Reparaciones", tituloFont);
+                        encabezado.Alignment = Element.ALIGN_CENTER;
+                        encabezado.SpacingAfter = 12f;
+                        doc.Add(encabezado);
+
+                        // Crear tabla
+                        int columnas = dgvinventario.Columns.Count;
+                        PdfPTable tabla = new PdfPTable(columnas);
+                        tabla.WidthPercentage = 100;
+
+                        // Encabezados de columnas
+                        var headerFont = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
+                        foreach (DataGridViewColumn col in dgvinventario.Columns)
+                        {
+                            string headerText = col.HeaderText ?? "";
+                            PdfPCell celdaHeader = new PdfPCell(new Phrase(headerText, headerFont));
+                            celdaHeader.HorizontalAlignment = Element.ALIGN_CENTER;
+                            celdaHeader.VerticalAlignment = Element.ALIGN_MIDDLE;
+                            celdaHeader.BackgroundColor = new BaseColor(217, 225, 242); // azul claro
+                            tabla.AddCell(celdaHeader);
+                        }
+
+                        // Filas de datos
+                        var cellFont = FontFactory.GetFont("Arial", 9, iTextSharp.text.Font.NORMAL);
+                        foreach (DataGridViewRow fila in dgvinventario.Rows)
+                        {
+                            if (!fila.IsNewRow)
+                            {
+                                foreach (DataGridViewCell celda in fila.Cells)
+                                {
+                                    string texto = celda?.Value?.ToString() ?? "";
+                                    PdfPCell pcell = new PdfPCell(new Phrase(texto, cellFont));
+                                    pcell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                    tabla.AddCell(pcell);
+                                }
+                            }
+                        }
+
+                        doc.Add(tabla);
+                        doc.Close();
+
+                        MessageBox.Show("PDF exportado correctamente C-MISUR.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al exportar a PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void btnayuda_Click(object sender, EventArgs e)
+        {
+            // Ruta del PDF en la carpeta del ejecutable
+            string rutaPdf = Path.Combine(Application.StartupPath, "Manual de usuario consulta inventario.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+    }
+}
+
+## MANUAL TECNICO CONSULTA DE FACTURACION
+using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Microsoft.Data.SqlClient;
+using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using static System.Resources.ResXFileRef;
+
+//Este formulario permite la consulta, filtrado y exportación de datos de pagos y facturas del sistema C-MISUR.
+//Además, permite generar reportes en Excel y PDF, así como acceder al manual de usuario.
+namespace INICIO
+{
+
+    public partial class Salidapagos : Form
+    {
+        //Define el formulario de control de pagos y facturas,
+        //que permite la consulta avanzada de información financiera del sistema.
+        public Salidapagos()
+        {
+            InitializeComponent();
+        }
+
+        private void btnguardar_Click(object sender, EventArgs e)
+        {
+
+
+
+        }
+
+
+
+
+        //Restablece el formulario:
+       // Reinicia los ComboBox.
+        //Limpia el DataGridView dtvpagos.
+        //Evita inconsistencias en búsquedas anteriores.
+        private void btnlimpiar_Click(object sender, EventArgs e)
+        {
+            cmbtabla.SelectedIndex = 0;
+            cmbdescrip.SelectedIndex = 0;
+            dtvpagos.DataSource = null; ;
+        }
+        //Esto prepara automáticamente el entorno de consulta al abrir el formulario.
+        private void Salidapagos_Load(object sender, EventArgs e)
+        {
+            cmbtabla.Items.AddRange(new string[] { "FACTURAS", "PAGOS" });
+            cmbtabla.SelectedIndex = 0;
+            CargarColumnas("FACTURAS");
+            CargarValoresDescripcion("FACTURAS", cbobuscar.SelectedItem.ToString());
+            CargarDatos();
+        }
+
+        //Carga los valores únicos de la columna seleccionada en el ComboBox descripción
+        private void CargarDescripcion()
+        {
+            cmbdescrip.Items.Clear();
+
+            using (SqlConnection conn = ConexionBD.ObtenerConexion())
+            {
+                string campo = cbobuscar.SelectedItem.ToString();
+                string query = $"SELECT DISTINCT {campo} FROM PAGOS";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    cmbdescrip.Items.Add(dr[0].ToString());
+                }
+            }
+
+            if (cmbdescrip.Items.Count > 0)
+                cmbdescrip.SelectedIndex = 0;
+        }
+
+        //ste método es de tipo privado y no devuelve ningún valor.
+        //Su función principal es la carga dinámica de datos desde SQL Server hacia la interfaz gráfica.
+        private void CargarDatos()
+        {
+            try
+            //Se utiliza un bloque try-catch para capturar cualquier error durante la consulta, evitando que el sistema se cierre inesperadamente.
+            {
+                //Se establece una conexión a SQL Server mediante la clase ConexionBD.
+                //El uso de using garantiza que la conexión se cierre correctamente al finalizar el proceso.
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    //Se obtienen los valores seleccionados en los ComboBox:
+                    string tabla = cmbtabla.Text;
+                    string columna = cbobuscar.Text;
+                    string valor = cmbdescrip.Text;
+
+                    //Se construye una consulta base que obtiene todos los registros de la tabla seleccionada.
+                    string query = $"SELECT * FROM {tabla}";
+
+                    if (!string.IsNullOrEmpty(valor))
+                    {
+                        if (columna.Contains("FECHA"))
+                        {
+                            //Convierte la fecha para evitar errores de formato y compara solo la parte de la fecha.
+                            query += $" WHERE CONVERT(date, {columna}) = '{valor}'";
+                        }
+                        else
+                        {
+                            //Permite búsquedas parciales usando el operador LIKE.
+                            query += $" WHERE {columna} LIKE '%{valor}%'";
+                        }
+                    }
+
+                    //Esto muestra automáticamente los resultados al usuario.
+                    SqlDataAdapter da = new SqlDataAdapter(query, con);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dtvpagos.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar datos: " + ex.Message);
+            }
+        }
+
+        //El método InicializarCombos() se encarga de configurar y cargar los valores iniciales del ComboBox cmbtabla
+        private void InicializarCombos()
+        {
+            try
+            {
+                cmbtabla.Items.Clear();
+                cmbtabla.Items.Add("PAGOS");
+                cmbtabla.Items.Add("FACTURAS");
+
+                if (cmbtabla.Items.Count > 0)
+                {
+                    cmbtabla.SelectedIndex = 0;
+                    CargarColumnas(cmbtabla.SelectedItem.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al inicializar combos: " + ex.Message);
+            }
+        }
+        // ✅ Cargar valores únicos de la columna seleccionada en el ComboBox descripción
+        private void CargarValoresDescripcion(string tabla, string columna)
+        {
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = $"SELECT DISTINCT {columna} FROM {tabla}";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    cmbdescrip.Items.Clear();
+
+                    while (reader.Read())
+                    {
+                        if (reader[columna] != DBNull.Value)
+                        {
+                            if (reader[columna] is DateTime dt)
+                                cmbdescrip.Items.Add(dt.ToString("yyyy-MM-dd"));
+                            else if (reader[columna] is decimal or double or float)
+                                cmbdescrip.Items.Add(Convert.ToDecimal(reader[columna]).ToString());
+                            else
+                                cmbdescrip.Items.Add(reader[columna].ToString());
+                        }
+                    }
+
+                    if (cmbdescrip.Items.Count > 0) cmbdescrip.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar valores únicos: " + ex.Message);
+            }
+        }
+
+        //Carga dinámicamente las columnas dependiendo la tabla seleccionada
+        //Carga dinámicamente las columnas dependiendo la tabla seleccionada
+        private void CargarColumnas(string tabla)
+        {
+            cbobuscar.Items.Clear();
+
+            switch (tabla)
+            {
+                case "PAGOS":
+                    cbobuscar.Items.AddRange(new string[]
+                    {
+                "ID_PAGO",
+                "ID_FACTURA",
+                "FECHA_PAGO",
+                "MONTO_PAGO",
+                "ESTADO_PAGO"
+                    });
+                    break;
+
+                case "FACTURAS":
+                    cbobuscar.Items.AddRange(new string[]
+                    {
+                "ID_FACTURA",
+                "ID_CONTRATO",
+                "FECHA_FACTURA",
+                "MONTO_TOTAL",
+                "METODO_PAGO"
+                    });
+                    break;
+            }
+
+            if (cbobuscar.Items.Count > 0)
+                cbobuscar.SelectedIndex = 0;
+        }
+
+
+        private void btnsalir_Click(object sender, EventArgs e)
+        {
+            // Preguntar si realmente quiere salir
+            DialogResult resultado = MessageBox.Show(
+                "¿Está seguro que desea salir del sistema de facturas?",
+                "Confirmar Salida",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            // Si el usuario presiona "Sí", cerrar el formulario
+            if (resultado == DialogResult.Yes)
+            {
+                this.Close();
+            }
+        }
+
+        // 🔹 Cargar todos los registros
+        private void CargarPagos()
+        {
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    string query = "SELECT * FROM Pagos";
+                    SqlDataAdapter da = new SqlDataAdapter(query, con);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dtvpagos.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar los pagos: " + ex.Message);
+            }
+        }
+
+        private void btnbuscar_Click(object sender, EventArgs e)
+        {
+
+
+        }
+
+        //Este evento se ejecuta cuando el usuario presiona el botón “Cargar” del formulario.
+        //Su función principal es actualizar y mostrar los registros en el DataGridView según los filtros actualmente seleccionados(tabla, campo y valor).
+        private void btncargar_Click(object sender, EventArgs e)
+        {
+            CargarDatos();
+        }
+
+
+
+        private void dtvpagos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        //Este es un método manejador de evento, el cual se activa cuando el usuario cambia la selección del ComboBox.
+        private void cbobuscar_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarValoresDescripcion(cmbtabla.Text, cbobuscar.Text);
+        }
+
+
+        private void txtbuscar_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        //Se recargan las columnas.
+       // Se recargan los valores de búsqueda.
+        //Se actualiza el DataGridView automáticamente.
+        private void cmbtabla_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarColumnas(cmbtabla.Text);
+            CargarValoresDescripcion(cmbtabla.Text, cbobuscar.Text);
+            CargarDatos();
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        //Detecta automáticamente el tipo de dato
+        //Y ejecuta una consulta parametrizada para mayor seguridad
+        private void cmbdescrip_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarDatos();
+            if (cmbdescrip.SelectedIndex < 0) return;
+
+            string tabla = cmbtabla.Text;
+            string columna = cbobuscar.Text;
+            string valor = cmbdescrip.Text;
+
+            try
+            {
+                using (SqlConnection con = ConexionBD.ObtenerConexion())
+                {
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = con;
+
+                    string query = $"SELECT * FROM {tabla} WHERE ";
+
+                    // ✅ Detectar fecha correctamente
+                    if (columna.ToUpper().Contains("FECHA"))
+                    {
+                        query += $"CONVERT(date,{columna}) = @valor";
+                        cmd.Parameters.AddWithValue("@valor", DateTime.Parse(valor));
+                    }
+                    // ✅ Detectar montos decimal
+                    else if (columna.ToUpper().Contains("MONTO"))
+                    {
+                        query += $"{columna} = @valor";
+                        cmd.Parameters.AddWithValue("@valor", decimal.Parse(valor));
+                    }
+                    // ✅ Detectar ID (entero)
+                    else if (columna.ToUpper().Contains("ID"))
+                    {
+                        query += $"{columna} = @valor";
+                        cmd.Parameters.AddWithValue("@valor", int.Parse(valor));
+                    }
+                    // ✅ Texto
+                    else
+                    {
+                        query += $"{columna} LIKE '%' + @valor + '%'";
+                        cmd.Parameters.AddWithValue("@valor", valor);
+                    }
+
+                    cmd.CommandText = query;
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    dtvpagos.DataSource = dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al buscar: " + ex.Message);
+            }
+        }
+
+        //Valida que existan datos.
+        //Convierte el DataGridView en un DataTable.
+       // Solicita la ruta de guardado.
+       // Exporta usando ClosedXML.
+        private void btnexcel_Click(object sender, EventArgs e)
+        {
+            if (dtvpagos.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay datos para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                // Crear un DataTable desde el DataGridView
+                DataTable dt = new DataTable();
+
+                foreach (DataGridViewColumn col in dtvpagos.Columns)
+                {
+                    dt.Columns.Add(col.HeaderText);
+                }
+
+                foreach (DataGridViewRow row in dtvpagos.Rows)
+                {
+                    if (!row.IsNewRow)
+                    {
+                        dt.Rows.Add(row.Cells.Cast<DataGridViewCell>()
+                            .Select(c => c.Value?.ToString()).ToArray());
+                    }
+                }
+
+                // Guardar archivo
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Excel Workbook|*.xlsx";
+                sfd.FileName = "ConsultaExportada.xlsx";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    using (XLWorkbook wb = new XLWorkbook())
+                    {
+                        wb.Worksheets.Add(dt, "Resultados");
+                        wb.SaveAs(sfd.FileName);
+                    }
+
+                    MessageBox.Show("Datos exportados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+
+        //Crea documento PDF.
+        //Agrega encabezado institucional de C-MISUR.
+        //Genera tabla dinámica con los datos.
+        //Aplica formato a encabezados y celdas.
+        //Guarda el archivo automáticamente.
+
+        private void btnpdf_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dtvpagos.Rows.Count == 0)
+                {
+                    MessageBox.Show("No hay datos para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (dtvpagos.Columns.Count == 0)
+                {
+                    MessageBox.Show("No hay columnas para exportar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Archivo PDF|*.pdf";
+                sfd.FileName = "ServiciosExportados.pdf";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    Document doc = new Document(PageSize.A4);
+                    PdfWriter.GetInstance(doc, new FileStream(sfd.FileName, FileMode.Create));
+                    doc.Open();
+
+                    // Encabezado
+                    var tituloFont = FontFactory.GetFont("Arial", 14, iTextSharp.text.Font.BOLD);
+                    Paragraph encabezado = new Paragraph("C-MISUR\nControl Mecánico Industrial de Servicios y Reparaciones", tituloFont);
+                    encabezado.Alignment = Element.ALIGN_CENTER;
+                    encabezado.SpacingAfter = 12f;
+                    doc.Add(encabezado);
+
+                    // Crear tabla
+                    int columnas = dtvpagos.Columns.Count;
+                    PdfPTable tabla = new PdfPTable(columnas);
+                    tabla.WidthPercentage = 100;
+
+                    // Encabezados de columnas
+                    var headerFont = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
+                    foreach (DataGridViewColumn col in dtvpagos.Columns)
+                    {
+                        string headerText = col.HeaderText ?? "";
+                        PdfPCell celdaHeader = new PdfPCell(new Phrase(headerText, headerFont));
+                        celdaHeader.HorizontalAlignment = Element.ALIGN_CENTER;
+                        celdaHeader.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        celdaHeader.BackgroundColor = new BaseColor(217, 225, 242); // azul claro
+                        tabla.AddCell(celdaHeader);
+                    }
+
+                    // Filas de datos
+                    var cellFont = FontFactory.GetFont("Arial", 9, iTextSharp.text.Font.NORMAL);
+                    foreach (DataGridViewRow fila in dtvpagos.Rows)
+                    {
+                        if (!fila.IsNewRow)
+                        {
+                            foreach (DataGridViewCell celda in fila.Cells)
+                            {
+                                string texto = celda?.Value?.ToString() ?? "";
+                                PdfPCell pcell = new PdfPCell(new Phrase(texto, cellFont));
+                                pcell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                tabla.AddCell(pcell);
+                            }
+                        }
+                    }
+
+                    doc.Add(tabla);
+                    doc.Close();
+
+                    MessageBox.Show("PDF exportado correctamente C-MISUR.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al exportar a PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        //Muestra una confirmación antes de cerrar el formulario, evitando salidas accidentales.
+        private void btnsalir_Click_1(object sender, EventArgs e)
+        {
+            DialogResult resultado = MessageBox.Show(
+              "¿Está seguro que desea salir del sistema de inventario?",
+              "Confirmar Salida",
+              MessageBoxButtons.YesNo,
+              MessageBoxIcon.Question);
+
+            // Si el usuario presiona "Sí", cerrar el formulario
+            if (resultado == DialogResult.Yes)
+            {
+                this.Close();
+            }
+        }
+
+        //Permite abrir el Manual de Usuario desde la carpeta del ejecutable
+        private void btnayuda_Click(object sender, EventArgs e)
+        {
+            // Ruta del PDF en la carpeta del ejecutable
+            string rutaPdf = Path.Combine(Application.StartupPath, "Manual de usuario consulta Facturación.pdf");
+
+            if (File.Exists(rutaPdf))
+            {
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = rutaPdf,
+                        UseShellExecute = true
+                    };
+                    Process.Start(psi);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("No se pudo abrir el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+    }
+
+}
+
+
+
+
 
