@@ -13,16 +13,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static ClosedXML.Excel.XLPredefinedFormat;
+using static System.Resources.ResXFileRef;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace INICIO
 {
+
+    //Define el formulario ConsultaProyectos, perteneciente al espacio de nombres INICIO.
+    //Este formulario se encarga de realizar consultas dinámicas sobre varias tablas del sistema.
     public partial class ConsultaProyectos : Form
     {
+        //Inicializa todos los controles gráficos definidos en el diseñador (ComboBox, DataGridView, botones, etc.).
         public ConsultaProyectos()
         {
             InitializeComponent();
         }
 
+        //Preparar el entorno de búsqueda antes de que el usuario interactúe.
         private void ConsultaProyectos_Load(object sender, EventArgs e)
         {
             // 🔹 Llenar ComboBox de tablas
@@ -47,7 +56,7 @@ namespace INICIO
             cbDescripcion.Text = "";
         }
 
-        // 🔹 Cargar columnas según tabla seleccionada
+        // Se cargan sus columnas en el cbobuscar para permitir búsquedas dinámicas sin escribir consultas manualmente.
         private void CargarColumnas(string tabla)
         {
             cbobuscar.Items.Clear();
@@ -86,7 +95,9 @@ namespace INICIO
                 cbobuscar.SelectedIndex = 0;
         }
 
-        // 🔹 Cuando cambia el campo "Buscar"
+        //  Cuando cambia el campo "Buscar"
+        //Se cargan automáticamente sus valores únicos desde la base de datos.
+        //Esto permite búsquedas por lista sin escribir texto manual.
         private void cbobuscar_SelectedIndexChanged(object sender, EventArgs e)
         {
             string tabla = cbotabla.Text;
@@ -107,6 +118,8 @@ namespace INICIO
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
+                    //llena el cbDescripcion con los valores únicos existentes en la base de datos.
+                    //Evita duplicados y evita errores de escritura por parte del usuario.
                     string query = $"SELECT DISTINCT {columna} FROM {tabla}";
                     SqlCommand cmd = new SqlCommand(query, con);
                     SqlDataReader dr = cmd.ExecuteReader();
@@ -129,6 +142,7 @@ namespace INICIO
         }
 
         // 🔹 Buscar registros al seleccionar una descripción
+        //Esto permite búsquedas automáticas sin necesidad de escribir consultas SQL.
         private void cbDescripcion_SelectedIndexChanged(object sender, EventArgs e)
         {
             string tabla = cbotabla.Text;
@@ -142,6 +156,7 @@ namespace INICIO
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
+                    //Detecta automáticamente si el valor es una fecha o texto
                     string query = $"SELECT * FROM {tabla} WHERE {columna} = @valor";
                     SqlCommand cmd = new SqlCommand(query, con);
 
@@ -179,6 +194,8 @@ namespace INICIO
 
         }
 
+        //Muestra un mensaje de confirmación antes de cerrar el formulario.
+        //Previene cierres accidentales del sistema.
         private void btnsalir_Click_1(object sender, EventArgs e)
         {
             DialogResult resultado = MessageBox.Show(
@@ -201,6 +218,10 @@ namespace INICIO
 
         }
 
+        //Valida que existan datos en el DataGridView.
+      //  Convierte los datos a DataTable.
+       // Solicita la ruta mediante SaveFileDialog.
+        //Exporta el archivo usando ClosedXML.
         private void btnExportar_Click(object sender, EventArgs e)
         {
             if (dtvproyectos.Rows.Count == 0)
@@ -249,6 +270,12 @@ namespace INICIO
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
+        //Genera un archivo PDF en formato horizontal.
+        //Agrega un título dinámico con el nombre de la tabla.
+        //Crea una tabla con los datos del DataGridView.
+        //Aplica formato a encabezados.
+      //  Guarda el archivo automáticamente.
         private void ExportarPDF()
         {
             if (dtvproyectos.Rows.Count == 0)
@@ -319,6 +346,7 @@ namespace INICIO
             ExportarPDF();
         }
 
+        //Permite abrir el Manual de Usuario en PDF
         private void btnayuda_Click(object sender, EventArgs e)
         {
             // Ruta del PDF en la carpeta del ejecutable
