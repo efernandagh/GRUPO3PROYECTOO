@@ -37,7 +37,14 @@ Este sistema fue desarrollado utilizando las siguientes tecnologías:
 
 ###  Sistema Operativo
 - **Windows** – Plataforma donde se ejecuta el sistema.
+- 
   ![Imagen de WhatsApp 2025-12-03 a las 09 24 13_27e1862c](https://github.com/user-attachments/assets/2bb05702-773a-4f81-91df-70e1192271af)
+
+  ![Imagen de WhatsApp 2025-12-03 a las 09 24 33_e51cfbf3](https://github.com/user-attachments/assets/d40b634c-bcd1-4afd-93af-6a18aa41901d)
+
+  ![Imagen de WhatsApp 2025-12-03 a las 09 24 55_8905a176](https://github.com/user-attachments/assets/a54f57f9-d61b-4078-b957-71cc36f5718e)
+
+
 
 
   ## Pruebas del Sistema
