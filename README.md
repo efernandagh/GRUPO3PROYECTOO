@@ -1,6 +1,18 @@
-TALLER MECANICO INDUSTRIAL C-MISUR
+# TALLER MECÁNICO INDUSTRIAL C-MISUR
 
-El sistema informático desarrollado para C-MISUR es una aplicación de gestión administrativa y operativa, creada en Visual Studio, que permite centralizar, organizar y digitalizar los procesos principales del taller mecánico industrial.
+El sistema informático desarrollado para **C-MISUR** es una **aplicación de gestión administrativa y operativa**, construida en **Visual Studio con lenguaje C# (Windows Forms)**. Su objetivo principal es **centralizar, organizar y digitalizar los procesos clave del taller mecánico industrial**, permitiendo una administración eficiente, segura y confiable de la información.
+
+Este sistema facilita el control de:
+- Clientes  
+- Servicios  
+- Inventarios  
+- Reportes administrativos  
+- Exportación de información a Excel y PDF  
+
+Además, incorpora mecanismos de búsqueda, filtrado de datos y generación de reportes, optimizando los tiempos de trabajo y la toma de decisiones dentro del taller.
+
+El proyecto está orientado a mejorar la calidad del servicio, reducir errores manuales y fortalecer la gestión interna del Taller Mecánico Industrial C-MISUR.
+
 
 ## Tecnologías Utilizadas – Proyecto C-MISUR
 
