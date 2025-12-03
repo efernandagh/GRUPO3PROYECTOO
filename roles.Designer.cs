@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             GroupBox1 = new GroupBox();
+            btnayuda = new Button();
             cmbnombrerol = new ComboBox();
             btncancelar = new Button();
             btneliminar = new Button();
@@ -38,14 +39,12 @@
             Label3 = new Label();
             Label2 = new Label();
             Label1 = new Label();
-            btnayuda = new Button();
             GroupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // GroupBox1
             // 
             GroupBox1.BackColor = Color.CornflowerBlue;
-            GroupBox1.Controls.Add(btnayuda);
             GroupBox1.Controls.Add(cmbnombrerol);
             GroupBox1.Controls.Add(btncancelar);
             GroupBox1.Controls.Add(btneliminar);
@@ -64,6 +63,22 @@
             GroupBox1.TabStop = false;
             GroupBox1.Text = "Roles";
             GroupBox1.Enter += GroupBox1_Enter;
+            // 
+            // btnayuda
+            // 
+            btnayuda.FlatAppearance.BorderSize = 0;
+            btnayuda.FlatAppearance.MouseOverBackColor = Color.Red;
+            btnayuda.FlatStyle = FlatStyle.Flat;
+            btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
+            btnayuda.ForeColor = Color.White;
+            btnayuda.Location = new Point(567, 472);
+            btnayuda.Margin = new Padding(3, 2, 3, 2);
+            btnayuda.Name = "btnayuda";
+            btnayuda.Size = new Size(117, 30);
+            btnayuda.TabIndex = 36;
+            btnayuda.Text = "Ayuda";
+            btnayuda.UseVisualStyleBackColor = true;
+            btnayuda.Click += btnayuda_Click_1;
             // 
             // cmbnombrerol
             // 
@@ -98,7 +113,7 @@
             btneliminar.FlatStyle = FlatStyle.Flat;
             btneliminar.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btneliminar.ForeColor = Color.White;
-            btneliminar.Location = new Point(280, 233);
+            btneliminar.Location = new Point(167, 279);
             btneliminar.Name = "btneliminar";
             btneliminar.Size = new Size(71, 23);
             btneliminar.TabIndex = 9;
@@ -130,7 +145,7 @@
             btnguardar.FlatStyle = FlatStyle.Flat;
             btnguardar.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnguardar.ForeColor = Color.White;
-            btnguardar.Location = new Point(271, 183);
+            btnguardar.Location = new Point(40, 279);
             btnguardar.Name = "btnguardar";
             btnguardar.Size = new Size(80, 23);
             btnguardar.TabIndex = 5;
@@ -171,28 +186,13 @@
             Label1.TabIndex = 0;
             Label1.Text = "Id rol:";
             // 
-            // btnayuda
-            // 
-            btnayuda.FlatAppearance.BorderSize = 0;
-            btnayuda.FlatAppearance.MouseOverBackColor = Color.Red;
-            btnayuda.FlatStyle = FlatStyle.Flat;
-            btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
-            btnayuda.ForeColor = Color.White;
-            btnayuda.Location = new Point(20, 279);
-            btnayuda.Margin = new Padding(3, 2, 3, 2);
-            btnayuda.Name = "btnayuda";
-            btnayuda.Size = new Size(117, 30);
-            btnayuda.TabIndex = 36;
-            btnayuda.Text = "Ayuda";
-            btnayuda.UseVisualStyleBackColor = true;
-            btnayuda.Click += btnayuda_Click_1;
-            // 
             // roles
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(192, 192, 255);
             ClientSize = new Size(970, 556);
+            Controls.Add(btnayuda);
             Controls.Add(GroupBox1);
             FormBorderStyle = FormBorderStyle.None;
             Name = "roles";

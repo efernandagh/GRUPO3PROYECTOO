@@ -39,7 +39,6 @@
             // groupBox1
             // 
             groupBox1.BackColor = Color.CornflowerBlue;
-            groupBox1.Controls.Add(btnayuda);
             groupBox1.Controls.Add(btnSalir);
             groupBox1.Controls.Add(btnrestau);
             groupBox1.Controls.Add(btnrestaurar);
@@ -49,6 +48,7 @@
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Respaldo y restauracion";
+            groupBox1.Enter += groupBox1_Enter;
             // 
             // btnSalir
             // 
@@ -106,7 +106,7 @@
             btnayuda.FlatStyle = FlatStyle.Flat;
             btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
             btnayuda.ForeColor = Color.White;
-            btnayuda.Location = new Point(271, 224);
+            btnayuda.Location = new Point(379, 375);
             btnayuda.Margin = new Padding(3, 2, 3, 2);
             btnayuda.Name = "btnayuda";
             btnayuda.Size = new Size(117, 30);
@@ -121,6 +121,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(192, 192, 255);
             ClientSize = new Size(940, 545);
+            Controls.Add(btnayuda);
             Controls.Add(groupBox1);
             FormBorderStyle = FormBorderStyle.None;
             Name = "RespaldoYrestaurar";

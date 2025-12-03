@@ -17,11 +17,11 @@ using static INICIO.roles;
 
 
 namespace INICIO
-{
+{// Instancia de la clase de conexión
     public partial class roles : Form
     {
         private string conexiontionString;
-        private ConexionBD conexionDB = new ConexionBD(); // Instancia de la clase de conexión
+        private ConexionBD conexionDB = new ConexionBD(); 
 
 
 
@@ -41,7 +41,11 @@ namespace INICIO
 
 
 
-
+        // Método que carga los roles disponibles desde la base de datos y los muestra en un ComboBox
+        // Establece una conexión con la base de datos usando el patrón 'using' para garantizar su cierre automático
+        // Define la consulta SQL para obtener el ID y nombre de todos los roles
+        // Crea el comando SQL con la consulta y la conexión
+        // Ejecuta la consulta y obtiene un lector de datos
         public void CargarRoles()
         {
             using (SqlConnection con = ConexionBD.ObtenerConexion())
@@ -67,6 +71,10 @@ namespace INICIO
                 }
             }
         }
+        // Evento del botón guardar que inserta un nuevo rol en la base de datos
+        // Obtiene y valida los datos ingresados en los campos del formulario
+        // Valida que los campos obligatorios no estén vacíos
+        // Refrescar roles en el formulario de usuarios
         private void btnguardar_Click(object sender, EventArgs e)
         {
             string id = txtidrol.Text.Trim();
@@ -93,7 +101,7 @@ namespace INICIO
                     cmd.ExecuteNonQuery();
                     MessageBox.Show("✅ Rol guardado correctamente en SQL.");
 
-                    // Refrescar roles en el formulario de usuarios
+                    
                     foreach (Form f in Application.OpenForms)
                     {
                         if (f is usuarios)
@@ -116,7 +124,11 @@ namespace INICIO
 
 
 
-
+        // Evento del botón eliminar que borra un rol de la base de datos por su ID
+        // Valida que se haya ingresado un ID de rol
+        // Ejecuta la eliminación del rol en la tabla ROL
+        // Verifica si se eliminó algún registro y muestra el resultado
+        // Limpia todos los campos después de la operación
         private void btneliminar_Click(object sender, EventArgs e)
         {
             string id = txtidrol.Text;
@@ -158,9 +170,9 @@ namespace INICIO
 
 
 
-
+        // Preguntar si está seguro de salir
         private void btncancelar_Click(object sender, EventArgs e)
-        {// Preguntar si está seguro de salir
+        {
             DialogResult resultado = MessageBox.Show("¿Está seguro que desea salir?",
                 "Confirmar salida", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -174,20 +186,21 @@ namespace INICIO
         {
 
         }
+        // esto indica que abra con la app predeterminada
 
         private void btnAyuda_Click(object sender, EventArgs e)
         {
             var psi = new System.Diagnostics.ProcessStartInfo
             {
                 FileName = @"C:\Users\Belen\Downloads\MANUAL ROLES.pdf",
-                UseShellExecute = true // esto indica que abra con la app predeterminada
+                UseShellExecute = true 
             };
             System.Diagnostics.Process.Start(psi);
         }
-
+        // Ruta del PDF en la carpeta del ejecutable
         private void btnayuda_Click_1(object sender, EventArgs e)
         {
-            // Ruta del PDF en la carpeta del ejecutable
+            
             string rutaPdf = Path.Combine(Application.StartupPath, "MANUAL ROLES.pdf");
 
             if (File.Exists(rutaPdf))

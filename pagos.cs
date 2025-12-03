@@ -31,6 +31,9 @@ namespace INICIO
 
 
         //  Cargar al iniciar el formulario
+        // Cargar estados de pago
+        // Cargar facturas desde la base de datos
+
         private void frmPagos_Load(object sender, EventArgs e)
         {
             txtPago.Enabled = false;
@@ -38,14 +41,14 @@ namespace INICIO
             dtpFecha.Format = DateTimePickerFormat.Custom;
             dtpFecha.CustomFormat = "dd/MM/yyyy";
 
-            // Cargar estados de pago
+            
             cboEstado.Items.Clear();
             cboEstado.Items.Add("Pendiente");
             cboEstado.Items.Add("Pagado");
             cboEstado.Items.Add("Cancelado");
             cboEstado.SelectedIndex = 0;
 
-            // Cargar facturas desde la base de datos
+            
             CargarFacturas();
         }
 
@@ -85,13 +88,14 @@ namespace INICIO
 
 
         //  Botón Limpiar
+        // Método para limpiar todos los campos
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             LimpiarCampos();
             MessageBox.Show("Formulario limpiado correctamente.", "Limpieza", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        // Método para limpiar todos los campos
+        
         private void LimpiarCampos()
         {
             txtPago.Clear();
@@ -113,26 +117,30 @@ namespace INICIO
         }
 
         // Validar entrada numérica en txtMonto
+        // Permitir solo números, punto decimal y teclas de control
+        // Permitir solo un punto decimal
         private void txtMonto_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // Permitir solo números, punto decimal y teclas de control
+            
             if (!char.IsDigit(e.KeyChar) && e.KeyChar != '.' && !char.IsControl(e.KeyChar))
             {
                 e.Handled = true;
             }
 
-            // Permitir solo un punto decimal
+            
             if (e.KeyChar == '.' && txtMonto.Text.Contains("."))
             {
                 e.Handled = true;
             }
         }
-
+        //validaciones
+        //Generar nuevo ID_PAGO manualmente
+        //inserta el nuevo pago
         private void btnGuardar_Click_1(object sender, EventArgs e)
         {
             try
             {
-                // VALIDACIONES
+                /
                 if (cmbidfaactura.SelectedIndex == -1)
                 {
                     MessageBox.Show("Seleccione una factura.", "Advertencia");
@@ -159,14 +167,14 @@ namespace INICIO
 
                 using (SqlConnection conn = ConexionBD.ObtenerConexion())
                 {
-                    // Generar nuevo ID_PAGO manualmente
+                    
                     long nuevoId = 0;
                     using (SqlCommand cmdId = new SqlCommand("SELECT ISNULL(MAX(ID_PAGO), 0) + 1 FROM PAGOS", conn))
                     {
                         nuevoId = Convert.ToInt64(cmdId.ExecuteScalar());
                     }
 
-                    // Insertar el nuevo pago
+                    
                     string query = @"INSERT INTO PAGOS (ID_PAGO, ID_FACTURA, FECHA_PAGO, MONTO_PAGO, ESTADO_PAGO)
                              VALUES (@idpago, @idfactura, @fecha, @monto, @estado)";
 
@@ -199,13 +207,13 @@ namespace INICIO
                 MessageBox.Show($"❌ Error general: {ex.Message}", "Error");
             }
         }
-
+        // Función para generar el siguiente ID automáticamente
         private void frmPagos_Load_1(object sender, EventArgs e)
         {
             txtPago.Enabled = false;
             GenerarNuevoId();
         }
-        // Función para generar el siguiente ID automáticamente
+
         private int ObtenerSiguienteIdUsuario()
         {
             int siguienteId = 1;
@@ -220,13 +228,14 @@ namespace INICIO
 
             return siguienteId;
         }
+        //genera automaticamente el pago id
         private void GenerarNuevoId()
         {
             try
             {
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
-                    //genera automaticamente el pagoid
+                    
                     string consulta = "SELECT ISNULL(MAX(ID_PAGO), 0) + 1 FROM PAGOS";
                     SqlCommand cmd = new SqlCommand(consulta, con);
                     object resultado = cmd.ExecuteScalar();
@@ -239,20 +248,20 @@ namespace INICIO
                 txtPago.Text = "1";
             }
         }
-
+        // abre con la aplicación predeterminada
         private void btnAyuda_Click(object sender, EventArgs e)
         {
             var psi = new System.Diagnostics.ProcessStartInfo
             {
                 FileName = @"C:\Users\Belen\Downloads\MANUAL PAGOS.pdf",
-                UseShellExecute = true // abre con la aplicación predeterminada
+                UseShellExecute = true 
             };
             System.Diagnostics.Process.Start(psi);
         }
-
+        // Ruta del PDF en la carpeta del ejecutable
         private void btnayuda_Click_1(object sender, EventArgs e)
         {
-            // Ruta del PDF en la carpeta del ejecutable
+            
             string rutaPdf = Path.Combine(Application.StartupPath, "MANUAL PAGOS.pdf");
 
             if (File.Exists(rutaPdf))

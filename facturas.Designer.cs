@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             panel1 = new Panel();
+            btnayuda = new Button();
             cboidcontrato = new ComboBox();
             txtidfactura = new TextBox();
             label6 = new Label();
@@ -44,7 +45,6 @@
             label3 = new Label();
             label2 = new Label();
             label1 = new Label();
-            btnayuda = new Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -52,7 +52,6 @@
             // panel1
             // 
             panel1.BackColor = Color.CornflowerBlue;
-            panel1.Controls.Add(btnayuda);
             panel1.Controls.Add(cboidcontrato);
             panel1.Controls.Add(txtidfactura);
             panel1.Controls.Add(label6);
@@ -73,6 +72,23 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(523, 341);
             panel1.TabIndex = 1;
+            panel1.Paint += panel1_Paint;
+            // 
+            // btnayuda
+            // 
+            btnayuda.FlatAppearance.BorderSize = 0;
+            btnayuda.FlatAppearance.MouseOverBackColor = Color.Red;
+            btnayuda.FlatStyle = FlatStyle.Flat;
+            btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
+            btnayuda.ForeColor = Color.White;
+            btnayuda.Location = new Point(643, 475);
+            btnayuda.Margin = new Padding(3, 2, 3, 2);
+            btnayuda.Name = "btnayuda";
+            btnayuda.Size = new Size(117, 30);
+            btnayuda.TabIndex = 36;
+            btnayuda.Text = "Ayuda";
+            btnayuda.UseVisualStyleBackColor = true;
+            btnayuda.Click += btnayuda_Click_1;
             // 
             // cboidcontrato
             // 
@@ -237,28 +253,13 @@
             label1.TabIndex = 0;
             label1.Text = "FACTURA";
             // 
-            // btnayuda
-            // 
-            btnayuda.FlatAppearance.BorderSize = 0;
-            btnayuda.FlatAppearance.MouseOverBackColor = Color.Red;
-            btnayuda.FlatStyle = FlatStyle.Flat;
-            btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
-            btnayuda.ForeColor = Color.White;
-            btnayuda.Location = new Point(28, 297);
-            btnayuda.Margin = new Padding(3, 2, 3, 2);
-            btnayuda.Name = "btnayuda";
-            btnayuda.Size = new Size(117, 30);
-            btnayuda.TabIndex = 36;
-            btnayuda.Text = "Ayuda";
-            btnayuda.UseVisualStyleBackColor = true;
-            btnayuda.Click += btnayuda_Click_1;
-            // 
             // facturas
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(192, 192, 255);
             ClientSize = new Size(1098, 546);
+            Controls.Add(btnayuda);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
             Name = "facturas";

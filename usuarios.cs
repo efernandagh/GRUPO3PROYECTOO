@@ -20,9 +20,9 @@ namespace INICIO
 
     public partial class usuarios : Form
     {
-
+        // Instancia de la clase de conexión
         private string conexiontionString;
-        private ConexionBD conexionDB = new ConexionBD(); // Instancia de la clase de conexión
+        private ConexionBD conexionDB = new ConexionBD(); 
 
         public usuarios()
         {
@@ -30,7 +30,7 @@ namespace INICIO
         }
 
 
-        // 🔹 Método para cargar roles en el ComboBox
+        //Método para cargar roles en el ComboBox
         public void CargarRoles()
         {
             using (SqlConnection con = ConexionBD.ObtenerConexion())
@@ -56,9 +56,12 @@ namespace INICIO
                 }
             }
         }
+        // validaciones básicas
+        // Si por alguna razón el ID está vacío, lo regeneramos
+        // limpiar y generar ID nuevo
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            // validaciones básicas
+            
             if (string.IsNullOrWhiteSpace(txtnombreusuario.Text) ||
                 string.IsNullOrWhiteSpace(txtapellidousuarios.Text) ||
                 string.IsNullOrWhiteSpace(txtcorreousuario.Text) ||
@@ -75,7 +78,7 @@ namespace INICIO
                 {
 
 
-                    // Si por alguna razón el ID está vacío, lo regeneramos
+                    
                     if (string.IsNullOrWhiteSpace(txtidusuario.Text))
                         GenerarNuevoId();
 
@@ -95,7 +98,7 @@ namespace INICIO
                     cmd.ExecuteNonQuery();
                     MessageBox.Show("✅ Usuario guardado correctamente.");
 
-                    // limpiar y generar ID nuevo
+                    
                     LimpiarCampos();
                     GenerarNuevoId();
                 }
@@ -106,7 +109,7 @@ namespace INICIO
             }
         }
 
-
+        //elimna contenido o datos de los campos
         private void btneliminar_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("¿Deseas eliminar los datos ingresados?",
@@ -146,16 +149,18 @@ namespace INICIO
         {
 
         }
+        // No permitir editar el ID
+        // Llamar a función que genera el ID automáticamente
 
         private void usuarios_Load(object sender, EventArgs e)
         {
             txtidusuario.Enabled = false;
             CargarRoles();
             dtpfecha.Value = DateTime.Now;
-            txtidusuario.Enabled = false; // No permitir editar el ID
-            GenerarNuevoId(); // 🔹 Llamar a función que genera el ID automáticamente
+            txtidusuario.Enabled = false; 
+            GenerarNuevoId(); 
         }
-        // ✅ Función para generar el siguiente ID automáticamente
+        // Función para generar el siguiente ID automáticamente
         private int ObtenerSiguienteIdUsuario()
         {
             int siguienteId = 1;
@@ -170,7 +175,7 @@ namespace INICIO
 
             return siguienteId;
         }
-        // <<-- Asegúrate de que este método exista y tenga este nombre EXACTO
+        //Asegurarse de que este método exista y tenga este nombre EXACTO
         private void GenerarNuevoId()
         {
             try
@@ -195,10 +200,10 @@ namespace INICIO
         {
 
         }
-
+        // Ruta del PDF en la carpeta del ejecutable
         private void btnAyuda_Click(object sender, EventArgs e)
         {
-            // Ruta del PDF en la carpeta del ejecutable
+            
             string rutaPdf = Path.Combine(Application.StartupPath, "MANUAL USUARIOS.pdf");
 
             if (File.Exists(rutaPdf))

@@ -54,7 +54,6 @@
             // panel1
             // 
             panel1.BackColor = Color.CornflowerBlue;
-            panel1.Controls.Add(btnAyuda);
             panel1.Controls.Add(cmbrol);
             panel1.Controls.Add(txtidusuario);
             panel1.Controls.Add(label1);
@@ -87,7 +86,7 @@
             btnAyuda.FlatAppearance.BorderSize = 0;
             btnAyuda.FlatAppearance.MouseOverBackColor = Color.Red;
             btnAyuda.FlatStyle = FlatStyle.Flat;
-            btnAyuda.Location = new Point(324, 369);
+            btnAyuda.Location = new Point(594, 554);
             btnAyuda.Name = "btnAyuda";
             btnAyuda.Size = new Size(75, 23);
             btnAyuda.TabIndex = 18;
@@ -132,7 +131,7 @@
             btncancelar.FlatStyle = FlatStyle.Flat;
             btncancelar.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btncancelar.ForeColor = Color.White;
-            btncancelar.Location = new Point(251, 327);
+            btncancelar.Location = new Point(308, 338);
             btncancelar.Margin = new Padding(3, 2, 3, 2);
             btncancelar.Name = "btncancelar";
             btncancelar.Size = new Size(82, 22);
@@ -149,7 +148,7 @@
             btneliminar.FlatStyle = FlatStyle.Flat;
             btneliminar.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btneliminar.ForeColor = Color.White;
-            btneliminar.Location = new Point(138, 327);
+            btneliminar.Location = new Point(181, 338);
             btneliminar.Margin = new Padding(3, 2, 3, 2);
             btneliminar.Name = "btneliminar";
             btneliminar.Size = new Size(82, 22);
@@ -166,7 +165,7 @@
             btnGuardar.FlatStyle = FlatStyle.Flat;
             btnGuardar.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnGuardar.ForeColor = Color.White;
-            btnGuardar.Location = new Point(13, 327);
+            btnGuardar.Location = new Point(50, 338);
             btnGuardar.Margin = new Padding(3, 2, 3, 2);
             btnGuardar.Name = "btnGuardar";
             btnGuardar.Size = new Size(82, 22);
@@ -302,6 +301,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(192, 192, 255);
             ClientSize = new Size(1300, 650);
+            Controls.Add(btnAyuda);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
             Name = "usuarios";

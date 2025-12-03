@@ -16,13 +16,14 @@ namespace INICIO
         {
             InitializeComponent();
         }
-
+        // Carga contratos
+        // Carga métodos de pago
         private void facturas_Load(object sender, EventArgs e)
         {
             txtidfactura.Enabled = false;
             GenerarNuevoId();
 
-            // 🔹 Cargar contratos
+            
             try
             {
                 using (SqlConnection conn = ConexionBD.ObtenerConexion())
@@ -45,7 +46,7 @@ namespace INICIO
                 MessageBox.Show("❌ Error al cargar contratos: " + ex.Message);
             }
 
-            // 🔹 Cargar métodos de pago
+            
             cmbMetodoPago.Items.Clear();
             cmbMetodoPago.Items.Add("Efectivo");
             cmbMetodoPago.Items.Add("Tarjeta");
@@ -54,7 +55,7 @@ namespace INICIO
 
             dtpFecha.Format = DateTimePickerFormat.Custom;
         }
-
+        //limpia los campos
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             txtidfactura.Clear();
@@ -66,7 +67,7 @@ namespace INICIO
             MessageBox.Show("Todos los campos han sido limpiados", "Información",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
+        //boton para salir de sistema de facturacion
         private void btnSalir_Click(object sender, EventArgs e)
         {
             DialogResult resultado = MessageBox.Show(
@@ -80,10 +81,20 @@ namespace INICIO
                 this.Close();
             }
         }
-
+        // Validaciones
+        // Generar el nuevo ID manualmente
+        // Insertar nueva factura
+        // Mostrar mensaje de éxito
+        // Preguntar si desea registrar pago
+        // Aquí podrías abrir el formulario de pagos
+        // new pagos(idGenerado).ShowDialog();
+        // Actualizar el campo ID en pantalla
+        // Actualizar el campo ID en pantalla
+        // Mostrar resumen amigable
+        // Preguntar si desea crear otra factura
         private void btnGuardar_Click_1(object sender, EventArgs e)
         {
-            // ✅ Validaciones
+            
             if (cboidcontrato.SelectedIndex == -1 ||
                 string.IsNullOrWhiteSpace(txtMontoTotal.Text) ||
                 cmbMetodoPago.SelectedIndex == -1)
@@ -104,12 +115,12 @@ namespace INICIO
             {
                 try
                 {
-                    // 🔹 Generar el nuevo ID manualmente
+                    
                     string getNextIdQuery = "SELECT ISNULL(MAX(ID_FACTURA), 0) + 1 FROM FACTURAS";
                     SqlCommand getIdCmd = new SqlCommand(getNextIdQuery, conn);
                     idGenerado = Convert.ToInt32(getIdCmd.ExecuteScalar());
 
-                    // 🔹 Insertar nueva factura
+                    
                     string query = @"INSERT INTO FACTURAS (ID_FACTURA, ID_CONTRATO, FECHA_FACTURA, MONTO_TOTAL, METODO_PAGO)
                                      VALUES (@idfactura, @idcontrato, @fecha, @monto, @metodo)";
                     SqlCommand cmd = new SqlCommand(query, conn);
@@ -121,11 +132,11 @@ namespace INICIO
 
                     cmd.ExecuteNonQuery();
 
-                    // 🔹 Mostrar mensaje de éxito
+                    
                     MessageBox.Show($"✅ Factura guardada correctamente.\n🧾 ID generado: {idGenerado}",
                         "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // 🔹 Preguntar si desea registrar pago
+                    
                     DialogResult result = MessageBox.Show(
                         "¿Desea registrar un pago para esta factura?",
                         "Factura Guardada",
@@ -134,11 +145,10 @@ namespace INICIO
 
                     if (result == DialogResult.Yes)
                     {
-                        // Aquí podrías abrir el formulario de pagos
-                        // new pagos(idGenerado).ShowDialog();
+                        
                     }
 
-                    // 🔹 Actualizar el campo ID en pantalla
+                    
                     txtidfactura.Text = idGenerado.ToString();
                 }
                 catch (Exception ex)
@@ -147,7 +157,7 @@ namespace INICIO
                 }
             }
 
-            // 🔹 Mostrar resumen amigable
+            
             string mensaje = "═══════════════════════════════\n";
             mensaje += "   FACTURA GUARDADA EXITOSAMENTE\n";
             mensaje += "═══════════════════════════════\n\n";
@@ -160,7 +170,7 @@ namespace INICIO
             MessageBox.Show(mensaje, "✓ Factura Registrada",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            // 🔹 Preguntar si desea crear otra factura
+            
             DialogResult respuesta = MessageBox.Show(
                 "¿Desea crear otra factura?",
                 "Nueva Factura",
@@ -178,7 +188,7 @@ namespace INICIO
             }
         }
 
-        // ✅ Función para generar el siguiente ID automáticamente
+        // Función para generar el siguiente ID automáticamente
         private void GenerarNuevoId()
         {
             try
@@ -197,21 +207,21 @@ namespace INICIO
                 txtidfactura.Text = "1";
             }
         }
-
+        // esto indica que abra con la app predeterminada
         private void btnAyuda_Click(object sender, EventArgs e)
         {
 
             var psi = new System.Diagnostics.ProcessStartInfo
             {
                 FileName = @"C:\Users\Belen\Downloads\MANUAL FACTURACION.pdf",
-                UseShellExecute = true // esto indica que abra con la app predeterminada
+                UseShellExecute = true 
             };
             System.Diagnostics.Process.Start(psi);
         }
-
+        // Ruta del PDF en la carpeta del ejecutable
         private void btnayuda_Click_1(object sender, EventArgs e)
         {
-            // Ruta del PDF en la carpeta del ejecutable
+            
             string rutaPdf = Path.Combine(Application.StartupPath, "MANUAL FACTURACION.pdf");
 
             if (File.Exists(rutaPdf))
@@ -234,6 +244,11 @@ namespace INICIO
             {
                 MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

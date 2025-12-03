@@ -29,9 +29,8 @@
         private void InitializeComponent()
         {
             panel1 = new Panel();
-            btnayuda = new Button();
-            cmbidfaactura = new ComboBox();
             btnGuardar = new Button();
+            cmbidfaactura = new ComboBox();
             cboEstado = new ComboBox();
             btnSalir = new Button();
             btnLimpiar = new Button();
@@ -45,6 +44,7 @@
             label4 = new Label();
             label3 = new Label();
             label2 = new Label();
+            btnayuda = new Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -75,30 +75,6 @@
             panel1.TabIndex = 1;
             panel1.Paint += panel1_Paint;
             // 
-            // btnayuda
-            // 
-            btnayuda.FlatAppearance.BorderSize = 0;
-            btnayuda.FlatAppearance.MouseOverBackColor = Color.Red;
-            btnayuda.FlatStyle = FlatStyle.Flat;
-            btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
-            btnayuda.ForeColor = Color.White;
-            btnayuda.Location = new Point(601, 452);
-            btnayuda.Margin = new Padding(3, 2, 3, 2);
-            btnayuda.Name = "btnayuda";
-            btnayuda.Size = new Size(117, 30);
-            btnayuda.TabIndex = 36;
-            btnayuda.Text = "Ayuda";
-            btnayuda.UseVisualStyleBackColor = true;
-            btnayuda.Click += btnayuda_Click_1;
-            // 
-            // cmbidfaactura
-            // 
-            cmbidfaactura.FormattingEnabled = true;
-            cmbidfaactura.Location = new Point(162, 146);
-            cmbidfaactura.Name = "cmbidfaactura";
-            cmbidfaactura.Size = new Size(121, 23);
-            cmbidfaactura.TabIndex = 17;
-            // 
             // btnGuardar
             // 
             btnGuardar.BackColor = Color.CornflowerBlue;
@@ -113,6 +89,14 @@
             btnGuardar.Text = "GUARDAR";
             btnGuardar.UseVisualStyleBackColor = false;
             btnGuardar.Click += btnGuardar_Click_1;
+            // 
+            // cmbidfaactura
+            // 
+            cmbidfaactura.FormattingEnabled = true;
+            cmbidfaactura.Location = new Point(162, 146);
+            cmbidfaactura.Name = "cmbidfaactura";
+            cmbidfaactura.Size = new Size(121, 23);
+            cmbidfaactura.TabIndex = 17;
             // 
             // cboEstado
             // 
@@ -251,6 +235,22 @@
             label2.Size = new Size(64, 21);
             label2.TabIndex = 1;
             label2.Text = "FECHA:";
+            // 
+            // btnayuda
+            // 
+            btnayuda.FlatAppearance.BorderSize = 0;
+            btnayuda.FlatAppearance.MouseOverBackColor = Color.Red;
+            btnayuda.FlatStyle = FlatStyle.Flat;
+            btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
+            btnayuda.ForeColor = Color.White;
+            btnayuda.Location = new Point(736, 450);
+            btnayuda.Margin = new Padding(3, 2, 3, 2);
+            btnayuda.Name = "btnayuda";
+            btnayuda.Size = new Size(117, 30);
+            btnayuda.TabIndex = 36;
+            btnayuda.Text = "Ayuda";
+            btnayuda.UseVisualStyleBackColor = true;
+            btnayuda.Click += btnayuda_Click_1;
             // 
             // frmPagos
             // 

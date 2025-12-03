@@ -26,7 +26,11 @@ namespace INICIO
 
         }
 
-        // 🔹 Crear respaldo
+        // Crear respaldo
+        // Evento del botón que crea un respaldo (backup) de la base de datos
+        // Define la ruta del archivo de respaldo en el escritorio del usuario
+        // Ejecuta el comando BACKUP DATABASE para crear el archivo .bak
+        // Muestra mensaje de éxito con la ubicación del respaldo o error si falla
         private void btnCrearBackup_Click(object sender, EventArgs e)
         {
             try
@@ -52,6 +56,12 @@ namespace INICIO
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        // Evento del botón que restaura la base de datos desde un archivo de respaldo
+        // Abre un diálogo para que el usuario seleccione el archivo .bak
+        // Se conecta a la base de datos master para ejecutar la restauración
+        // Pone la base de datos en modo usuario único, restaura desde el archivo y vuelve a modo multiusuario
+        // Muestra mensaje de éxito o error según el resultado de la operación
+        // Se usa la base "master" para ejecutar el RESTORE
         private void btnrestau_Click(object sender, EventArgs e)
         {
             try
@@ -64,7 +74,7 @@ namespace INICIO
                 {
                     string backupFile = open.FileName;
 
-                    // ⚠ Se usa la base "master" para ejecutar el RESTORE
+                    
                     string masterConnection = "Server=DESKTOP-8QJ2O4S\\ENIAGOMEZ;Database=master;Integrated Security=True;TrustServerCertificate=True;";
 
                     using (SqlConnection con = new SqlConnection(masterConnection))
@@ -92,22 +102,24 @@ namespace INICIO
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        // Ruta donde se guardará el respaldo
+        // Verificar si la carpeta existe, si no, crearla
+        //  Crear respaldo de la base de datos
         private void btnrestaurar_Click(object sender, EventArgs e)
         {
             try
             {
-                // 📂 Ruta donde se guardará el respaldo
+                
                 string carpetaRespaldo = @"C:\RespaldoSQL";
                 string backupPath = Path.Combine(carpetaRespaldo, "MECANICA_INDUSTRIAL.bak");
 
-                // 🔹 Verificar si la carpeta existe, si no, crearla
+                
                 if (!Directory.Exists(carpetaRespaldo))
                 {
                     Directory.CreateDirectory(carpetaRespaldo);
                 }
 
-                // 🔹 Crear respaldo de la base de datos
+                /
                 using (SqlConnection con = ConexionBD.ObtenerConexion())
                 {
                     string query = $"BACKUP DATABASE MECANICA_INDUSTRIAL TO DISK = '{backupPath}' WITH FORMAT, INIT;";
@@ -124,27 +136,28 @@ namespace INICIO
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        // Preguntar si realmente quiere salir
+        // Si el usuario presiona "Sí", cerrar el formulario
         private void btnSalir_Click(object sender, EventArgs e)
         {
 
-            // Preguntar si realmente quiere salir
+            
             DialogResult resultado = MessageBox.Show(
                 "¿Está seguro que desea salir del sistema de facturas?",
                 "Confirmar Salida",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
-            // Si el usuario presiona "Sí", cerrar el formulario
+            
             if (resultado == DialogResult.Yes)
             {
                 this.Close();
             }
         }
-
+        // Ruta del PDF en la carpeta del ejecutable
         private void btnayuda_Click(object sender, EventArgs e)
         {
-            // Ruta del PDF en la carpeta del ejecutable
+            
             string rutaPdf = Path.Combine(Application.StartupPath, "MANUAL RESPALDO Y RESTAURACION.pdf");
 
             if (File.Exists(rutaPdf))
@@ -167,6 +180,11 @@ namespace INICIO
             {
                 MessageBox.Show("No se encontró el archivo PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -335,7 +335,7 @@
             btnSalir.FlatAppearance.MouseOverBackColor = Color.CornflowerBlue;
             btnSalir.FlatStyle = FlatStyle.Flat;
             btnSalir.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnSalir.Location = new Point(582, 618);
+            btnSalir.Location = new Point(581, 588);
             btnSalir.Margin = new Padding(3, 2, 3, 2);
             btnSalir.Name = "btnSalir";
             btnSalir.Size = new Size(94, 32);
@@ -351,10 +351,10 @@
             btnayuda.FlatStyle = FlatStyle.Flat;
             btnayuda.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic);
             btnayuda.ForeColor = Color.White;
-            btnayuda.Location = new Point(57, 553);
+            btnayuda.Location = new Point(748, 583);
             btnayuda.Margin = new Padding(3, 2, 3, 2);
             btnayuda.Name = "btnayuda";
-            btnayuda.Size = new Size(160, 43);
+            btnayuda.Size = new Size(106, 37);
             btnayuda.TabIndex = 37;
             btnayuda.Text = "Ayuda";
             btnayuda.UseVisualStyleBackColor = true;

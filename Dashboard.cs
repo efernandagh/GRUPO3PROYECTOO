@@ -48,7 +48,16 @@ namespace INICIO
 
 
 
-
+        // Mostrar el menú principal de nuevo
+        // Cerrar este formulario
+        // Abre el formulario de contratos como diálogo modal
+        // Abre el formulario de clientes como diálogo modal
+        // Actualiza la etiqueta con la hora actual en formato HH:mm:ss
+        // Vuelve al menú principal, abre el formulario Menu y cierra el actual
+        // Minimiza la ventana del formulario
+        // Cierra completamente la aplicación
+        // Evento click del gráfico (sin implementación)
+        // Evento de carga del Dashboard: inicializa la hora y carga el gráfico
         private void btncontratos_Click(object sender, EventArgs e)
         {
             contratos formContratos = new contratos();
@@ -66,14 +75,14 @@ namespace INICIO
             lblHora.Text = DateTime.Now.ToString("HH:mm:ss");
 
         }
-
+        
         private void btnvolver_Click(object sender, EventArgs e)
         {
-            // Mostrar el menú principal de nuevo
+            
             Menu frmMenu = new Menu();
             frmMenu.Show();
 
-            // Cerrar este formulario
+            
             this.Close();
         }
 
@@ -98,7 +107,17 @@ namespace INICIO
             lblHora.Text = DateTime.Now.ToString("HH:mm:ss");
             CargarGrafico();
         }
-
+        // Consulta agrupada por estado
+        // Limpiar gráfico
+        // Crear y configurar el área del gráfico
+        // Quitar márgenes para centrar el pastel
+        // Esto centra y ajusta el pastel dentro del área visible
+        // Crear la serie (gráfico pastel)
+        // nombre + porcentaje
+        // Carga datos desde SQL
+        // Tonos diferentes de azul
+        // Agregar serie
+        // Leyenda (opcional, también centrada a la derecha)
         private void CargarGrafico()
         {
             try
@@ -107,37 +126,36 @@ namespace INICIO
                 {
 
 
-                    // 🔹 Consulta agrupada por estado
+                    
                     string query = "SELECT ESTADO, COUNT(*) AS TOTAL FROM PROYECTOS GROUP BY ESTADO";
                     SqlCommand cmd = new SqlCommand(query, con);
                     SqlDataReader dr = cmd.ExecuteReader();
 
-                    // 🔹 Limpiar gráfico
+                    
                     grafica.Series.Clear();
                     grafica.ChartAreas.Clear();
                     grafica.Titles.Clear();
                     grafica.Legends.Clear();
 
-                    // 🔹 Crear y configurar el área del gráfico
+                    
                     ChartArea area = new ChartArea("MainArea");
                     grafica.ChartAreas.Add(area);
 
-                    // Quitar márgenes para centrar el pastel
+                    
                     area.Position = new ElementPosition(0, 0, 100, 100);
                     area.InnerPlotPosition = new ElementPosition(25, 10, 50, 80);
-                    // ↑ Esto centra y ajusta el pastel dentro del área visible
-
-                    // 🔹 Crear la serie (gráfico pastel)
+                    
+                    
                     Series serie = new Series("Proyectos");
                     serie.ChartType = SeriesChartType.Pie;
                     serie.IsValueShownAsLabel = true;
-                    serie.Label = "#VALX\n#PERCENT{P1}"; // nombre + porcentaje
+                    serie.Label = "#VALX\n#PERCENT{P1}"; 
                     serie.Font = new Font("Segoe UI", 9, FontStyle.Bold);
                     serie.LabelForeColor = Color.White;
                     serie["PieLabelStyle"] = "Inside";
                     serie["PieStartAngle"] = "90";
 
-                    // 🔹 Cargar datos desde SQL
+                    
                     while (dr.Read())
                     {
                         string estado = dr["ESTADO"].ToString();
@@ -145,29 +163,29 @@ namespace INICIO
                         serie.Points.AddXY(estado, total);
                     }
 
-                    // 🔹 Tonos diferentes de azul
+                    
                     Color[] tonosAzules = new Color[]
                     {
-                Color.FromArgb(70, 130, 180),  // SteelBlue
-                Color.FromArgb(100, 149, 237), // CornflowerBlue
-                Color.FromArgb(135, 206, 235), // SkyBlue
-                Color.FromArgb(176, 224, 230)  // PowderBlue
+                Color.FromArgb(70, 130, 180),  
+                Color.FromArgb(100, 149, 237), 
+                Color.FromArgb(135, 206, 235), 
+                Color.FromArgb(176, 224, 230)  
                     };
 
                     for (int i = 0; i < serie.Points.Count; i++)
                         serie.Points[i].Color = tonosAzules[i % tonosAzules.Length];
 
-                    // 🔹 Agregar serie
+                    
                     grafica.Series.Add(serie);
 
-                    // 🔹 Leyenda (opcional, también centrada a la derecha)
+                    
                     Legend leyenda = new Legend("Estados");
                     leyenda.Docking = Docking.Right;
                     leyenda.Alignment = StringAlignment.Center;
                     leyenda.Font = new Font("Segoe UI", 9);
                     grafica.Legends.Add(leyenda);
 
-                    // 🔹 Título centrado
+                   
                     Title titulo = new Title("Proyectos por Estado",
                         Docking.Top,
                         new Font("Segoe UI", 12, FontStyle.Bold),
@@ -184,15 +202,15 @@ namespace INICIO
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        //salir
         private void btnSalir_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-
+        // Ruta del PDF en la carpeta del ejecutable 
         private void btnayuda_Click(object sender, EventArgs e)
         {
-            // Ruta del PDF en la carpeta del ejecutable
+            
             string rutaPdf = Path.Combine(Application.StartupPath, "MANUAL DASHBOARD.pdf");
 
             if (File.Exists(rutaPdf))
