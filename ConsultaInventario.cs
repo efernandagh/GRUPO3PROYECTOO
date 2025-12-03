@@ -17,7 +17,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 namespace INICIO
 {
     //Representa el módulo encargado de consultar información de inventarios y proveedores, con opciones de búsqueda, filtrado y exportación.
-    //
+   
     public partial class ConsultaInventario : Form
     {
         //Inicializa todos los controles gráficos definidos en el diseñador.
